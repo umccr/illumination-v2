@@ -1,0 +1,265 @@
+Resources:
+  LambdaProxyServerServiceRole0017D47E:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+          - Action: sts:AssumeRole
+            Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+        Version: "2012-10-17"
+      ManagedPolicyArns:
+        - Fn::Join:
+            - ""
+            - - "arn:"
+              - Ref: AWS::Partition
+              - :iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+    Metadata:
+      aws:cdk:path: ProxyServerStack/LambdaProxyServer/ServiceRole/Resource
+  LambdaProxyServerE153D199:
+    Type: AWS::Lambda::Function
+    Properties:
+      Code:
+        S3Bucket:
+          Fn::Sub: cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}
+        S3Key: 46bd2e43f6f518be376a966ed43ce984d457f1caca2f29aae8904ccf4faffb8b.zip
+      Role:
+        Fn::GetAtt:
+          - LambdaProxyServerServiceRole0017D47E
+          - Arn
+      Environment:
+        Variables:
+          ica_server_name: ica.illumina.com
+          AWS_NODEJS_CONNECTION_REUSE_ENABLED: "1"
+      FunctionName: proxy_server_ica_v2
+      Handler: index.handler
+      Runtime: nodejs14.x
+      Timeout: 10
+    DependsOn:
+      - LambdaProxyServerServiceRole0017D47E
+    Metadata:
+      aws:cdk:path: ProxyServerStack/LambdaProxyServer/Resource
+      aws:asset:path: /Users/wpintan/UMCCR/GitHub/illumination-v2/infrastructure/cdk.out/asset.46bd2e43f6f518be376a966ed43ce984d457f1caca2f29aae8904ccf4faffb8b
+      aws:asset:is-bundled: true
+      aws:asset:property: Code
+  CognitoUserPoolUserPoolAuthorizerClientFF7C00F7:
+    Type: AWS::Cognito::UserPoolClient
+    Properties:
+      UserPoolId:
+        Ref: CognitoUserPoolIdSSMParamterParameter
+      AllowedOAuthFlows:
+        - implicit
+        - code
+      AllowedOAuthFlowsUserPoolClient: true
+      AllowedOAuthScopes:
+        - profile
+        - phone
+        - email
+        - openid
+        - aws.cognito.signin.user.admin
+      CallbackURLs:
+        - https://example.com
+      SupportedIdentityProviders:
+        - COGNITO
+    Metadata:
+      aws:cdk:path: ProxyServerStack/CognitoUserPool/UserPoolAuthorizerClient/Resource
+  ApiGatewayProxyServer5C0098A0:
+    Type: AWS::ApiGatewayV2::Api
+    Properties:
+      CorsConfiguration:
+        AllowHeaders:
+          - Authorization
+        AllowMethods:
+          - GET
+          - OPTIONS
+        AllowOrigins:
+          - "*"
+      Description: Gateway for ICAV2 proxy server
+      Name: ICAV2_proxy_server
+      ProtocolType: HTTP
+    Metadata:
+      aws:cdk:path: ProxyServerStack/ApiGatewayProxyServer/Resource
+  ApiGatewayProxyServerDefaultRouteProxyServerLmabdaApiIntegration6FBB20DD:
+    Type: AWS::ApiGatewayV2::Integration
+    Properties:
+      ApiId:
+        Ref: ApiGatewayProxyServer5C0098A0
+      IntegrationType: AWS_PROXY
+      IntegrationUri:
+        Fn::GetAtt:
+          - LambdaProxyServerE153D199
+          - Arn
+      PayloadFormatVersion: "2.0"
+    Metadata:
+      aws:cdk:path: ProxyServerStack/ApiGatewayProxyServer/DefaultRoute/ProxyServerLmabdaApiIntegration/Resource
+  ApiGatewayProxyServerDefaultRouteProxyServerLmabdaApiIntegrationPermissionB275D4D4:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: lambda:InvokeFunction
+      FunctionName:
+        Fn::GetAtt:
+          - LambdaProxyServerE153D199
+          - Arn
+      Principal: apigateway.amazonaws.com
+      SourceArn:
+        Fn::Join:
+          - ""
+          - - "arn:"
+            - Ref: AWS::Partition
+            - ":execute-api:"
+            - Ref: AWS::Region
+            - ":"
+            - Ref: AWS::AccountId
+            - ":"
+            - Ref: ApiGatewayProxyServer5C0098A0
+            - /*/*
+    Metadata:
+      aws:cdk:path: ProxyServerStack/ApiGatewayProxyServer/DefaultRoute/ProxyServerLmabdaApiIntegration-Permission
+  ApiGatewayProxyServerDefaultRoute9184E61C:
+    Type: AWS::ApiGatewayV2::Route
+    Properties:
+      ApiId:
+        Ref: ApiGatewayProxyServer5C0098A0
+      RouteKey: $default
+      AuthorizationType: JWT
+      AuthorizerId:
+        Ref: ApiGatewayProxyServerDataPortalAuthorizer5F57187C
+      Target:
+        Fn::Join:
+          - ""
+          - - integrations/
+            - Ref: ApiGatewayProxyServerDefaultRouteProxyServerLmabdaApiIntegration6FBB20DD
+    Metadata:
+      aws:cdk:path: ProxyServerStack/ApiGatewayProxyServer/DefaultRoute/Resource
+  ApiGatewayProxyServerDataPortalAuthorizer5F57187C:
+    Type: AWS::ApiGatewayV2::Authorizer
+    Properties:
+      ApiId:
+        Ref: ApiGatewayProxyServer5C0098A0
+      AuthorizerType: JWT
+      Name: DataPortalAuthorizer
+      IdentitySource:
+        - $request.header.Authorization
+      JwtConfiguration:
+        Audience:
+          - Ref: CognitoUserPoolUserPoolAuthorizerClientFF7C00F7
+        Issuer:
+          Fn::Join:
+            - ""
+            - - https://cognito-idp.
+              - Ref: AWS::Region
+              - .amazonaws.com/
+              - Ref: CognitoUserPoolIdSSMParamterParameter
+    Metadata:
+      aws:cdk:path: ProxyServerStack/ApiGatewayProxyServer/DataPortalAuthorizer/Resource
+  ApiGatewayProxyServerDefaultStage36BDD829:
+    Type: AWS::ApiGatewayV2::Stage
+    Properties:
+      ApiId:
+        Ref: ApiGatewayProxyServer5C0098A0
+      StageName: $default
+      AutoDeploy: true
+    Metadata:
+      aws:cdk:path: ProxyServerStack/ApiGatewayProxyServer/DefaultStage/Resource
+  CDKMetadata:
+    Type: AWS::CDK::Metadata
+    Properties:
+      Analytics: v2:deflate64:H4sIAAAAAAAA/1WQzU7DMBCEn6V3Z/snwZW2EoILqoI4R9tkSbdN7MjetAIr747ttBBOs7Majb/1CpaP4BczvLqsrM5Zwwfw74LlWYVV4RtsDxUW2lR0cvCW5LnXpbDRirEFn5uG1O5TRx2UWxfoHImDTZTgYduXZ5ItOlJjG/gQ/y0J855sy84FN6jS1JrFgP9wZPfGNLuGSUuM/d8MCjuuUeiKX5dV6tx0HHOvWqi2eG/PTS+JcNPL0Vj+JhtdOLKmYVCJMxrWdYJBiy1JCOXkTG/L8brJvDO6Ykm0iwyb7oiwmD3dfnAedUp2S/gXkS4CRh2R4jRlTYk/xmjvkPH/4eTml+UDrMNrJ8ec2V4LtwT5qD/9761PywEAAA==
+    Metadata:
+      aws:cdk:path: ProxyServerStack/CDKMetadata/Default
+    Condition: CDKMetadataAvailable
+Parameters:
+  CognitoUserPoolIdSSMParamterParameter:
+    Type: AWS::SSM::Parameter::Value<String>
+    Default: /data_portal/client/cog_user_pool_id
+  BootstrapVersion:
+    Type: AWS::SSM::Parameter::Value<String>
+    Default: /cdk-bootstrap/hnb659fds/version
+    Description: Version of the CDK Bootstrap resources in this environment, automatically retrieved from SSM Parameter Store. [cdk:skip]
+Conditions:
+  CDKMetadataAvailable:
+    Fn::Or:
+      - Fn::Or:
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - af-south-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - ap-east-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - ap-northeast-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - ap-northeast-2
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - ap-south-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - ap-southeast-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - ap-southeast-2
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - ca-central-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - cn-north-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - cn-northwest-1
+      - Fn::Or:
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - eu-central-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - eu-north-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - eu-south-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - eu-west-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - eu-west-2
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - eu-west-3
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - me-south-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - sa-east-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - us-east-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - us-east-2
+      - Fn::Or:
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - us-west-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - us-west-2
+Rules:
+  CheckBootstrapVersion:
+    Assertions:
+      - Assert:
+          Fn::Not:
+            - Fn::Contains:
+                - - "1"
+                  - "2"
+                  - "3"
+                  - "4"
+                  - "5"
+                - Ref: BootstrapVersion
+        AssertDescription: CDK bootstrap stack version 6 required. Please run 'cdk bootstrap' with a recent version of the CDK CLI.
+

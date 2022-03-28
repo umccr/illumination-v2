@@ -48,6 +48,9 @@
     ]
   },
   "devDependencies": {
+    "@types/react-router-dom": "^5.3.3",
     "eslint-plugin-react-hooks": "^4.3.0"
-  }
+  },
+  "proxy": "https://ica.illumina.com"
+
 }

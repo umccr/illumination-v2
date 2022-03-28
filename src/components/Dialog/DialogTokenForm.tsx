@@ -19,25 +19,25 @@ interface iDialogTokenProps {
 
 interface IDialogTokenProps {
   handleIcaTokenChange: Function;
+  handleDialogClose: Function
 }
 
 export default function DialogTokenForm(props: IDialogTokenProps) {
   const [icaJwtToken, setIcaJwtToken] = useState<string>("");
-  const [isDialogOpen, setIsDialogOpen] = useState<boolean>(true);
 
-  const { handleIcaTokenChange } = props;
+  const { handleIcaTokenChange, handleDialogClose } = props;
 
   function handleSaveButton() {
     handleIcaTokenChange(icaJwtToken);
   }
 
   const handleClose = () => {
-    setIsDialogOpen(false);
+    handleDialogClose(false);
   };
 
   return (
     <div>
-      <Dialog open={isDialogOpen} onClose={handleClose}>
+      <Dialog open={true} onClose={handleClose}>
         <Button onClick={handleClose} sx={{ position: "absolute", right: 0 }}>
           <CloseIcon color="disabled" />
         </Button>
