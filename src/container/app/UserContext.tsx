@@ -1,8 +1,6 @@
 import React, { useContext, createContext, useState, useEffect } from "react";
 import DialogTokenForm from "../../components/Dialog/DialogTokenForm";
 
-import {configure}  from "../../openapi/middlelayer"
-
 // Interface
 interface iProviderprops {
   children?: React.ReactNode;
@@ -35,7 +33,7 @@ function UserContextProvider(props: iProviderprops) {
   useEffect(() => {
     if (user.ica_token) {
       setIsDialogTokenOpen(false);
-      configure( user.ica_token );
+      // configure( user.ica_token );
     } else {
       setIsDialogTokenOpen(true);
     }
