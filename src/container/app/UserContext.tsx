@@ -1,6 +1,7 @@
 import React, { useContext, createContext, useState, useEffect } from "react";
-
 import DialogTokenForm from "../../components/Dialog/DialogTokenForm";
+
+import {configure}  from "../../openapi/middlelayer"
 
 // Interface
 interface iProviderprops {
@@ -19,14 +20,35 @@ const userContext = {
 
 function UserContextProvider(props: iProviderprops) {
   const [user, setUser] = useState(userContext.user);
+  const [isDialogTokenOpen, setIsDialogTokenOpen] = useState<boolean>(true)
 
   function handleChangeToken(token: string) {
     setUser({ ...user, ica_token: token });
   }
+  
+  function handleDialogClose(){
+    if (user.ica_token){
+      setIsDialogTokenOpen(false);
+    }
+  }
+
+  useEffect(() => {
+    if (user.ica_token) {
+      setIsDialogTokenOpen(false);
+      configure( user.ica_token );
+    } else {
+      setIsDialogTokenOpen(true);
+    }
+  }, [user.ica_token]);
+  
+
   return (
     <UserContext.Provider value={{ user, setUser }}>
-      {!user.ica_token ? (
-        <DialogTokenForm handleIcaTokenChange={handleChangeToken} />
+      {isDialogTokenOpen ? (
+        <DialogTokenForm
+          handleIcaTokenChange={handleChangeToken}
+          handleDialogClose={handleDialogClose}
+        />
       ) : (
         <></>
       )}
