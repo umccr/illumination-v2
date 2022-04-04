@@ -5,6 +5,9 @@ import { BrowserRouter } from "react-router-dom";
 
 import App from "./App";
 import "./index.css";
+import { SetBasicConfig } from "icats";
+
+SetBasicConfig({ baseURL: "http://127.0.0.1:5000/ica/rest" });
 
 ReactDOM.render(
   <React.StrictMode>

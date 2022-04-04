@@ -35,8 +35,8 @@ function MainHomeChip() {
       </Grid>
 
       <Grid item container direction="row" xs={12} spacing={2}>
-        {buttonProps.map((buttonProperties: IButtonProps) => (
-          <Grid item>
+        {buttonProps.map((buttonProperties: IButtonProps, index: number) => (
+          <Grid item key={index}>
             <Chip
               component={RouterLink}
               to={buttonProperties.route}

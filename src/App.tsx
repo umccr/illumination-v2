@@ -1,11 +1,11 @@
 import React from "react";
 import NavigationBar from "./container/app/NavigationBar";
 import UserContext from "./container/app/UserContext";
-import AppRoutes from "./AppRoutes"
+import AppRoutes from "./AppRoutes";
 
 // MaterialUI Component
 import Box from "@mui/material/Box";
-import Container from "@mui/material/Container"
+import Container from "@mui/material/Container";
 
 function App() {
   return (

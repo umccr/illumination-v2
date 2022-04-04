@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -8,21 +8,35 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
+import Divider from "@mui/material/Divider";
 
-import { ProjectPagedList } from "../../openapi/api";
+import { ProjectApiAxiosParamCreator, ProjectPagedList, RunAxios } from "icats";
 
-// SOME CONSTANT VALUE
 import { PROJECT_DATA_SAMPLE } from "../../utils/constant";
 
-interface IOverviewProjectProps {
-  projectData: ProjectPagedList;
+async function getProjectData(): Promise<ProjectPagedList> {
+  // Generate axios parameter
+  const ProjectParamCreator = ProjectApiAxiosParamCreator();
+  const getProjectsParamter = await ProjectParamCreator.getProjects();
+
+  // Calling axios
+  const axiosData = await RunAxios(getProjectsParamter);
+  return axiosData.data;
 }
 
-function OverviewProject(projectOverviewProps: IOverviewProjectProps) {
-  console.log(projectOverviewProps);
 
+function OverviewProject() {
   const [projectData, setProjectData] =
     useState<ProjectPagedList>(PROJECT_DATA_SAMPLE);
+
+  useEffect(() => {
+    async function fetchData() {
+      const data = await getProjectData();
+      setProjectData(data);
+      console.log(data);
+    }
+    fetchData();
+  }, []);
 
   return (
     <TableContainer component={Paper}>
@@ -30,7 +44,9 @@ function OverviewProject(projectOverviewProps: IOverviewProjectProps) {
         <TableHead>
           <TableRow>
             <TableCell>Projects</TableCell>
-            <TableCell>Data</TableCell>
+            <TableCell sx={{ borderLeft: "1px solid rgba(224, 224, 224, 1)" }}>
+              Data
+            </TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -42,7 +58,9 @@ function OverviewProject(projectOverviewProps: IOverviewProjectProps) {
               <TableCell component="th" scope="row">
                 {row.name}
               </TableCell>
-              <TableCell>
+              <TableCell
+                style={{ borderLeft: "1px solid rgba(224, 224, 224, 1)" }}
+              >
                 <Link to={row.id} style={{ textDecoration: "none" }}>
                   DATA
                 </Link>
