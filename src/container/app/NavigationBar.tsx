@@ -1,7 +1,11 @@
-import * as React from "react";
+import React, { useEffect, useState } from "react";
 
 // React Router Dom
 import { Link as RouterLink } from "react-router-dom";
+
+// aws-amplify
+import { Auth, Hub } from "aws-amplify";
+import { CognitoHostedUIIdentityProvider } from "@aws-amplify/auth";
 
 // MaterialUI
 import AppBar from "@mui/material/AppBar";
@@ -13,14 +17,12 @@ import Menu from "@mui/material/Menu";
 import MenuIcon from "@mui/icons-material/Menu";
 import Container from "@mui/material/Container";
 import Avatar from "@mui/material/Avatar";
-import Button from "@mui/material/Button";
 import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 
 // Custom component
 import ButtonLink from "../../components/ButtonLink";
-
-const settings = ["User","ICA Token"];
+import { useUserContext } from "./UserContext";
 
 const ROUTER_LINK_INFO = [
   {
@@ -71,6 +73,24 @@ function navbarLinkButton(linkInformation: NavBarLinkConstant) {
 }
 
 const ResponsiveAppBar = () => {
+  // User Context State
+  const { user, setUser } = useUserContext();
+  useEffect(() => {
+    const unsubscribe = Hub.listen("auth", ({ payload: { event, data } }) => {
+      switch (event) {
+        case "signIn":
+          setUser(data);
+          break;
+        case "signOut":
+          setUser({});
+          break;
+      }
+    });
+
+    return unsubscribe;
+  }, [setUser]);
+
+  // Navigations Bar State
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
     null
   );
@@ -164,11 +184,11 @@ const ResponsiveAppBar = () => {
           <Box sx={{ flexGrow: 0 }}>
             <Tooltip title="Open settings">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar alt="Remy Sharp"  />
+                <Avatar alt="Remy Sharp" />
               </IconButton>
             </Tooltip>
             <Menu
-              sx={{ mt: "45px" }}
+              sx={{ mt: "45px", width: "150px" }}
               id="menu-appbar"
               anchorEl={anchorElUser}
               anchorOrigin={{
@@ -183,11 +203,19 @@ const ResponsiveAppBar = () => {
               open={Boolean(anchorElUser)}
               onClose={handleCloseUserMenu}
             >
-              {settings.map((setting) => (
-                <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                  <Typography textAlign="center">{setting}</Typography>
+              {Object.keys(user).length === 0 ? (
+                <MenuItem
+                  onClick={() =>
+                    Auth.federatedSignIn({
+                      provider: CognitoHostedUIIdentityProvider.Google,
+                    })
+                  }
+                >
+                  Sign In
                 </MenuItem>
-              ))}
+              ) : (
+                <MenuItem onClick={() => Auth.signOut()}>Sign Out</MenuItem>
+              )}
             </Menu>
           </Box>
         </Toolbar>
