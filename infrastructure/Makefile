@@ -1,4 +1,6 @@
 install:
+	brew tap aws/tap
+	brew install aws-sam-cli
 	npm install
 local: install
 	cdk synth --no-staging ProxyServerStack > template.yaml
