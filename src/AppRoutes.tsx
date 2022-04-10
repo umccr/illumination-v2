@@ -9,10 +9,10 @@ import ProtectedRoute from "./utils/ProtectedRoute";
 export default function AppRoutes() {
   return (
     <Routes>
-      <Route path="/" element={<ProtectedRoute element={HomePage} />} />
+      <Route path="/" element={<ProtectedRoute element={<HomePage />} />} />
       <Route
         path="/projects"
-        element={<ProtectedRoute element={ProjectPage} />}
+        element={<ProtectedRoute element={<ProjectPage />} />}
       />
     </Routes>
   );
