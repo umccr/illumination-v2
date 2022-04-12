@@ -11,7 +11,6 @@ import TokenPagination, {
 } from "../../container/tokenPagination/TokenPagination";
 import JSONContainer from "../../components/JSONContainer/JSONContainer";
 import { useDialogContext } from "../../container/app/DialogContext";
-import { PROJECT_DATA_SAMPLE } from "../../utils/Constant";
 import CustomTable, { IColumnMapping } from "../../container/table/Table";
 
 const COLUMN_MAPPPING: IColumnMapping[] = [

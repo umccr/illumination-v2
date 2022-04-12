@@ -12,8 +12,6 @@ import Divider from "@mui/material/Divider";
 
 import { ProjectApiAxiosParamCreator, ProjectPagedList, RunAxios } from "icats";
 
-import { PROJECT_DATA_SAMPLE } from "../../utils/Constant";
-
 async function getProjectData(): Promise<ProjectPagedList> {
   // Generate axios parameter
   const ProjectParamCreator = ProjectApiAxiosParamCreator();
@@ -25,8 +23,7 @@ async function getProjectData(): Promise<ProjectPagedList> {
 }
 
 function OverviewProject() {
-  const [projectData, setProjectData] =
-    useState<ProjectPagedList>(PROJECT_DATA_SAMPLE);
+  const [projectData, setProjectData] = useState<ProjectPagedList | null>();
 
   useEffect(() => {
     let cancel = false;
