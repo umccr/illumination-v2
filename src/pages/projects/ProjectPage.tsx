@@ -1,170 +1,150 @@
 import React, { useState, useEffect } from "react";
-import { grey } from "@mui/material/colors";
 
-import { styled } from "@mui/material/styles";
 import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
-import Table from "@mui/material/Table";
-import TableBody from "@mui/material/TableBody";
-import TableCell, { tableCellClasses } from "@mui/material/TableCell";
-import TableContainer from "@mui/material/TableContainer";
-import TableHead from "@mui/material/TableHead";
-import TableRow from "@mui/material/TableRow";
-import Paper from "@mui/material/Paper";
+import CircularProgress from "@mui/material/CircularProgress";
 
 import { ProjectPagedList, ProjectApiAxiosParamCreator, RunAxios } from "icats";
-import JSONContainer  from "../../components/JSONContainer/JSONContainer";
-import { PROJECT_DATA_SAMPLE } from "../../utils/constant";
+import TokenPagination, {
+  ITokenPaginationData,
+  tokenPaginationInit,
+} from "../../container/tokenPagination/TokenPagination";
+import JSONContainer from "../../components/JSONContainer/JSONContainer";
+import { useDialogContext } from "../../container/app/DialogContext";
+import { PROJECT_DATA_SAMPLE } from "../../utils/Constant";
+import CustomTable, { IColumnMapping } from "../../container/table/Table";
 
-const StyledTableCell = styled(TableCell)(({ theme }) => ({
-  [`&.${tableCellClasses.head}`]: {
-    backgroundColor: grey[300],
-    color: theme.palette.common.black,
-  },
-  [`&.${tableCellClasses.body}`]: {
-    fontSize: 14,
-  },
-}));
-
-const StyledTableRow = styled(TableRow)(({ theme }) => ({
-  "&:nth-of-type(odd)": {
-    backgroundColor: theme.palette.action.hover,
-  },
-  // hide last border
-  "&:last-child td, &:last-child th": {
-    border: 0,
-  },
-}));
-
-function createData(
-  name: string,
-  calories: number,
-  fat: number,
-  carbs: number,
-  protein: number
-) {
-  return { name, calories, fat, carbs, protein };
-}
-
-interface ITableConstant {
-  displayName: string;
-  jsonKey: string | string[];
-}
-const COLUMN_CONSTANT: ITableConstant[] = [
-  { displayName: "Name", jsonKey: ["name"] },
-  { displayName: "Data", jsonKey: "DATA" },
-  { displayName: "ID", jsonKey: ["id"] },
-  { displayName: "OwnerId", jsonKey: ["ownerId"] },
-  { displayName: "TenantId", jsonKey: ["tenantId"] },
-  { displayName: "TenantName", jsonKey: ["tenantName"] },
-  { displayName: "Active", jsonKey: ["active"] },
-  { displayName: "Information", jsonKey: ["information"] },
-  { displayName: "TimeCreated", jsonKey: ["timeCreated"] },
-  { displayName: "TimeModified", jsonKey: ["timeModified"] },
-  { displayName: "BillingMode", jsonKey: ["billingMode"] },
-  { displayName: "DataSharingEnabled", jsonKey: ["dataSharingEnabled"] },
-  { displayName: "StorageBundleId", jsonKey: ["storageBundle", "id"] },
+const COLUMN_MAPPPING: IColumnMapping[] = [
+  { displayName: "Name", jsonKeys: ["name"] },
+  { displayName: "Data", jsonKeys: "DATA" },
+  { displayName: "ID", jsonKeys: ["id"] },
+  { displayName: "Owner Id", jsonKeys: ["ownerId"] },
+  { displayName: "Tenant Id", jsonKeys: ["tenantId"] },
+  { displayName: "Tenant Name", jsonKeys: ["tenantName"] },
+  { displayName: "Active", jsonKeys: ["active"] },
+  { displayName: "Information", jsonKeys: ["information"] },
+  { displayName: "Time Created", jsonKeys: ["timeCreated"] },
+  { displayName: "Time Modified", jsonKeys: ["timeModified"] },
+  { displayName: "Billing Mode", jsonKeys: ["billingMode"] },
+  { displayName: "DataSharing Enabled", jsonKeys: ["dataSharingEnabled"] },
+  { displayName: "StorageBundle Id", jsonKeys: ["storageBundle", "id"] },
   {
-    displayName: "StorageBundleName",
-    jsonKey: ["storageBundle", "bundleName"],
+    displayName: "Storage Bundle Name",
+    jsonKeys: ["storageBundle", "bundleName"],
   },
 ];
 
-function CustomTableHead() {
-  return (
-    <TableHead>
-      <TableRow>
-        {COLUMN_CONSTANT.map((columnObject: ITableConstant, index: number) => (
-          <StyledTableCell key={index}>
-            {columnObject.displayName}
-          </StyledTableCell>
-        ))}
-      </TableRow>
-    </TableHead>
-  );
-}
-
-interface IPropsCustomTableBody {
-  listItem: any[];
-}
-
-function findValueFromKeyList(resObj: any, keyList: string[]): string {
-  let name_of_object = resObj;
-  for (const key of keyList) {
-    name_of_object = name_of_object[key];
-  }
-  return String(name_of_object);
-}
-
-function CustomTableBody(props: IPropsCustomTableBody) {
-  const { listItem } = props;
-
-  return (
-    <TableBody>
-      {listItem.map((item: any, index: number) => (
-        <StyledTableRow key={index}>
-          {COLUMN_CONSTANT.map(
-            (displayObj: ITableConstant, objIndex: number) => (
-              <StyledTableCell align="right" key={objIndex}>
-                {typeof displayObj.jsonKey == "string"
-                  ? displayObj.jsonKey
-                  : findValueFromKeyList(item, displayObj.jsonKey)}
-              </StyledTableCell>
-            )
-          )}
-        </StyledTableRow>
-      ))}
-    </TableBody>
-  );
-}
-
-async function getProjectData(): Promise<ProjectPagedList> {
+async function getProjectData(parameter: any): Promise<ProjectPagedList> {
   // Generate axios parameter
   const ProjectParamCreator = ProjectApiAxiosParamCreator();
   const getProjectsParamter = await ProjectParamCreator.getProjects();
+
+  getProjectsParamter.url += `?`;
+  for (const element in parameter) {
+    getProjectsParamter.url += `${element}=${parameter[element]}`;
+  }
 
   // Calling axios
   const axiosData = await RunAxios(getProjectsParamter);
   return axiosData.data;
 }
 
+function convertResponseToPaginationProps(
+  projectRes: ProjectPagedList,
+  prevToken: string
+): ITokenPaginationData {
+  const totalRecord = projectRes.totalItemCount
+    ? projectRes.totalItemCount
+    : projectRes.items.length;
+  const remainingRecord = projectRes.remainingRecords
+    ? projectRes.remainingRecords
+    : 0;
+  const nextPageToken = projectRes.nextPageToken
+    ? projectRes.nextPageToken
+    : "";
+
+  return {
+    totalRecord: totalRecord,
+    remainingRecord: remainingRecord,
+    prevPageToken: prevToken,
+    nextPageToken: nextPageToken,
+  };
+}
+
 function ProjectPage() {
   const [projectListResponse, setProjectListResponse] =
     useState<ProjectPagedList | null>();
 
+  const [tokenPaginationData, setTokenPaginationData] =
+    useState<ITokenPaginationData>(tokenPaginationInit);
+
+  const [apiParameter, setApiParameter] = useState({ pageToken: "" });
+  function handleApiParameterChange(parameterChange: { pageToken: string }) {
+    setApiParameter((prev) => ({ ...prev, ...parameterChange }));
+  }
+
+  const { setDialogInfo } = useDialogContext();
+
   useEffect(() => {
+    let cancel = false;
+
     async function fetchData() {
-      const data = await getProjectData();
-      setProjectListResponse(data);
+      try {
+        const data = await getProjectData(apiParameter);
+        setProjectListResponse(data);
+        setTokenPaginationData((prev) =>
+          convertResponseToPaginationProps(data, prev.nextPageToken)
+        );
+      } catch (err) {
+        setDialogInfo({
+          isOpen: true,
+          dialogTitle: "Error",
+          dialogContent: `Sorry, An error has occured while fetching the API (${err}). Please try again!`,
+        });
+      }
+
+      if (cancel) return;
     }
+
     fetchData();
 
-    // setProjectListResponse(PROJECT_DATA_SAMPLE);
-  }, []);
+    return () => {
+      cancel = true;
+    };
+  }, [apiParameter]);
+
   return (
     <Grid
       container
       direction="row"
-      justifyContent="flex-start"
+      justifyContent="center"
       alignItems="flex-start"
       spacing={3}
     >
       <Grid item xs={12}>
-        <Typography variant="h5">Available Projects</Typography>
+        <Typography variant="h4">Available Projects</Typography>
       </Grid>
 
       {!projectListResponse ? (
-        "Loading ... "
+        <CircularProgress sx={{ marginTop: "50px" }} />
       ) : (
-        <Grid item xs={12}>
-          <TableContainer component={Paper}>
-            <Table sx={{ minWidth: 700 }} aria-label="customized table">
-              <CustomTableHead />
-              <CustomTableBody listItem={projectListResponse.items} />
-            </Table>
-          </TableContainer>
+        <Grid item container spacing={3}>
+          <Grid item xs={12}>
+            <CustomTable
+              items={projectListResponse.items}
+              columnMapping={COLUMN_MAPPPING}
+            />
+          </Grid>
 
-          <JSONContainer data={projectListResponse.items} />
+          <Grid item xs={12}>
+            <TokenPagination
+              data={tokenPaginationData}
+              handleApiParameterChange={handleApiParameterChange}
+            />
+          </Grid>
+          <Grid item xs={12}>
+            <JSONContainer data={projectListResponse} />
+          </Grid>
         </Grid>
       )}
     </Grid>
