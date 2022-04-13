@@ -18,7 +18,7 @@ export class ProxyServerStack extends Stack {
 
     // Lambda for proxy server
     const proxyServerFn = new lambda.NodejsFunction(this, "LambdaProxyServer", {
-      entry: "proxy_server/server.tsx",
+      entry: "proxy_server/server.ts",
       handler: "handler",
       functionName: "proxy_server_ica_v2",
       environment: {

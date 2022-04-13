@@ -1,10 +1,14 @@
 import React, { useState, useEffect } from "react";
 
+// MUI components
 import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
 import CircularProgress from "@mui/material/CircularProgress";
 
+// icats component
 import { ProjectPagedList, ProjectApiAxiosParamCreator, RunAxios } from "icats";
+
+// Custom components
 import TokenPagination, {
   ITokenPaginationData,
   tokenPaginationInit,
@@ -25,8 +29,8 @@ const COLUMN_MAPPPING: IColumnMapping[] = [
   { displayName: "Time Created", jsonKeys: ["timeCreated"] },
   { displayName: "Time Modified", jsonKeys: ["timeModified"] },
   { displayName: "Billing Mode", jsonKeys: ["billingMode"] },
-  { displayName: "DataSharing Enabled", jsonKeys: ["dataSharingEnabled"] },
-  { displayName: "StorageBundle Id", jsonKeys: ["storageBundle", "id"] },
+  { displayName: "Data Sharing Enabled", jsonKeys: ["dataSharingEnabled"] },
+  { displayName: "Storage Bundle Id", jsonKeys: ["storageBundle", "id"] },
   {
     displayName: "Storage Bundle Name",
     jsonKeys: ["storageBundle", "bundleName"],
@@ -36,15 +40,15 @@ const COLUMN_MAPPPING: IColumnMapping[] = [
 async function getProjectData(parameter: any): Promise<ProjectPagedList> {
   // Generate axios parameter
   const ProjectParamCreator = ProjectApiAxiosParamCreator();
-  const getProjectsParamter = await ProjectParamCreator.getProjects();
+  const getProjectsParam = await ProjectParamCreator.getProjects();
 
-  getProjectsParamter.url += `?`;
+  getProjectsParam.url += `?`;
   for (const element in parameter) {
-    getProjectsParamter.url += `${element}=${parameter[element]}`;
+    getProjectsParam.url += `${element}=${parameter[element]}`;
   }
 
   // Calling axios
-  const axiosData = await RunAxios(getProjectsParamter);
+  const axiosData = await RunAxios(getProjectsParam);
   return axiosData.data;
 }
 

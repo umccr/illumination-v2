@@ -12,17 +12,17 @@ export interface IDialogShowProps {
   children?: React.ReactNode;
 }
 
-export const dialogContex = {
+export const dialogContext = {
   dialogInfo: {
     isOpen: false,
     dialogTitle: "",
     dialogContent: "",
   },
-  setDialogInfo: (dialoasdg: any) => {},
+  setDialogInfo: (dialogContent: any) => {},
 };
 
 export default function DialogComponent(props: IDialogShowProps) {
-  const [dialogInfo, setDialogInfo] = useState(dialogContex.dialogInfo);
+  const [dialogInfo, setDialogInfo] = useState(dialogContext.dialogInfo);
 
   // Reset Dialog when Close
   const handleClose = () =>
@@ -58,7 +58,7 @@ export default function DialogComponent(props: IDialogShowProps) {
 
 
 // Context to store logged in user information
-export const DialogContext = createContext(dialogContex);
+export const DialogContext = createContext(dialogContext);
 export function useDialogContext() {
   return useContext(DialogContext);
 }
