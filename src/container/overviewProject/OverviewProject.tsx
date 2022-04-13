@@ -7,12 +7,9 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
-import Typography from "@mui/material/Typography";
-import Divider from "@mui/material/Divider";
+import CircularProgress from "@mui/material/CircularProgress";
 
 import { ProjectApiAxiosParamCreator, ProjectPagedList, RunAxios } from "icats";
-
-import { PROJECT_DATA_SAMPLE } from "../../utils/constant";
 
 async function getProjectData(): Promise<ProjectPagedList> {
   // Generate axios parameter
@@ -24,51 +21,69 @@ async function getProjectData(): Promise<ProjectPagedList> {
   return axiosData.data;
 }
 
-
 function OverviewProject() {
-  const [projectData, setProjectData] =
-    useState<ProjectPagedList>(PROJECT_DATA_SAMPLE);
+  const [projectData, setProjectData] = useState<ProjectPagedList | null>();
 
   useEffect(() => {
+    let cancel = false;
+
     async function fetchData() {
       const data = await getProjectData();
+
+      if (cancel) return;
       setProjectData(data);
-      console.log(data);
     }
+
     fetchData();
+
+    return () => {
+      cancel = true;
+    };
   }, []);
 
   return (
-    <TableContainer component={Paper}>
-      <Table sx={{ minWidth: 650, width: "100%" }} aria-label="simple table">
-        <TableHead>
-          <TableRow>
-            <TableCell>Projects</TableCell>
-            <TableCell sx={{ borderLeft: "1px solid rgba(224, 224, 224, 1)" }}>
-              Data
-            </TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {projectData.items.map((row) => (
-            <TableRow
-              key={row.name}
-              sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-            >
-              <TableCell component="th" scope="row">
-                {row.name}
-              </TableCell>
+    <TableContainer
+      component={Paper}
+      elevation={3}
+      sx={{ display: "flex", justifyContent: "center"}}
+    >
+      {!projectData ? (
+        <div style={{ minHeight: "75px" }}>
+          <CircularProgress sx={{ marginTop: "1rem" }} />
+        </div>
+      ) : (
+        <Table sx={{ minWidth: 650, width: "100%" }} aria-label="simple table">
+          <TableHead>
+            <TableRow>
+              <TableCell>Projects</TableCell>
               <TableCell
-                style={{ borderLeft: "1px solid rgba(224, 224, 224, 1)" }}
+                sx={{ borderLeft: "1px solid rgba(224, 224, 224, 1)" }}
               >
-                <Link to={row.id} style={{ textDecoration: "none" }}>
-                  DATA
-                </Link>
+                Data
               </TableCell>
             </TableRow>
-          ))}
-        </TableBody>
-      </Table>
+          </TableHead>
+          <TableBody>
+            {projectData.items.map((row) => (
+              <TableRow
+                key={row.name}
+                sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+              >
+                <TableCell component="th" scope="row">
+                  {row.name}
+                </TableCell>
+                <TableCell
+                  style={{ borderLeft: "1px solid rgba(224, 224, 224, 1)" }}
+                >
+                  <Link to={row.id} style={{ textDecoration: "none" }}>
+                    DATA
+                  </Link>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      )}
     </TableContainer>
   );
 }

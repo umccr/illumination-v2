@@ -1,5 +1,5 @@
 import axios, { AxiosRequestConfig } from "axios";
-const token = "SOME SECRET TOKEN";
+const ica_token = process.env.ica_token;
 exports.handler = async (event: any) => {
   // Event payload:
   // https://docs.aws.amazon.com/apigateway/latest/developerguide/http-api-develop-integrations-lambda.html
@@ -26,7 +26,7 @@ exports.handler = async (event: any) => {
       baseURL: base_url,
       method: "get",
       headers: {
-        Authorization: `Bearer ${token}}`,
+        Authorization: `Bearer ${ica_token}}`,
         Accept: "application/vnd.illumina.v3+json",
       },
       url: raw_path,
