@@ -10,11 +10,16 @@ Swagger is used from an SDK at seperate repository: https://github.com/umccr-ill
 
 ### Running the APP
 
-Currently the app is still in development and only deploy locally. The app will be able to run via `npm start` which will run it on [http://localhost:3000](http://localhost:3000) to view it in the browser.
+Currently the app is still in development and only deploy locally. The app will be able to run via `yarn start` which will run it on [http://localhost:3000](http://localhost:3000) to view it in the browser.
 
-Command:
+Before running the app, make sure that AWS_PROFILE is set with a valid credentials. This will need to query some environment variable from AWS.
 ```bash
-npm start
+source get_env.sh
+```
+
+After setting the environment variables, you could start the app by using the following command.
+```bash
+yarn start
 ```
 
 ### Running the ICA-Endpoint
@@ -25,7 +30,7 @@ Requirements to run:
 - Docker
 - aws-sam-cli
 
-There is a Makefile to install/run this proxy
+There is a Makefile to install/run this proxy. In a different terminal, run the following command.
 
 ```bash
 cd infrastructure

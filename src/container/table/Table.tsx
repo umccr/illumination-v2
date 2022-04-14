@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+
+// MUI Components
 import { grey } from "@mui/material/colors";
 import { styled } from "@mui/material/styles";
 import Table from "@mui/material/Table";
@@ -10,6 +12,12 @@ import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import TablePagination from "@mui/material/TablePagination";
 
+// React Router DOM
+import { Link as RouterLink } from "react-router-dom";
+
+// Custom Component/function
+import { reformatString } from "../../utils/Utils";
+
 export interface IPaginationProps {
   nextPageToken?: string;
   currentPageToken?: string;
@@ -17,9 +25,15 @@ export interface IPaginationProps {
   remaingRecord?: number;
 }
 
+export interface linkToProps {
+  formatString: string;
+  formatValue: string[][];
+}
+
 export interface IColumnMapping {
   displayName: string;
   jsonKeys: string | string[];
+  linkTo?: linkToProps;
 }
 
 interface ITableProps {
@@ -115,6 +129,16 @@ interface ICustomTableBodyProps {
   columnMapping: IColumnMapping[];
 }
 
+function findArrayValuesFromJsonKeys(item: any, jsonKeysList: string[][]) {
+  const results: string[] = [];
+
+  for (const keys of jsonKeysList) {
+    results.push(findValueFromKeyList(item, keys));
+  }
+
+  return results;
+}
+
 function CustomTableBody(props: ICustomTableBodyProps) {
   const { listItem, columnMapping } = props;
 
@@ -124,9 +148,28 @@ function CustomTableBody(props: ICustomTableBodyProps) {
         <StyledTableRow key={index}>
           {columnMapping.map((displayObj: IColumnMapping, objIndex: number) => (
             <StyledTableCell align="left" key={objIndex}>
-              {typeof displayObj.jsonKeys == "string"
-                ? displayObj.jsonKeys
-                : findValueFromKeyList(item, displayObj.jsonKeys)}
+              {displayObj.linkTo ? (
+                <RouterLink
+                  style={{ color: "black" }}
+                  to={reformatString(
+                    displayObj.linkTo.formatString,
+                    findArrayValuesFromJsonKeys(
+                      item,
+                      displayObj.linkTo.formatValue
+                    )
+                  )}
+                >
+                  {typeof displayObj.jsonKeys == "string"
+                    ? displayObj.jsonKeys
+                    : findValueFromKeyList(item, displayObj.jsonKeys)}
+                </RouterLink>
+              ) : (
+                <>
+                  {typeof displayObj.jsonKeys == "string"
+                    ? displayObj.jsonKeys
+                    : findValueFromKeyList(item, displayObj.jsonKeys)}
+                </>
+              )}
             </StyledTableCell>
           ))}
         </StyledTableRow>

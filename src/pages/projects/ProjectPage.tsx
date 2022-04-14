@@ -1,103 +1,64 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 
-// MUI components
-import Grid from "@mui/material/Grid";
-import Typography from "@mui/material/Typography";
-import CircularProgress from "@mui/material/CircularProgress";
+// React-Router-Dom components
+import { useParams, Link as RouterLink } from "react-router-dom";
 
-// icats component
-import { ProjectPagedList, ProjectApiAxiosParamCreator, RunAxios } from "icats";
+// MUI Component
+import { CircularProgress, Grid, Typography, Chip } from "@mui/material";
+
+// icats Component
+import { Project, ProjectApiAxiosParamCreator, RunAxios } from "icats";
+
+// JSON to table
+import { JsonToTable as JSONTable } from "react-json-to-table";
 
 // Custom components
-import TokenPagination, {
-  ITokenPaginationData,
-  tokenPaginationInit,
-} from "../../container/tokenPagination/TokenPagination";
-import JSONContainer from "../../components/JSONContainer/JSONContainer";
 import { useDialogContext } from "../../container/app/DialogContext";
-import CustomTable, { IColumnMapping } from "../../container/table/Table";
+import JSONContainer from "../../components/JSONContainer/JSONContainer";
 
-const COLUMN_MAPPPING: IColumnMapping[] = [
-  { displayName: "Name", jsonKeys: ["name"] },
-  { displayName: "Data", jsonKeys: "DATA" },
-  { displayName: "ID", jsonKeys: ["id"] },
-  { displayName: "Owner Id", jsonKeys: ["ownerId"] },
-  { displayName: "Tenant Id", jsonKeys: ["tenantId"] },
-  { displayName: "Tenant Name", jsonKeys: ["tenantName"] },
-  { displayName: "Active", jsonKeys: ["active"] },
-  { displayName: "Information", jsonKeys: ["information"] },
-  { displayName: "Time Created", jsonKeys: ["timeCreated"] },
-  { displayName: "Time Modified", jsonKeys: ["timeModified"] },
-  { displayName: "Billing Mode", jsonKeys: ["billingMode"] },
-  { displayName: "Data Sharing Enabled", jsonKeys: ["dataSharingEnabled"] },
-  { displayName: "Storage Bundle Id", jsonKeys: ["storageBundle", "id"] },
+interface IButtonProps {
+  name: string;
+  route: string;
+}
+
+const buttonProps: IButtonProps[] = [
+  { name: "Analyses", route: "analyses" },
+  { name: "Pipelines", route: "pipelines" },
+  { name: "Bundles", route: "bundles" },
+  { name: "Notification Subscriptions", route: "notificationSubscriptions" },
   {
-    displayName: "Storage Bundle Name",
-    jsonKeys: ["storageBundle", "bundleName"],
+    name: "Custom Notification Subscriptions",
+    route: "customNotificationSubscriptions",
   },
+  { name: "Permissions", route: "permissions" },
+  { name: "Base Jobs", route: "base/jobs" },
 ];
 
-async function getProjectData(parameter: any): Promise<ProjectPagedList> {
+async function getProjectData(projectId: string): Promise<Project> {
   // Generate axios parameter
   const ProjectParamCreator = ProjectApiAxiosParamCreator();
-  const getProjectsParam = await ProjectParamCreator.getProjects();
-
-  getProjectsParam.url += `?`;
-  for (const element in parameter) {
-    getProjectsParam.url += `${element}=${parameter[element]}`;
-  }
+  const getProjectsParam = await ProjectParamCreator.getProject(projectId);
 
   // Calling axios
   const axiosData = await RunAxios(getProjectsParam);
   return axiosData.data;
 }
 
-function convertResponseToPaginationProps(
-  projectRes: ProjectPagedList,
-  prevToken: string
-): ITokenPaginationData {
-  const totalRecord = projectRes.totalItemCount
-    ? projectRes.totalItemCount
-    : projectRes.items.length;
-  const remainingRecord = projectRes.remainingRecords
-    ? projectRes.remainingRecords
-    : 0;
-  const nextPageToken = projectRes.nextPageToken
-    ? projectRes.nextPageToken
-    : "";
-
-  return {
-    totalRecord: totalRecord,
-    remainingRecord: remainingRecord,
-    prevPageToken: prevToken,
-    nextPageToken: nextPageToken,
-  };
-}
-
 function ProjectPage() {
-  const [projectListResponse, setProjectListResponse] =
-    useState<ProjectPagedList | null>();
-
-  const [tokenPaginationData, setTokenPaginationData] =
-    useState<ITokenPaginationData>(tokenPaginationInit);
-
-  const [apiParameter, setApiParameter] = useState({ pageToken: "" });
-  function handleApiParameterChange(parameterChange: { pageToken: string }) {
-    setApiParameter((prev) => ({ ...prev, ...parameterChange }));
-  }
+  const { projectId } = useParams();
 
   const { setDialogInfo } = useDialogContext();
+  const [projectResponse, setProjectResponse] = useState<Project | null>();
 
   useEffect(() => {
     let cancel = false;
-
     async function fetchData() {
       try {
-        const data = await getProjectData(apiParameter);
-        setProjectListResponse(data);
-        setTokenPaginationData((prev) =>
-          convertResponseToPaginationProps(data, prev.nextPageToken)
-        );
+        if (projectId) {
+          const data = await getProjectData(projectId);
+          if (cancel) return;
+          setProjectResponse(data);
+        }
       } catch (err) {
         setDialogInfo({
           isOpen: true,
@@ -105,16 +66,12 @@ function ProjectPage() {
           dialogContent: `Sorry, An error has occured while fetching the API (${err}). Please try again!`,
         });
       }
-
-      if (cancel) return;
     }
-
     fetchData();
-
     return () => {
       cancel = true;
     };
-  }, [apiParameter]);
+  }, [projectId, setDialogInfo]);
 
   return (
     <Grid
@@ -125,28 +82,33 @@ function ProjectPage() {
       spacing={3}
     >
       <Grid item xs={12}>
-        <Typography variant="h4">Available Projects</Typography>
+        <Typography variant="h4">Project Id: {projectId}</Typography>
       </Grid>
 
-      {!projectListResponse ? (
+      <Grid item container direction="row" xs={12} spacing={2}>
+        {buttonProps.map((buttonProperties: IButtonProps, index: number) => (
+          <Grid item key={index}>
+            <Chip
+              component={RouterLink}
+              to={buttonProperties.route}
+              label={buttonProperties.name}
+              clickable
+              style={{ width: "100px" }}
+            />
+          </Grid>
+        ))}
+      </Grid>
+
+      {!projectResponse ? (
         <CircularProgress sx={{ marginTop: "50px" }} />
       ) : (
         <Grid item container spacing={3}>
           <Grid item xs={12}>
-            <CustomTable
-              items={projectListResponse.items}
-              columnMapping={COLUMN_MAPPPING}
-            />
+            <JSONTable json={projectResponse} />
           </Grid>
 
           <Grid item xs={12}>
-            <TokenPagination
-              data={tokenPaginationData}
-              handleApiParameterChange={handleApiParameterChange}
-            />
-          </Grid>
-          <Grid item xs={12}>
-            <JSONContainer data={projectListResponse} />
+            <JSONContainer data={projectResponse} />
           </Grid>
         </Grid>
       )}
