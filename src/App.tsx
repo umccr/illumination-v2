@@ -2,7 +2,7 @@ import React from "react";
 import NavigationBar from "./container/app/NavigationBar";
 import UserContext from "./container/app/UserContext";
 import DialogComponent from "./container/app/DialogContext";
-import AppRoutes from "./AppRoutes";
+import AppRoutes from "./routes/AppRoutes";
 
 // MaterialUI Component
 import Box from "@mui/material/Box";

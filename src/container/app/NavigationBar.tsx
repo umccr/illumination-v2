@@ -21,7 +21,7 @@ import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 
 // Custom component
-import ButtonLink from "../../components/ButtonLink";
+import ButtonLink from "../../components/buttonLink/ButtonLink";
 import { useUserContext } from "./UserContext";
 
 const ROUTER_LINK_INFO = [

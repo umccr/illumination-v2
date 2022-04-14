@@ -5,7 +5,7 @@ import Link from "@mui/material/Link";
 import { Auth } from "aws-amplify";
 import { CognitoHostedUIIdentityProvider } from "@aws-amplify/auth";
 
-import { useUserContext } from "../container/app/UserContext";
+import { useUserContext } from "../../container/app/UserContext";
 
 interface IProtectedRouteProps {
   element: JSX.Element;

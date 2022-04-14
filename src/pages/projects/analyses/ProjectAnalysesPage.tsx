@@ -1,54 +1,53 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 
 // MUI components
 import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
 import CircularProgress from "@mui/material/CircularProgress";
 
+// React-Router-Dom components
+import { useParams } from "react-router-dom";
+
 // icats component
-import { ProjectPagedList, ProjectApiAxiosParamCreator, RunAxios } from "icats";
+import {
+  ProjectAnalysisApiAxiosParamCreator,
+  AnalysisPagedList,
+  RunAxios,
+} from "icats";
 
 // Custom components
 import TokenPagination, {
   ITokenPaginationData,
   tokenPaginationInit,
-} from "../../container/tokenPagination/TokenPagination";
-import JSONContainer from "../../components/JSONContainer/JSONContainer";
-import { useDialogContext } from "../../container/app/DialogContext";
-import CustomTable, { IColumnMapping } from "../../container/table/Table";
+} from "../../../container/tokenPagination/TokenPagination";
+import JSONContainer from "../../../components/JSONContainer/JSONContainer";
+import { useDialogContext } from "../../../container/app/DialogContext";
+import CustomTable, { IColumnMapping } from "../../../container/table/Table";
+
 
 const COLUMN_MAPPPING: IColumnMapping[] = [
-  { displayName: "Name", jsonKeys: ["name"] },
-  {
-    displayName: "Data",
-    jsonKeys: "DATA",
-    linkTo: { formatString: "{0}/data", formatValue: [["id"]] },
-  },
   {
     displayName: "ID",
     jsonKeys: ["id"],
     linkTo: { formatString: "{0}", formatValue: [["id"]] },
   },
+  { displayName: "Time Created", jsonKeys: ["timeCreated"] },
+  { displayName: "Time Modified", jsonKeys: ["timeModified"] },
   { displayName: "Owner Id", jsonKeys: ["ownerId"] },
   { displayName: "Tenant Id", jsonKeys: ["tenantId"] },
   { displayName: "Tenant Name", jsonKeys: ["tenantName"] },
-  { displayName: "Active", jsonKeys: ["active"] },
-  { displayName: "Information", jsonKeys: ["information"] },
-  { displayName: "Time Created", jsonKeys: ["timeCreated"] },
-  { displayName: "Time Modified", jsonKeys: ["timeModified"] },
-  { displayName: "Billing Mode", jsonKeys: ["billingMode"] },
-  { displayName: "Data Sharing Enabled", jsonKeys: ["dataSharingEnabled"] },
-  { displayName: "Storage Bundle Id", jsonKeys: ["storageBundle", "id"] },
-  {
-    displayName: "Storage Bundle Name",
-    jsonKeys: ["storageBundle", "bundleName"],
-  },
+  { displayName: "Reference", jsonKeys: ["reference"] },
+  { displayName: "User Reference", jsonKeys: ["userReference"] },
+  { displayName: "Pipeline Id", jsonKeys: ["pipeline", "id"] },
 ];
 
-async function getProjectData(parameter: any): Promise<ProjectPagedList> {
+async function getProjectAnalysesData(
+  projectId: string,
+  parameter: any
+): Promise<AnalysisPagedList> {
   // Generate axios parameter
-  const ProjectParamCreator = ProjectApiAxiosParamCreator();
-  const getProjectsParam = await ProjectParamCreator.getProjects();
+  const ProjectParamCreator = ProjectAnalysisApiAxiosParamCreator();
+  const getProjectsParam = await ProjectParamCreator.getAnalyses(projectId);
 
   getProjectsParam.url += `?`;
   for (const element in parameter) {
@@ -61,7 +60,7 @@ async function getProjectData(parameter: any): Promise<ProjectPagedList> {
 }
 
 function convertResponseToPaginationProps(
-  projectRes: ProjectPagedList,
+  projectRes: AnalysisPagedList,
   prevToken: string
 ): ITokenPaginationData {
   const totalRecord = projectRes.totalItemCount
@@ -82,9 +81,9 @@ function convertResponseToPaginationProps(
   };
 }
 
-function ProjectsPage() {
-  const [projectListResponse, setProjectListResponse] =
-    useState<ProjectPagedList | null>();
+function ProjectAnalysesPage() {
+  const [projectAnalysesResponse, setProjectAnalysesResponse] =
+    useState<AnalysisPagedList | null>();
 
   const [tokenPaginationData, setTokenPaginationData] =
     useState<ITokenPaginationData>(tokenPaginationInit);
@@ -95,25 +94,28 @@ function ProjectsPage() {
   }
 
   const { setDialogInfo } = useDialogContext();
+  const { projectId } = useParams();
 
   useEffect(() => {
     let cancel = false;
 
     async function fetchData() {
-      try {
-        const data = await getProjectData(apiParameter);
-        if (cancel) return;
+      if (projectId) {
+        try {
+          const data = await getProjectAnalysesData(projectId, apiParameter);
+          if (cancel) return;
 
-        setProjectListResponse(data);
-        setTokenPaginationData((prev) =>
-          convertResponseToPaginationProps(data, prev.nextPageToken)
-        );
-      } catch (err) {
-        setDialogInfo({
-          isOpen: true,
-          dialogTitle: "Error",
-          dialogContent: `Sorry, An error has occured while fetching the API (${err}). Please try again!`,
-        });
+          setProjectAnalysesResponse(data);
+          setTokenPaginationData((prev) =>
+            convertResponseToPaginationProps(data, prev.nextPageToken)
+          );
+        } catch (err) {
+          setDialogInfo({
+            isOpen: true,
+            dialogTitle: "Error",
+            dialogContent: `Sorry, An error has occured while fetching the API (${err}). Please try again!`,
+          });
+        }
       }
     }
 
@@ -122,7 +124,7 @@ function ProjectsPage() {
     return () => {
       cancel = true;
     };
-  }, [apiParameter, setDialogInfo]);
+  }, [apiParameter, setDialogInfo, projectId]);
 
   return (
     <Grid
@@ -133,16 +135,16 @@ function ProjectsPage() {
       spacing={3}
     >
       <Grid item xs={12}>
-        <Typography variant="h4">Available Projects</Typography>
+        <Typography variant="h4">Projects Anayleses: {projectId}</Typography>
       </Grid>
 
-      {!projectListResponse ? (
+      {!projectAnalysesResponse ? (
         <CircularProgress sx={{ marginTop: "50px" }} />
       ) : (
         <Grid item container spacing={3}>
           <Grid item xs={12}>
             <CustomTable
-              items={projectListResponse.items}
+              items={projectAnalysesResponse.items}
               columnMapping={COLUMN_MAPPPING}
             />
           </Grid>
@@ -154,7 +156,7 @@ function ProjectsPage() {
             />
           </Grid>
           <Grid item xs={12}>
-            <JSONContainer data={projectListResponse} />
+            <JSONContainer data={projectAnalysesResponse} />
           </Grid>
         </Grid>
       )}
@@ -162,4 +164,4 @@ function ProjectsPage() {
   );
 }
 
-export default ProjectsPage;
+export default ProjectAnalysesPage;
