@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
 
 // React-Router-Dom components
-import { useParams, Link as RouterLink } from "react-router-dom";
+import { useParams } from "react-router-dom";
 
 // MUI Component
-import { CircularProgress, Grid, Typography, Chip } from "@mui/material";
+import { CircularProgress, Grid, Typography } from "@mui/material";
 
 // icats Component
 import { Project, ProjectApiAxiosParamCreator, RunAxios } from "icats";
@@ -15,11 +15,7 @@ import { JsonToTable as JSONTable } from "react-json-to-table";
 // Custom components
 import { useDialogContext } from "../../container/app/DialogContext";
 import JSONContainer from "../../components/JSONContainer/JSONContainer";
-
-interface IButtonProps {
-  name: string;
-  route: string;
-}
+import ChipArray, { IButtonProps } from "../../components/chipArray/ChipArray";
 
 const buttonProps: IButtonProps[] = [
   { name: "Analyses", route: "analyses" },
@@ -84,21 +80,7 @@ function ProjectPage() {
       <Grid item xs={12}>
         <Typography variant="h4">Project Id: {projectId}</Typography>
       </Grid>
-
-      <Grid item container direction="row" xs={12} spacing={2}>
-        {buttonProps.map((buttonProperties: IButtonProps, index: number) => (
-          <Grid item key={index}>
-            <Chip
-              component={RouterLink}
-              to={buttonProperties.route}
-              label={buttonProperties.name}
-              clickable
-              style={{ width: "100px" }}
-            />
-          </Grid>
-        ))}
-      </Grid>
-
+      <ChipArray data={buttonProps} />
       {!projectResponse ? (
         <CircularProgress sx={{ marginTop: "50px" }} />
       ) : (
