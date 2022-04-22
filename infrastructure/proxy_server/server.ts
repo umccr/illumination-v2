@@ -9,7 +9,7 @@ exports.handler = async (event: any) => {
   const base_url = `https://${server_url}`;
 
   const raw_path = event.rawPath;
-  const paramter = event.queryStringParameters;
+  const parameter = event.queryStringParameters;
 
   // Rsponse template
   const response = {
@@ -26,11 +26,11 @@ exports.handler = async (event: any) => {
       baseURL: base_url,
       method: "get",
       headers: {
-        Authorization: `Bearer ${ica_token}}`,
+        Authorization: `Bearer ${ica_token}`,
         Accept: "application/vnd.illumina.v3+json",
       },
       url: raw_path,
-      params: paramter,
+      params: parameter,
     };
 
     try {
