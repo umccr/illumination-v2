@@ -14,7 +14,7 @@ import {
 } from "icats";
 
 // JSON to table
-import { JsonToTable as JSONTable } from "react-json-to-table";
+import JSONToTable from "../../../components/JSONToTable/JSONToTable";
 
 // Custom component
 import { useDialogContext } from "../../../container/app/DialogContext";
@@ -93,7 +93,7 @@ function ProjectAnalysesConfigurationsPage() {
       ) : (
         <Grid item container spacing={3}>
           <Grid item xs={12}>
-            <JSONTable json={analysisConfigurationsResponse} />
+            <JSONToTable JSONData={analysisConfigurationsResponse} />
           </Grid>
 
           <Grid item xs={12}>

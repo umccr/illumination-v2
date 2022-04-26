@@ -14,27 +14,28 @@ import {
 } from "icats";
 
 // JSON to table
-import { JsonToTable as JSONTable } from "react-json-to-table";
+import JSONToTable from "../../../components/JSONToTable/JSONToTable";
 
 // Custom component
 import { useDialogContext } from "../../../container/app/DialogContext";
 import JSONContainer from "../../../components/JSONContainer/JSONContainer";
 
-
 // Helper function
 async function getProjectAnalysesStepData(
   projectId: string,
-  analysisId: string,
+  analysisId: string
 ): Promise<AnalysisStepList> {
   // Generate axios parameter
   const ProjectParamCreator = ProjectAnalysisApiAxiosParamCreator();
-  const getProjectsParam = await ProjectParamCreator.getAnalysisSteps(projectId, analysisId);
+  const getProjectsParam = await ProjectParamCreator.getAnalysisSteps(
+    projectId,
+    analysisId
+  );
 
   // Calling axios
   const axiosData = await RunAxios(getProjectsParam);
   return axiosData.data;
 }
-
 
 // Main function
 function ProjectAnalysesStepPage() {
@@ -63,7 +64,7 @@ function ProjectAnalysesStepPage() {
       }
     }
 
-    fetchData()
+    fetchData();
     return () => {
       cancel = true;
     };
@@ -89,7 +90,7 @@ function ProjectAnalysesStepPage() {
       ) : (
         <Grid item container spacing={3}>
           <Grid item xs={12}>
-            <JSONTable json={analysisStepResponse.items} />
+            <JSONToTable JSONData={analysisStepResponse.items} />
           </Grid>
 
           <Grid item xs={12}>

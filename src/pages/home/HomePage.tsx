@@ -7,10 +7,7 @@ import OverviewProject from "../../container/overviewProject/OverviewProject";
 import MainHomeChip from "../../container/mainHomeChip/MainHomeChip";
 import OtherHomeChip from "../../container/otherMenuChip/OtherMenuChip";
 
-
-
 function HomePage() {
-
   return (
     <>
       <Grid
@@ -21,7 +18,7 @@ function HomePage() {
         spacing={5}
       >
         <Grid item xs={12}>
-          <OverviewProject/>
+          <OverviewProject />
         </Grid>
 
         <Grid item xs={12}>

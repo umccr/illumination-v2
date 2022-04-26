@@ -39,10 +39,12 @@ Requirements to run:
 
 - `Docker`
 - `aws-sam-cli`
+- *ICAV2_ACCESS_TOKEN*
 
 There is a Makefile to install/run this proxy. In a different terminal, run the following commands:
 
 ```bash
+export ICAV2_ACCESS_TOKEN=`cat ~/.icav2/.session.ica.yaml | grep access-token | sed -e 's/access-token: //'`
 cd infrastructure
 make local
 ```

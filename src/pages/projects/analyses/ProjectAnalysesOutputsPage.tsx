@@ -14,7 +14,7 @@ import {
 } from "icats";
 
 // JSON to table
-import { JsonToTable as JSONTable } from "react-json-to-table";
+import JSONToTable from "../../../components/JSONToTable/JSONToTable";
 
 // Custom component
 import { useDialogContext } from "../../../container/app/DialogContext";
@@ -50,7 +50,10 @@ function ProjectAnalysesOutputsPage() {
     async function fetchData() {
       if (projectId && analysisId) {
         try {
-          const data = await getProjectAnalysesOutputsData(projectId, analysisId);
+          const data = await getProjectAnalysesOutputsData(
+            projectId,
+            analysisId
+          );
           if (cancel) return;
 
           setAnalysisOutputsResponse(data);
@@ -90,7 +93,7 @@ function ProjectAnalysesOutputsPage() {
       ) : (
         <Grid item container spacing={3}>
           <Grid item xs={12}>
-            <JSONTable json={analysisOutputsResponse} />
+            <JSONToTable JSONData={analysisOutputsResponse} />
           </Grid>
 
           <Grid item xs={12}>

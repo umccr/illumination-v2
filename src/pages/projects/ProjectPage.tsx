@@ -10,7 +10,7 @@ import { CircularProgress, Grid, Typography } from "@mui/material";
 import { Project, ProjectApiAxiosParamCreator, RunAxios } from "icats";
 
 // JSON to table
-import { JsonToTable as JSONTable } from "react-json-to-table";
+import JSONToTable from "../../components/JSONToTable/JSONToTable";
 
 // Custom components
 import { useDialogContext } from "../../container/app/DialogContext";
@@ -86,7 +86,7 @@ function ProjectPage() {
       ) : (
         <Grid item container spacing={3}>
           <Grid item xs={12}>
-            <JSONTable json={projectResponse} />
+            <JSONToTable JSONData={projectResponse} />
           </Grid>
 
           <Grid item xs={12}>
