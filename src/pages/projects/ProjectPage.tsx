@@ -28,6 +28,7 @@ const buttonProps: IButtonProps[] = [
   },
   { name: "Permissions", route: "permissions" },
   { name: "Base Jobs", route: "base/jobs" },
+  { name: "Base Tables", route: "base/tables" },
 ];
 
 async function getProjectData(projectId: string): Promise<Project> {
