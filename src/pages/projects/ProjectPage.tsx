@@ -29,6 +29,7 @@ const buttonProps: IButtonProps[] = [
   { name: "Permissions", route: "permissions" },
   { name: "Base Jobs", route: "base/jobs" },
   { name: "Base Tables", route: "base/tables" },
+  { name: "Data", route: "Data" },
 ];
 
 async function getProjectData(projectId: string): Promise<Project> {
@@ -86,10 +87,6 @@ function ProjectPage() {
         <CircularProgress sx={{ marginTop: "50px" }} />
       ) : (
         <Grid item container spacing={3}>
-          <Grid item xs={12}>
-            <JSONToTable JSONData={projectResponse} />
-          </Grid>
-
           <Grid item xs={12}>
             <JSONContainer data={projectResponse} />
           </Grid>

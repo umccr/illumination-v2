@@ -6,43 +6,39 @@ import { useParams } from "react-router-dom";
 import { CircularProgress, Grid, Typography } from "@mui/material";
 
 // icats Component
-import {
-  ProjectBaseJobApiAxiosParamCreator,
-  BaseJob,
-  RunAxios,
-} from "icats";
-
-// JSON to table
-import JSONToTable from "../../../components/JSONToTable/JSONToTable";
+import { ProjectDataApiAxiosParamCreator, Data, RunAxios } from "icats";
 
 // Custom component
 import { useDialogContext } from "../../../container/app/DialogContext";
 import JSONContainer from "../../../components/JSONContainer/JSONContainer";
+import ChipArray, {
+  IButtonProps,
+} from "../../../components/chipArray/ChipArray";
 
+const buttonProps: IButtonProps[] = [
+  { name: "Children", route: "children" },
+  { name: "Linked Project", route: "linkedProject" },
+  { name: "Secondary Data", route: "secondaryData" },
+];
 
-async function getProjectBaseJobData(
-  projectId: string,
-  baseJobId: any
-): Promise<BaseJob> {
+async function getProjectData(projectId: string, dataId: any): Promise<Data> {
   // Generate axios parameter
-  const ProjectParamCreator = ProjectBaseJobApiAxiosParamCreator();
-  const getProjectsParam = await ProjectParamCreator.getBaseJob(
+  const ProjectParamCreator = ProjectDataApiAxiosParamCreator();
+  const getProjectsParam = await ProjectParamCreator.getProjectData(
     projectId,
-    baseJobId
+    dataId
   );
 
   // Calling axios
   const axiosData = await RunAxios(getProjectsParam);
   return axiosData.data;
-
 }
 
-function ProjectBaseJobPage() {
-  const [ProjectBaseJobResponse, setProjectBaseJobResponse] =
-    useState<BaseJob | null>();
+function ProjectDataPage() {
+  const [projectDataResponse, setProjectDataResponse] = useState<Data | null>();
 
   const { setDialogInfo } = useDialogContext();
-  const { projectId, baseJobId } = useParams();
+  const { projectId, dataId } = useParams();
 
   useEffect(() => {
     let cancel = false;
@@ -50,10 +46,10 @@ function ProjectBaseJobPage() {
     async function fetchData() {
       if (projectId) {
         try {
-          const data = await getProjectBaseJobData(projectId, baseJobId);
+          const data = await getProjectData(projectId, dataId);
           if (cancel) return;
 
-          setProjectBaseJobResponse(data);
+          setProjectDataResponse(data);
         } catch (err) {
           setDialogInfo({
             isOpen: true,
@@ -69,7 +65,7 @@ function ProjectBaseJobPage() {
     return () => {
       cancel = true;
     };
-  }, [baseJobId, setDialogInfo, projectId]);
+  }, [dataId, setDialogInfo, projectId]);
 
   return (
     <Grid
@@ -80,22 +76,19 @@ function ProjectBaseJobPage() {
       spacing={3}
     >
       <Grid item xs={12}>
-        <Typography variant="h4">Project Base Job</Typography>
+        <Typography variant="h4">Project Data</Typography>
       </Grid>
       <Grid item xs={12}>
         <Typography variant="subtitle1">Project Id: {projectId}</Typography>
-        <Typography variant="subtitle1">Base Job Id: {baseJobId}</Typography>
+        <Typography variant="subtitle1">Data Id: {dataId}</Typography>
       </Grid>
-      {!ProjectBaseJobResponse ? (
+      <ChipArray data={buttonProps} />
+      {!projectDataResponse ? (
         <CircularProgress sx={{ marginTop: "50px" }} />
       ) : (
         <Grid item container spacing={3}>
           <Grid item xs={12}>
-            <JSONToTable JSONData={ProjectBaseJobResponse} />
-          </Grid>
-
-          <Grid item xs={12}>
-            <JSONContainer data={ProjectBaseJobResponse} />
+            <JSONContainer data={projectDataResponse} />
           </Grid>
         </Grid>
       )}
@@ -103,4 +96,4 @@ function ProjectBaseJobPage() {
   );
 }
 
-export default ProjectBaseJobPage;
+export default ProjectDataPage;
