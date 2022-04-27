@@ -14,7 +14,7 @@ import { useDialogContext } from "../../../container/app/DialogContext";
 import JSONContainer from "../../../components/JSONContainer/JSONContainer";
 
 // Helper function
-async function getProjectAnalysesRawOutputsData(
+async function getProjectChildrenData(
   projectId: string,
   dataId: string
 ): Promise<ProjectList> {
@@ -43,7 +43,7 @@ function ProjectDataChildrenPage() {
     async function fetchData() {
       if (projectId && dataId) {
         try {
-          const data = await getProjectAnalysesRawOutputsData(
+          const data = await getProjectChildrenData(
             projectId,
             dataId
           );
