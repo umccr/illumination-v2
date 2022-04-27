@@ -80,7 +80,7 @@ function ProjectBaseJobPage() {
       spacing={3}
     >
       <Grid item xs={12}>
-        <Typography variant="h4">Project Analyses</Typography>
+        <Typography variant="h4">Project Base Job</Typography>
       </Grid>
       <Grid item xs={12}>
         <Typography variant="subtitle1">Project Id: {projectId}</Typography>
