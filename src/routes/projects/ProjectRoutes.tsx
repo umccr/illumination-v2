@@ -10,6 +10,7 @@ import ProjectAnalysesRoutes from "./analyses/ProjectAnalysesRoutes";
 import ProjectBaseRoutes from "./base/ProjectBaseRoutes";
 import ProjectCustomNotificationsRoutes from "./notificationSubscriptions/ProjectCustomNotificationSubscriptionsRoutes";
 import ProjectNotificationsRoutes from "./notificationSubscriptions/ProjectNotificationSubscriptionsRoutes";
+import ProjectDataRoutes from "./data/ProjectDataRoutes";
 
 const ProjectRoutes: React.ReactNode[] = [
   <Route
@@ -21,12 +22,11 @@ const ProjectRoutes: React.ReactNode[] = [
     <Route index element={<ProtectedRoute element={<ProjectPage />} />} />
     <Route path="analyses">{ProjectAnalysesRoutes}</Route>
     <Route path="base">{ProjectBaseRoutes}</Route>
+    <Route path="data">{ProjectDataRoutes}</Route>
     <Route path="customNotificationSubscriptions">
       {ProjectCustomNotificationsRoutes}
     </Route>
-    <Route path="notificationSubscriptions">
-      {ProjectNotificationsRoutes}
-    </Route>
+    <Route path="notificationSubscriptions">{ProjectNotificationsRoutes}</Route>
   </Route>,
 ];
 
