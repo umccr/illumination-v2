@@ -8,7 +8,7 @@ import ProjectDataPage from "../../../pages/projects/data/ProjectDataPage";
 import ProjectDataLinkedPage from "../../../pages/projects/data/ProjectDataLinkedPage";
 import ProjectDataChildrenPage from "../../../pages/projects/data/ProjectDataChildrenPage";
 import ProjectDataEligibleForLinkingPage from "../../../pages/projects/data/ProjectDataEligibleForLinkingPage";
-import ProjectNonSampleDatagPage from "../../../pages/projects/data/ProjectNonSampleDatagPage";
+import ProjectNonSampleDataPage from "../../../pages/projects/data/ProjectNonSampleDataPage";
 // import ProjectDataSecondaryDataPage from "../../../pages/projects/data/ProjectDataSecondaryDataPage";
 
 const ProjectBaseRoutes: React.ReactNode[] = [
@@ -28,7 +28,7 @@ const ProjectBaseRoutes: React.ReactNode[] = [
   <Route path="nonSampleData" key="ProejectnonSampleDataPage">
     <Route
       index
-      element={<ProtectedRoute element={<ProjectNonSampleDatagPage />} />}
+      element={<ProtectedRoute element={<ProjectNonSampleDataPage />} />}
     />
   </Route>,
   <Route path=":dataId" key="projectDataId">
