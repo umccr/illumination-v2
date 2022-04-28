@@ -38,10 +38,10 @@ const ROUTER_LINK_INFO = [
     name: "Pipelines",
     routerLink: "/pipelines",
   },
-  {
-    name: "Users",
-    routerLink: "/users",
-  },
+  // {
+  //   name: "Users",
+  //   routerLink: "/users",
+  // },
 ];
 
 interface NavBarLinkConstant extends TypographyProps {
