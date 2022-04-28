@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 
 // MUI Components
 import { grey } from "@mui/material/colors";
@@ -19,11 +19,16 @@ import { Link as RouterLink } from "react-router-dom";
 import { reformatString } from "../../utils/Utils";
 
 export interface IPaginationProps {
-  nextPageToken?: string;
-  currentPageToken?: string;
   totalItem: number;
-  remaingRecord?: number;
+  rowsPerPage: number;
+  currentPageNumber: number;
 }
+
+export const paginationPropsInit: IPaginationProps = {
+  totalItem: 0,
+  rowsPerPage: 10,
+  currentPageNumber: 0,
+};
 
 export interface linkToProps {
   formatString: string;
@@ -40,23 +45,52 @@ interface ITableProps {
   items: any[];
   columnMapping: IColumnMapping[];
   paginationProps?: IPaginationProps;
+  handlePaginationPropsChange?: Function;
 }
 
-function CustomTable(props: ITableProps) {
-  const { items, columnMapping } = props;
+export function getTotalItemCountFromRes(dataRes: any): number {
+  const totalRecord: number = dataRes.totalItemCount
+    ? dataRes.totalItemCount
+    : dataRes.items.length;
 
-  // Pagination
-  const [rowsPerPage, setRowsPerPage] = useState(10);
-  const [page, setPage] = useState(0);
+  return totalRecord;
+}
+
+function CustomPaginationTable(
+  props: IPaginationProps,
+  handlePaginationPropsChange: Function
+) {
   const handleChangeRowsPerPage = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
-    setRowsPerPage(+event.target.value);
-    setPage(0);
+    handlePaginationPropsChange({
+      rowsPerPage: +event.target.value,
+      currentPageNumber: 0,
+    });
   };
+
   const handleChangePage = (event: unknown, newPage: number) => {
-    setPage(newPage);
+    handlePaginationPropsChange({ currentPageNumber: newPage });
   };
+
+  return (
+    <TableContainer>
+      <TablePagination
+        rowsPerPageOptions={[10, 25, 50, 100]}
+        component="div"
+        count={props.totalItem}
+        rowsPerPage={props.rowsPerPage}
+        page={props.currentPageNumber}
+        onPageChange={handleChangePage}
+        onRowsPerPageChange={handleChangeRowsPerPage}
+      />
+    </TableContainer>
+  );
+}
+
+function CustomTable(props: ITableProps) {
+  const { items, columnMapping, paginationProps, handlePaginationPropsChange } =
+    props;
 
   return (
     <Paper elevation={3} sx={{ width: "100%", overflow: "hidden" }}>
@@ -66,17 +100,11 @@ function CustomTable(props: ITableProps) {
           <CustomTableBody listItem={items} columnMapping={columnMapping} />
         </Table>
       </TableContainer>
-      <TableContainer>
-        <TablePagination
-          rowsPerPageOptions={[10, 25, 50, 100]}
-          component="div"
-          count={items.length}
-          rowsPerPage={rowsPerPage}
-          page={page}
-          onPageChange={handleChangePage}
-          onRowsPerPageChange={handleChangeRowsPerPage}
-        />
-      </TableContainer>
+      {paginationProps && handlePaginationPropsChange ? (
+        CustomPaginationTable(paginationProps, handlePaginationPropsChange)
+      ) : (
+        <></>
+      )}
     </Paper>
   );
 }

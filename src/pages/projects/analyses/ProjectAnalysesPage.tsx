@@ -16,14 +16,14 @@ import {
 } from "icats";
 
 // Custom components
-import TokenPagination, {
-  ITokenPaginationData,
-  tokenPaginationInit,
-} from "../../../container/tokenPagination/TokenPagination";
 import JSONContainer from "../../../components/JSONContainer/JSONContainer";
 import { useDialogContext } from "../../../container/app/DialogContext";
-import CustomTable, { IColumnMapping } from "../../../container/table/Table";
-
+import CustomTable, {
+  IColumnMapping,
+  IPaginationProps,
+  paginationPropsInit,
+  getTotalItemCountFromRes,
+} from "../../../container/table/Table";
 
 const COLUMN_MAPPPING: IColumnMapping[] = [
   {
@@ -51,7 +51,7 @@ async function getProjectAnalysesData(
 
   getProjectsParam.url += `?`;
   for (const element in parameter) {
-    getProjectsParam.url += `${element}=${parameter[element]}`;
+    getProjectsParam.url += `${element}=${parameter[element]}&`;
   }
 
   // Calling axios
@@ -59,42 +59,33 @@ async function getProjectAnalysesData(
   return axiosData.data;
 }
 
-function convertResponseToPaginationProps(
-  projectRes: AnalysisPagedList,
-  prevToken: string
-): ITokenPaginationData {
-  const totalRecord = projectRes.totalItemCount
-    ? projectRes.totalItemCount
-    : projectRes.items.length;
-  const remainingRecord = projectRes.remainingRecords
-    ? projectRes.remainingRecords
-    : 0;
-  const nextPageToken = projectRes.nextPageToken
-    ? projectRes.nextPageToken
-    : "";
-
-  return {
-    totalRecord: totalRecord,
-    remainingRecord: remainingRecord,
-    prevPageToken: prevToken,
-    nextPageToken: nextPageToken,
-  };
-}
-
 function ProjectAnalysesPage() {
   const [projectAnalysesResponse, setProjectAnalysesResponse] =
     useState<AnalysisPagedList | null>();
-
-  const [tokenPaginationData, setTokenPaginationData] =
-    useState<ITokenPaginationData>(tokenPaginationInit);
-
-  const [apiParameter, setApiParameter] = useState({ pageToken: "" });
-  function handleApiParameterChange(parameterChange: { pageToken: string }) {
-    setApiParameter((prev) => ({ ...prev, ...parameterChange }));
+  const [paginationProps, setPaginationProps] =
+    useState<IPaginationProps>(paginationPropsInit);
+  function handlePaginationPropsChange(newProps: any) {
+    setPaginationProps((prev) => ({ ...prev, ...newProps }));
   }
+
+  const [apiParameter, setApiParameter] = useState({
+    pageOffset: 0,
+    pageSize: paginationProps.rowsPerPage,
+  });
 
   const { setDialogInfo } = useDialogContext();
   const { projectId } = useParams();
+
+  useEffect(() => {
+    // Calculate pageOffset
+    const pageOffset: number =
+      paginationProps.currentPageNumber * paginationProps.rowsPerPage;
+
+    setApiParameter({
+      pageOffset: pageOffset,
+      pageSize: paginationProps.rowsPerPage,
+    });
+  }, [paginationProps.rowsPerPage, paginationProps.currentPageNumber]);
 
   useEffect(() => {
     let cancel = false;
@@ -106,9 +97,9 @@ function ProjectAnalysesPage() {
           if (cancel) return;
 
           setProjectAnalysesResponse(data);
-          setTokenPaginationData((prev) =>
-            convertResponseToPaginationProps(data, prev.nextPageToken)
-          );
+          handlePaginationPropsChange({
+            totalItem: getTotalItemCountFromRes(data),
+          });
         } catch (err) {
           setDialogInfo({
             isOpen: true,
@@ -146,15 +137,11 @@ function ProjectAnalysesPage() {
             <CustomTable
               items={projectAnalysesResponse.items}
               columnMapping={COLUMN_MAPPPING}
+              paginationProps={paginationProps}
+              handlePaginationPropsChange={handlePaginationPropsChange}
             />
           </Grid>
 
-          <Grid item xs={12}>
-            <TokenPagination
-              data={tokenPaginationData}
-              handleApiParameterChange={handleApiParameterChange}
-            />
-          </Grid>
           <Grid item xs={12}>
             <JSONContainer data={projectAnalysesResponse} />
           </Grid>
