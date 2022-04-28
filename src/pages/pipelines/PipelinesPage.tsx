@@ -23,7 +23,8 @@ const COLUMN_MAPPPING: IColumnMapping[] = [
   { displayName: "Code", jsonKeys: ["code"] },
   { displayName: "Description", jsonKeys: ["description"] },
   { displayName: "Language", jsonKeys: ["language"] },
-
+  { displayName: "Time Created", jsonKeys: ["timeCreated"] },
+  { displayName: "Time Modified", jsonKeys: ["timeModified"] },
 ];
 
 async function getPipelinesData(): Promise<PipelineList> {
