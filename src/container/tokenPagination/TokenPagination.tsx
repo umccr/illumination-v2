@@ -22,6 +22,26 @@ interface ITokenPaginationProps {
   handleApiParameterChange: Function;
 }
 
+export function convertResponseToPaginationProps(
+  dataRes: any,
+  prevToken: string
+): ITokenPaginationData {
+  const totalRecord: number = dataRes.totalItemCount
+    ? dataRes.totalItemCount
+    : dataRes.items.length;
+  const remainingRecord = dataRes.remainingRecords
+    ? dataRes.remainingRecords
+    : 0;
+  const nextPageToken = dataRes.nextPageToken ? dataRes.nextPageToken : "";
+
+  return {
+    totalRecord: totalRecord,
+    remainingRecord: remainingRecord,
+    prevPageToken: prevToken,
+    nextPageToken: nextPageToken,
+  };
+}
+
 function TokenPagination(props: ITokenPaginationProps) {
   const { totalRecord, remainingRecord, prevPageToken, nextPageToken } =
     props.data;

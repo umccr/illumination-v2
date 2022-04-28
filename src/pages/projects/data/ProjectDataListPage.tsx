@@ -17,12 +17,13 @@ import {
 
 // Custom components
 import JSONContainer from "../../../components/JSONContainer/JSONContainer";
-import TokenPagination, {
-  ITokenPaginationData,
-  tokenPaginationInit,
-} from "../../../container/tokenPagination/TokenPagination";
 import { useDialogContext } from "../../../container/app/DialogContext";
-import CustomTable, { IColumnMapping } from "../../../container/table/Table";
+import CustomTable, {
+  IColumnMapping,
+  IPaginationProps,
+  paginationPropsInit,
+  getTotalItemCountFromRes,
+} from "../../../container/table/Table";
 import ChipArray, {
   IButtonProps,
 } from "../../../components/chipArray/ChipArray";
@@ -64,51 +65,41 @@ async function getProjectDataListPages(
 
   getProjectsParam.url += `?`;
   for (const element in parameter) {
-    getProjectsParam.url += `${element}=${parameter[element]}`;
+    getProjectsParam.url += `${element}=${parameter[element]}&`;
   }
 
   // Calling axios
   const axiosData = await RunAxios(getProjectsParam);
-
   return axiosData.data;
-}
-
-function convertResponseToPaginationProps(
-  projectRes: DataPagedList,
-  prevToken: string
-): ITokenPaginationData {
-  const totalRecord = projectRes.totalItemCount
-    ? projectRes.totalItemCount
-    : projectRes.items.length;
-  const remainingRecord = projectRes.remainingRecords
-    ? projectRes.remainingRecords
-    : 0;
-  const nextPageToken = projectRes.nextPageToken
-    ? projectRes.nextPageToken
-    : "";
-
-  return {
-    totalRecord: totalRecord,
-    remainingRecord: remainingRecord,
-    prevPageToken: prevToken,
-    nextPageToken: nextPageToken,
-  };
 }
 
 function ProjectDataListJobsPage() {
   const [projectDataListJobsResponse, setProjectDataListJobsResponse] =
     useState<DataPagedList | null>();
-
-  const [tokenPaginationData, setTokenPaginationData] =
-    useState<ITokenPaginationData>(tokenPaginationInit);
-
-  const [apiParameter, setApiParameter] = useState({ pageToken: "" });
-  function handleApiParameterChange(parameterChange: { pageToken: string }) {
-    setApiParameter((prev) => ({ ...prev, ...parameterChange }));
+  const [paginationProps, setPaginationProps] =
+    useState<IPaginationProps>(paginationPropsInit);
+  function handlePaginationPropsChange(newProps: any) {
+    setPaginationProps((prev) => ({ ...prev, ...newProps }));
   }
+
+  const [apiParameter, setApiParameter] = useState({
+    pageOffset: 0,
+    pageSize: paginationProps.rowsPerPage,
+  });
 
   const { setDialogInfo } = useDialogContext();
   const { projectId } = useParams();
+
+  useEffect(() => {
+    // Calculate pageOffset
+    const pageOffset: number =
+      paginationProps.currentPageNumber * paginationProps.rowsPerPage;
+
+    setApiParameter({
+      pageOffset: pageOffset,
+      pageSize: paginationProps.rowsPerPage,
+    });
+  }, [paginationProps.rowsPerPage, paginationProps.currentPageNumber]);
 
   useEffect(() => {
     setProjectDataListJobsResponse(null);
@@ -121,9 +112,9 @@ function ProjectDataListJobsPage() {
           if (cancel) return;
 
           setProjectDataListJobsResponse(data);
-          setTokenPaginationData((prev) =>
-            convertResponseToPaginationProps(data, prev.nextPageToken)
-          );
+          handlePaginationPropsChange({
+            totalItem: getTotalItemCountFromRes(data),
+          });
         } catch (err) {
           setDialogInfo({
             isOpen: true,
@@ -150,7 +141,7 @@ function ProjectDataListJobsPage() {
       spacing={3}
     >
       <Grid item xs={12}>
-        <Typography variant="h4">Project DataList Jobs</Typography>
+        <Typography variant="h4">Project Data List Jobs</Typography>
       </Grid>
       <Grid item xs={12}>
         <Typography variant="subtitle1">Project Id: {projectId}</Typography>
@@ -164,12 +155,8 @@ function ProjectDataListJobsPage() {
             <CustomTable
               items={projectDataListJobsResponse.items}
               columnMapping={COLUMN_MAPPPING}
-            />
-          </Grid>
-          <Grid item xs={12}>
-            <TokenPagination
-              data={tokenPaginationData}
-              handleApiParameterChange={handleApiParameterChange}
+              paginationProps={paginationProps}
+              handlePaginationPropsChange={handlePaginationPropsChange}
             />
           </Grid>
           <Grid item xs={12}>
