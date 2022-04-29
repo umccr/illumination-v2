@@ -1,4 +1,12 @@
-import { Stack, StackProps, Duration } from "aws-cdk-lib";
+import {
+  Stack,
+  StackProps,
+  Duration,
+  aws_certificatemanager,
+  aws_route53,
+  aws_route53_targets,
+  aws_secretsmanager,
+} from "aws-cdk-lib";
 import { Construct } from "constructs";
 import * as lambda from "aws-cdk-lib/aws-lambda-nodejs";
 import * as ssm from "aws-cdk-lib/aws-ssm";
@@ -13,8 +21,15 @@ export class ProxyServerStack extends Stack {
   constructor(scope: Construct, id: string, props?: StackProps) {
     super(scope, id, props);
 
-    const some_secret_token =
-      process.env.ICAV2_ACCESS_TOKEN ?? "SOME_SECRET_TOKEN";
+    /**
+     * Grab ICA JWT from secret manager
+     */
+
+    const ica_jwt_secret_manager = aws_secretsmanager.Secret.fromSecretNameV2(
+      this,
+      "ICAJWTSecret",
+      "IcaSecretsPortal" // TODO: Change secret name to the proper V2
+    );
 
     // Lambda for proxy server
     const proxyServerFn = new lambda.NodejsFunction(this, "LambdaProxyServer", {
@@ -22,11 +37,12 @@ export class ProxyServerStack extends Stack {
       handler: "handler",
       functionName: "proxy_server_ica_v2",
       environment: {
-        ica_server_name: "ica.illumina.com",
-        ica_token: some_secret_token,
+        ICA_SECRET_MANAGER_NAME: ica_jwt_secret_manager.secretName,
       },
       timeout: Duration.seconds(10),
     });
+
+    ica_jwt_secret_manager.grantRead(proxyServerFn);
 
     // User Pool
     const userPoolId = ssm.StringParameter.fromStringParameterName(
@@ -63,13 +79,80 @@ export class ProxyServerStack extends Stack {
       allowOrigins: ["*"],
     };
 
+    /**
+     * Lookup SSL Certficate that is created manually
+     */
+    // HostedZone Lookup
+    const hostedZoneId = ssm.StringParameter.fromStringParameterName(
+      this,
+      "UMCCRHostedZoneId",
+      "/hosted_zone/umccr/id"
+    ).stringValue;
+    const hostedZoneName = ssm.StringParameter.fromStringParameterName(
+      this,
+      "UMCCRHostedZoneName",
+      "/hosted_zone/umccr/name"
+    ).stringValue;
+
+    const hostedZone = aws_route53.HostedZone.fromHostedZoneAttributes(
+      this,
+      "HostedZone",
+      { hostedZoneId: hostedZoneId, zoneName: hostedZoneName }
+    );
+
+    const use1_cert_arn = ssm.StringParameter.fromStringParameterName(
+      this,
+      "UMCCRUSECertArn",
+      "/illumination/ssl_aps2_cert_arn"
+    ).stringValue;
+    const illumination_aps2_cert =
+      aws_certificatemanager.Certificate.fromCertificateArn(
+        this,
+        "IlluminationSSLCert",
+        use1_cert_arn
+      );
+
     // API Gateway
-    const httpApi = new apigwv2a.HttpApi(this, "ApiGatewayProxyServer", {
+    const apigwv2_domain_name = new apigwv2a.DomainName(
+      this,
+      "ApiGatewayDomainName",
+      {
+        certificate: illumination_aps2_cert,
+        domainName: `api.illumination.${hostedZoneName}`,
+        certificateName: "IlluminationSSL",
+      }
+    );
+
+    new apigwv2a.HttpApi(this, "ApiGatewayProxyServer", {
       apiName: "ICAV2_proxy_server",
       defaultIntegration: lambdaApiIntegration,
       corsPreflight: corsConfig,
       defaultAuthorizer: userPoolAuthorizer,
       description: "Gateway for ICAV2 proxy server",
+      defaultDomainMapping: {
+        domainName: apigwv2_domain_name,
+      },
+    });
+
+    const illumination_api_a_record = new aws_route53.ARecord(
+      this,
+      "IlluminationARecord",
+      {
+        target: aws_route53.RecordTarget.fromAlias(
+          new aws_route53_targets.ApiGatewayv2DomainProperties(
+            apigwv2_domain_name.regionalDomainName,
+            apigwv2_domain_name.regionalHostedZoneId
+          )
+        ),
+        zone: hostedZone,
+        recordName: "api.illumination",
+      }
+    );
+
+    // API Gateway URL ssm param
+    new ssm.StringParameter(this, "SSMOAuthRedirectIn", {
+      stringValue: illumination_api_a_record.domainName,
+      parameterName: "/illumination/proxy_server",
     });
   }
 }

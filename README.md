@@ -6,27 +6,23 @@ At the moment it utilises only the `GET` HTTP method; modifying data using `POST
 The endpoint is based on the ICA Swagger: <https://ica.illumina.com/ica/api/swagger/index.html>.
 This Swagger is used from an SDK in a separate repository: <https://github.com/umccr-illumina/icats>.
 
-## Installing
-
-```bash
-yarn install
-```
-
 ## Running
 
 ### App
 
-Currently the app is still in development and only deploys locally. Using `yarn start` the app will run on <http://localhost:3000> which can be viewed in the browser.
-Before running the app, make sure that your session's AWS profile is set with valid credentials. This is needed to query environment variables from AWS:
+Currently the app is still in development and deployed at <https://illumination.dev.umccr.org>. 
+You could still run this app locally by invoking the [start.sh](start.sh) script.
 
+When sourcing [start.sh](start.sh), there is argument need to specify. Arguments as follow.
+
+- local - This will set local environment variable, and deploy the app locally at <http://localhost:3000>.
+- deploy - This will update the remote application. The script will set environment needed for remote deployment, build the app, and store to the S3 bucket. NOTE: Make sure correct/valid environemt variables for the remote environment.
+- unset - Will unset all environment variable that were set for the app.
+
+Example
 ```bash
-source get_env.sh
-```
-
-After setting the environment variables, you can start the app with:
-
-```bash
-yarn start
+source start.sh local
+source start.sh deploy
 ```
 
 _Before_ starting the app, follow the steps below.
@@ -48,3 +44,6 @@ export ICAV2_ACCESS_TOKEN=`cat ~/.icav2/.session.ica.yaml | grep access-token | 
 cd infrastructure
 make local
 ```
+
+### Infrastructure
+Details on the infrastucture is on the [infrastrucutre](infrastructure/README.md) directory.

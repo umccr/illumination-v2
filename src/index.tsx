@@ -9,8 +9,10 @@ import App from "./App";
 import "./index.css";
 import config from "./config";
 
-SetBasicConfig({ baseURL: "http://127.0.0.1:5000/ica/rest" });
-
+SetBasicConfig({
+  baseURL:
+    process.env.REACT_APP_ICA_ENDPOINT ?? "http://127.0.0.1:5000/ica/rest",
+});
 
 Amplify.configure({
   Auth: {
