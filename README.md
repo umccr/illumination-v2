@@ -17,7 +17,6 @@ When sourcing [start.sh](start.sh), there is argument need to specify. Arguments
 
 - local - This will set local environment variable, and deploy the app locally at <http://localhost:3000>. You could BYO ICAV2 JWT token by setting environment variable `ICAV2_ACCESS_TOKEN`.
 - deploy - This will update the remote application. The script will set environment needed for remote deployment, build the app, and store to the S3 bucket. NOTE: Make sure correct/valid environemt variables for the remote environment.
-- unset - Will unset all environment variable that were set for the app.
 
 Example
 ```bash

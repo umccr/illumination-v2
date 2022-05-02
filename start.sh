@@ -11,9 +11,8 @@
 #
 # USAGE:
 #
-# Otherwise source it standalone itself by:
-#     source start.sh
-#     source start.sh unset
+#     source start.sh local
+#     source start.sh deploy
 #
 #
 # Try to be POSIX-y. Only tested on macOS! Contrib welcome for other OSs.
@@ -35,18 +34,18 @@ command -v jq >/dev/null 2>&1 || {
   return 1
 }
 
-if [ -n "$1" ] && [ "$1" = "unset" ]; then
-  unset REACT_APP_BUCKET_NAME
-  unset REACT_APP_DATA_PORTAL_API_DOMAIN
-  unset REACT_APP_REGION
-  unset REACT_APP_COG_USER_POOL_ID
-  unset REACT_APP_COG_APP_CLIENT_ID
-  unset REACT_APP_OAUTH_DOMAIN
-  unset REACT_APP_OAUTH_REDIRECT_IN
-  unset REACT_APP_OAUTH_REDIRECT_OUT
-  echo "UNSET REACT ENV VAR"
-  return 0
-fi
+# RESET ALL ENVIRONMENT VARIABLES
+unset REACT_APP_BUCKET_NAME
+unset REACT_APP_REGION
+unset REACT_APP_ICA_ENDPOINT
+unset REACT_APP_ICAV2_JWT
+unset REACT_APP_COG_USER_POOL_ID
+unset REACT_APP_COG_APP_CLIENT_ID
+unset REACT_APP_COG_IDENTITY_POOL_ID
+unset REACT_APP_OAUTH_DOMAIN
+unset REACT_APP_OAUTH_REDIRECT_IN
+unset REACT_APP_OAUTH_REDIRECT_OUT
+echo "UNSET REACT ENV VAR"
 
 # Illumination parmeter
 bucket_name=$(aws ssm get-parameter --name '/illumination/bucket_name' | jq -r .Parameter.Value)
@@ -61,6 +60,7 @@ if [ "$1" = "local" ]; then
   cog_app_client_id=$(aws ssm get-parameter --name '/data_portal/client/cog_app_client_id_local' | jq -r .Parameter.Value)
   oauth_redirect_in=$(aws ssm get-parameter --name '/data_portal/client/oauth_redirect_in_local' | jq -r .Parameter.Value)
   oauth_redirect_out=$(aws ssm get-parameter --name '/data_portal/client/oauth_redirect_out_local' | jq -r .Parameter.Value)
+  byo_jwt_token=$ICAV2_ACCESS_TOKEN
 elif [ "$1" = "deploy" ]; then
   cog_app_client_id=$(aws ssm get-parameter --name '/illumination/cognito_app_client_id' | jq -r .Parameter.Value)
   oauth_redirect_in=$(aws ssm get-parameter --name '/illumination/oauth_redirect_in_stage' | jq -r .Parameter.Value)
@@ -79,7 +79,7 @@ oauth_domain=$(aws ssm get-parameter --name '/data_portal/client/oauth_domain' |
 export REACT_APP_BUCKET_NAME=$bucket_name
 export REACT_APP_REGION=ap-southeast-2
 export REACT_APP_ICA_ENDPOINT=https://ica.illumina.com/ica/rest
-export REACT_APP_ICAV2_JWT=$ICAV2_ACCESS_TOKEN
+export REACT_APP_ICAV2_JWT=$byo_jwt_token
 
 # Cognito
 export REACT_APP_COG_USER_POOL_ID=$cog_user_pool_id
