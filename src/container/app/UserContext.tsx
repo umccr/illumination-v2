@@ -6,7 +6,7 @@ import Container from "@mui/material/Container";
 import { Typography } from "@mui/material";
 
 import { SetToken } from "icats";
-import { get_ica_jwt_token } from "../../utils/AWS";
+import { get_secret_manager_value } from "../../utils/AWS";
 
 // Interface
 interface iProviderprops {
@@ -15,12 +15,21 @@ interface iProviderprops {
 
 // Default value
 const userContext = {
-  user: {},
+  user: {
+    isSignedIn: false,
+    currentAuthenticatedUser: {},
+  },
   setUser: (user: any) => {},
 };
 
-function getUser() {
+function getAuthUser() {
   return Auth.currentAuthenticatedUser()
+    .then((userData) => userData)
+    .catch(() => console.log("Not signed in"));
+}
+
+function getCredsUser() {
+  return Auth.currentUserCredentials()
     .then((userData) => userData)
     .catch(() => console.log("Not signed in"));
 }
@@ -33,21 +42,30 @@ function UserContextProvider(props: iProviderprops) {
     async function onLoad() {
       try {
         await Auth.currentSession();
-        getUser().then((userData) => setUser(userData));
+
+        setUser({
+          isSignedIn: true,
+          currentAuthenticatedUser: await getAuthUser(),
+        });
+
+        // SetToken from SecretManager
+        const ica_jwt = await get_secret_manager_value(
+          await getCredsUser(),
+          "IcaSecretsPortal"
+        );
+        SetToken(process.env.REACT_APP_ICAV2_JWT ?? ica_jwt);
+        
       } catch (e) {
-        if (e !== "No current user") {
-        }
+        setUser({
+          isSignedIn: false,
+          currentAuthenticatedUser: {},
+        });
       }
 
       setIsAuthenticating(false);
     }
     onLoad();
   }, []);
-
-  useEffect(() => {
-    const ica_jwt: string = get_ica_jwt_token();
-    SetToken(process.env.REACT_APP_ICAV2_JWT ?? ica_jwt);
-  }, [user]);
 
   return (
     <UserContext.Provider value={{ user, setUser }}>

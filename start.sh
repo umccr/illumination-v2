@@ -54,6 +54,7 @@ if [[ "$bucket_name" == "" ]]; then
   echo "Halt, No valid AWS login session found. Please 'aws sso login --profile dev && export AWS_PROFILE=dev'"
   return 1
 fi
+cog_identity_pool_id=$(aws ssm get-parameter --name '/illumination/cog_identity_pool_id' | jq -r .Parameter.Value)
 
 # Change SSM parameter path for online/local deployment
 if [ "$1" = "local" ]; then
@@ -69,7 +70,7 @@ else
   return 0
 fi
 
-# Common for 
+# Common SSM 
 cog_user_pool_id=$(aws ssm get-parameter --name '/data_portal/client/cog_user_pool_id' | jq -r .Parameter.Value)
 data_portal_client_domain=$(aws ssm get-parameter --name '/hosted_zone/umccr/name' | jq -r .Parameter.Value)
 oauth_domain=$(aws ssm get-parameter --name '/data_portal/client/oauth_domain' | jq -r .Parameter.Value)
@@ -83,6 +84,7 @@ export REACT_APP_ICAV2_JWT=$ICAV2_ACCESS_TOKEN
 # Cognito
 export REACT_APP_COG_USER_POOL_ID=$cog_user_pool_id
 export REACT_APP_COG_APP_CLIENT_ID=$cog_app_client_id
+export REACT_APP_COG_IDENTITY_POOL_ID=$cog_identity_pool_id
 
 # Oauth
 export REACT_APP_OAUTH_DOMAIN=$oauth_domain

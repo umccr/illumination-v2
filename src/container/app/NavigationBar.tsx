@@ -75,20 +75,6 @@ function navbarLinkButton(linkInformation: NavBarLinkConstant) {
 const ResponsiveAppBar = () => {
   // User Context State
   const { user, setUser } = useUserContext();
-  useEffect(() => {
-    const unsubscribe = Hub.listen("auth", ({ payload: { event, data } }) => {
-      switch (event) {
-        case "signIn":
-          setUser(data);
-          break;
-        case "signOut":
-          setUser({});
-          break;
-      }
-    });
-
-    return unsubscribe;
-  }, [setUser]);
 
   // Navigations Bar State
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
@@ -203,7 +189,7 @@ const ResponsiveAppBar = () => {
               open={Boolean(anchorElUser)}
               onClose={handleCloseUserMenu}
             >
-              {Object.keys(user).length === 0 ? (
+              {!user.isSignedIn ? (
                 <MenuItem
                   onClick={() =>
                     Auth.federatedSignIn({

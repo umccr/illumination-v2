@@ -13,6 +13,7 @@ if (account_id === "472057503814") {
 const app_props = {
   app_name: "illumination",
   app_stage: app_stage,
+  region: "ap-southeast-2",
   client_bucket_name: {
     dev: "org.umccr.dev.illumination",
     prod: "org.umccr.prod.illumination",

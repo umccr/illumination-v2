@@ -9,6 +9,8 @@ import {
   aws_s3,
   aws_cloudfront,
   aws_cognito,
+  aws_iam,
+  aws_secretsmanager,
 } from "aws-cdk-lib";
 import { Construct } from "constructs";
 
@@ -181,6 +183,113 @@ export class InfrastructureStack extends Stack {
     new aws_ssm.StringParameter(this, "SSMOAuthRedirectIn", {
       stringValue: app_props.callback_url[app_props.app_stage][0],
       parameterName: "/illumination/oauth_redirect_out_stage",
+    });
+
+    /**
+     *  Add Autenticated user to access secret manager via Cognito Identity Pool
+     *  Ref: https://bobbyhadz.com/blog/aws-cdk-cognito-identity-pool-example
+     */
+
+    // Construcy User Pool Provider name
+    // Ref: https://stackoverflow.com/a/44007441/13137208
+    const user_pool_provider_name: string = `cognito-idp.${app_props.region}.amazonaws.com/${umccr_cognito_user_pool_id}`;
+
+    // Lookup local congito app client
+    const local_umccr_cognito_app_client_id =
+      aws_ssm.StringParameter.fromStringParameterName(
+        this,
+        "UMCCRCogClientIdLocalId",
+        "/data_portal/client/cog_app_client_id_local"
+      ).stringValue;
+    const umccr_cog_local_app_client = aws_cognito.UserPoolClient.fromUserPoolClientId(
+      this,
+      "UMCCRCogClientIdLocal",
+      local_umccr_cognito_app_client_id
+    );
+
+    const cognito_identity_pool = new aws_cognito.CfnIdentityPool(
+      this,
+      "identity-pool",
+      {
+        identityPoolName: "illumination_identity_pool",
+        allowUnauthenticatedIdentities: true,
+        cognitoIdentityProviders: [
+          {
+            clientId: illumination_client_id.userPoolClientId,
+            providerName: user_pool_provider_name,
+          },
+          {
+            clientId: umccr_cog_local_app_client.userPoolClientId,
+            providerName: user_pool_provider_name,
+          },
+        ],
+      }
+    );
+    const illumination_unauthenticated_role = new aws_iam.Role(
+      this,
+      "IlluminationUnauhtenticatedRole",
+      {
+        description: "Default role for anonymous users",
+        assumedBy: new aws_iam.FederatedPrincipal(
+          "cognito-identity.amazonaws.com",
+          {
+            StringEquals: {
+              "cognito-identity.amazonaws.com:aud": cognito_identity_pool.ref,
+            },
+            "ForAnyValue:StringLike": {
+              "cognito-identity.amazonaws.com:amr": "unauthenticated",
+            },
+          },
+          "sts:AssumeRoleWithWebIdentity"
+        ),
+      }
+    );
+
+    const illumination_authenticated_role = new aws_iam.Role(
+      this,
+      "IlluminationAuhtenticatedRole",
+      {
+        description: "Roles to access ICA secret mangaer",
+        roleName: "illumination_authenticated_pool",
+        assumedBy: new aws_iam.FederatedPrincipal(
+          "cognito-identity.amazonaws.com",
+          {
+            StringEquals: {
+              "cognito-identity.amazonaws.com:aud": cognito_identity_pool.ref,
+            },
+            "ForAnyValue:StringLike": {
+              "cognito-identity.amazonaws.com:amr": "authenticated",
+            },
+          },
+          "sts:AssumeRoleWithWebIdentity"
+        ),
+      }
+    );
+
+    // Grant access to secret manager for authenticated route
+    const ica_jwt_secret_manager = aws_secretsmanager.Secret.fromSecretNameV2(
+      this,
+      "ICAJWTSecret",
+      "IcaSecretsPortalV2" // TODO: Change secret name to the proper V2
+    );
+    ica_jwt_secret_manager.grantRead(illumination_authenticated_role);
+
+    new aws_cognito.CfnIdentityPoolRoleAttachment(
+      this,
+      "IdentityPoolRoleAttachment",
+      {
+        identityPoolId: cognito_identity_pool.ref,
+        roles: {
+          authenticated: illumination_authenticated_role.roleArn,
+          unauthenticated: illumination_unauthenticated_role.roleArn,
+        },
+      }
+    );
+
+    // Put in SSM paramter
+    new aws_ssm.StringParameter(this, "SSMIdentityPoolId", {
+      stringValue: cognito_identity_pool.ref,
+      parameterName: "/illumination/cog_identity_pool_id",
     });
   }
 }
