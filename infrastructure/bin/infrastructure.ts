@@ -2,7 +2,6 @@
 import "source-map-support/register";
 import * as cdk from "aws-cdk-lib";
 import { InfrastructureStack } from "../lib/infrastructure-stack";
-import { ProxyServerStack } from "../lib/proxy-server-stack";
 
 const account_id: string | undefined = process.env.CDK_DEFAULT_ACCOUNT;
 
@@ -36,12 +35,5 @@ new InfrastructureStack(app, "InfrastructureStack", {
   stackName: `${app_props.app_name}-stack`,
   tags: {
     stack: `${app_props.app_name}-stack`,
-  },
-});
-
-new ProxyServerStack(app, "ProxyServerStack", {
-  stackName: "icav2-proxy-server",
-  tags: {
-    stack: "icav2-proxy-server",
   },
 });

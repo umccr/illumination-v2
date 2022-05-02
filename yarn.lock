@@ -6971,7 +6971,7 @@ human-signals@^2.1.0:
 
 "icats@https://github.com/umccr-illumina/icats.git":
   version "1.0.0"
-  resolved "https://github.com/umccr-illumina/icats.git#c5bdbb25e74cc02bdb739ca6df15d5a31095f88a"
+  resolved "https://github.com/umccr-illumina/icats.git#81a1ce606f0f88bc4f6b48843822ca115977be28"
   dependencies:
     axios "^0.26.1"
 

@@ -60,12 +60,10 @@ if [ "$1" = "local" ]; then
   cog_app_client_id=$(aws ssm get-parameter --name '/data_portal/client/cog_app_client_id_local' | jq -r .Parameter.Value)
   oauth_redirect_in=$(aws ssm get-parameter --name '/data_portal/client/oauth_redirect_in_local' | jq -r .Parameter.Value)
   oauth_redirect_out=$(aws ssm get-parameter --name '/data_portal/client/oauth_redirect_out_local' | jq -r .Parameter.Value)
-  proxy_server_endpoint=http://127.0.0.1:5000
 elif [ "$1" = "deploy" ]; then
   cog_app_client_id=$(aws ssm get-parameter --name '/illumination/cognito_app_client_id' | jq -r .Parameter.Value)
   oauth_redirect_in=$(aws ssm get-parameter --name '/illumination/oauth_redirect_in_stage' | jq -r .Parameter.Value)
   oauth_redirect_out=$(aws ssm get-parameter --name '/illumination/oauth_redirect_out_stage' | jq -r .Parameter.Value)
-  proxy_server_endpoint=$(aws ssm get-parameter --name '/illumination/proxy_server' | jq -r .Parameter.Value)
 else
   echo "No Option mastch for $1"
   return 0
@@ -76,12 +74,11 @@ cog_user_pool_id=$(aws ssm get-parameter --name '/data_portal/client/cog_user_po
 data_portal_client_domain=$(aws ssm get-parameter --name '/hosted_zone/umccr/name' | jq -r .Parameter.Value)
 oauth_domain=$(aws ssm get-parameter --name '/data_portal/client/oauth_domain' | jq -r .Parameter.Value)
 
-
 # App
 export REACT_APP_BUCKET_NAME=$bucket_name
 export REACT_APP_REGION=ap-southeast-2
-export REACT_APP_UMCCR_DOMAIN_NAME=$data_portal_client_domain
-export REACT_APP_ICA_ENDPOINT=$proxy_server_endpoint
+export REACT_APP_ICA_ENDPOINT=https://ica.illumina.com/ica/rest
+export REACT_APP_ICAV2_JWT=$ICAV2_ACCESS_TOKEN
 
 # Cognito
 export REACT_APP_COG_USER_POOL_ID=$cog_user_pool_id

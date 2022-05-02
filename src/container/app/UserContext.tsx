@@ -1,8 +1,12 @@
 import React, { useContext, createContext, useState, useEffect } from "react";
 import { Auth } from "aws-amplify";
+
 import CircularProgress from "@mui/material/CircularProgress";
 import Container from "@mui/material/Container";
 import { Typography } from "@mui/material";
+
+import { SetToken } from "icats";
+import { get_ica_jwt_token } from "../../utils/AWS";
 
 // Interface
 interface iProviderprops {
@@ -39,7 +43,12 @@ function UserContextProvider(props: iProviderprops) {
     }
     onLoad();
   }, []);
-  
+
+  useEffect(() => {
+    const ica_jwt: string = get_ica_jwt_token();
+    SetToken(process.env.REACT_APP_ICAV2_JWT ?? ica_jwt);
+  }, [user]);
+
   return (
     <UserContext.Provider value={{ user, setUser }}>
       {isAuthenticating ? (
