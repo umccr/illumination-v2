@@ -1,10 +1,7 @@
-import React, { useEffect, useState } from "react";
-
-// React Router Dom
-import { Link as RouterLink } from "react-router-dom";
+import React from "react";
 
 // aws-amplify
-import { Auth, Hub } from "aws-amplify";
+import { Auth } from "aws-amplify";
 import { CognitoHostedUIIdentityProvider } from "@aws-amplify/auth";
 
 // MaterialUI
@@ -74,7 +71,7 @@ function navbarLinkButton(linkInformation: NavBarLinkConstant) {
 
 const ResponsiveAppBar = () => {
   // User Context State
-  const { user, setUser } = useUserContext();
+  const { user } = useUserContext();
 
   // Navigations Bar State
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(

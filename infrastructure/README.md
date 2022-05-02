@@ -8,6 +8,8 @@ New Resource declare in this stack:
 - S3 bucket - To store static app code.
 - CloudFront - To allow access from the domain name to s3 bucket,
 - SSM paramter - To store environment values
+- Cognito Identity Pool - To add read secret manager access for authenticated user from Cognito User Pool.
+
 
 Modifying existing resource:
 - [UMCCR cognito_user_pool](https://github.com/umccr/infrastructure/tree/master/terraform/stacks/cognito_aai) - adding a new app client for `illumination.${stage}.umccr.org` to existing UMCCR Cognito User Pool.

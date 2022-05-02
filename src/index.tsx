@@ -3,7 +3,6 @@ import ReactDOM from "react-dom";
 import reportWebVitals from "./reportWebVitals";
 import { BrowserRouter } from "react-router-dom";
 import { Amplify } from "aws-amplify";
-import { SetBasicConfig } from "icats";
 
 import App from "./App";
 import "./index.css";
