@@ -45,6 +45,7 @@ unset REACT_APP_COG_IDENTITY_POOL_ID
 unset REACT_APP_OAUTH_DOMAIN
 unset REACT_APP_OAUTH_REDIRECT_IN
 unset REACT_APP_OAUTH_REDIRECT_OUT
+unset REACT_APP_ICA_JWT_SECRET_NAME
 echo "UNSET REACT ENV VAR"
 
 # Illumination parmeter
@@ -65,6 +66,7 @@ elif [ "$1" = "deploy" ]; then
   cog_app_client_id=$(aws ssm get-parameter --name '/illumination/cognito_app_client_id' | jq -r .Parameter.Value)
   oauth_redirect_in=$(aws ssm get-parameter --name '/illumination/oauth_redirect_in_stage' | jq -r .Parameter.Value)
   oauth_redirect_out=$(aws ssm get-parameter --name '/illumination/oauth_redirect_out_stage' | jq -r .Parameter.Value)
+  unset byo_jwt_token
 else
   echo "No Option mastch for $1"
   return 0
@@ -80,6 +82,7 @@ export REACT_APP_BUCKET_NAME=$bucket_name
 export REACT_APP_REGION=ap-southeast-2
 export REACT_APP_ICA_ENDPOINT=https://ica.illumina.com/ica/rest
 export REACT_APP_ICAV2_JWT=$byo_jwt_token
+export REACT_APP_ICA_JWT_SECRET_NAME=IcaV2SecretsWorkflow
 
 # Cognito
 export REACT_APP_COG_USER_POOL_ID=$cog_user_pool_id
