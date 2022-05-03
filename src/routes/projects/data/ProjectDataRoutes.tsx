@@ -12,38 +12,20 @@ import ProjectNonSampleDataPage from "../../../pages/projects/data/ProjectNonSam
 // import ProjectDataSecondaryDataPage from "../../../pages/projects/data/ProjectDataSecondaryDataPage";
 
 const ProjectBaseRoutes: React.ReactNode[] = [
-  <Route
-    index
-    element={<ProtectedRoute element={<ProjectDataListPage />} />}
-    key="ProjectDataIndex"
-  />,
+  <Route index element={<ProjectDataListPage />} key="ProjectDataIndex" />,
   <Route path="eligibleForLinking" key="projectDataEligibleForLinking">
-    <Route
-      index
-      element={
-        <ProtectedRoute element={<ProjectDataEligibleForLinkingPage />} />
-      }
-    />
+    <Route index element={<ProjectDataEligibleForLinkingPage />} />
   </Route>,
   <Route path="nonSampleData" key="ProejectnonSampleDataPage">
-    <Route
-      index
-      element={<ProtectedRoute element={<ProjectNonSampleDataPage />} />}
-    />
+    <Route index element={<ProjectNonSampleDataPage />} />
   </Route>,
   <Route path=":dataId" key="projectDataId">
-    <Route index element={<ProtectedRoute element={<ProjectDataPage />} />} />
-    <Route
-      path="children"
-      element={<ProtectedRoute element={<ProjectDataChildrenPage />} />}
-    />
-    <Route
-      path="linkedProject"
-      element={<ProtectedRoute element={<ProjectDataLinkedPage />} />}
-    />
+    <Route index element={<ProjectDataPage />} />
+    <Route path="children" element={<ProjectDataChildrenPage />} />
+    <Route path="linkedProject" element={<ProjectDataLinkedPage />} />
     {/* <Route
       path="secondaryData"
-      element={<ProtectedRoute element={<ProjectDataSecondaryDataPage />} />}
+      element={<ProjectDataSecondaryDataPage/>}
     /> */}
   </Route>,
 ];

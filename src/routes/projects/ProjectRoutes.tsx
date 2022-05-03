@@ -15,11 +15,11 @@ import ProjectDataRoutes from "./data/ProjectDataRoutes";
 const ProjectRoutes: React.ReactNode[] = [
   <Route
     index
-    element={<ProtectedRoute element={<ProjectsPage />} />}
+    element={<ProjectsPage />}
     key="projectIndex"
   />,
   <Route path=":projectId" key="projectIdRoute">
-    <Route index element={<ProtectedRoute element={<ProjectPage />} />} />
+    <Route index element={<ProjectPage />} />
     <Route path="analyses">{ProjectAnalysesRoutes}</Route>
     <Route path="base">{ProjectBaseRoutes}</Route>
     <Route path="data">{ProjectDataRoutes}</Route>

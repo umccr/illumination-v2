@@ -9,12 +9,12 @@ import ProjectCustomNotificationsPage from "../../../pages/projects/notification
 const ProjectNotificationSubscriptionsRoutes: React.ReactNode[] = [
   <Route
     index
-    element={<ProtectedRoute element={<ProjectCustomNotificationsPage />} />}
+    element={<ProjectCustomNotificationsPage />}
     key="projectCustomNotificationSubsIndex"
   />,
   <Route
     path=":subId"
-    element={<ProtectedRoute element={<ProjectCustomNotificationPage />} />}
+    element={<ProjectCustomNotificationPage />}
     key="projectCustomNotificationSubsSubId"
   />,
 ];

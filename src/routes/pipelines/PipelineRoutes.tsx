@@ -11,18 +11,18 @@ import PipelineReferenceSetsPage from "../../pages/pipelines/PipelineReferenceSe
 const ProjectRoutes: React.ReactNode[] = [
   <Route
     index
-    element={<ProtectedRoute element={<PipelinesPage />} />}
+    element={<PipelinesPage />}
     key="pipelineIndex"
   />,
   <Route path=":pipelineId" key="projectIdRoute">
-    <Route index element={<ProtectedRoute element={<PipelinePage />} />} />
+    <Route index element={<PipelinePage />} />
     <Route
       path="inputParameters"
-      element={<ProtectedRoute element={<PipelineInputParametersPage />} />}
+      element={<PipelineInputParametersPage />}
     />
     <Route
       path="referenceSets"
-      element={<ProtectedRoute element={<PipelineReferenceSetsPage />} />}
+      element={<PipelineReferenceSetsPage />}
     /> 
   </Route>,
 ];

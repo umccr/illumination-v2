@@ -8,22 +8,14 @@ import ProjectBaseJobsPage from "../../../pages/projects/base/ProjectBaseJobsPag
 import ProjectBaseTablesPage from "../../../pages/projects/base/ProjectBaseTablesPage";
 import NotFoundPage from "../../../pages/NotFoundPage";
 
-
 const ProjectBaseRoutes: React.ReactNode[] = [
-  <Route
-    index
-    element={<ProtectedRoute element={<NotFoundPage />} />}
-    key="ProjectBaseIndex"
-  />,
+  <Route index element={<NotFoundPage />} key="ProjectBaseIndex" />,
   <Route path="jobs" key="projectBaseJobs">
-    <Route index element={<ProtectedRoute element={<ProjectBaseJobsPage />} />} />
-    <Route
-      path=":baseJobId"
-      element={<ProtectedRoute element={<ProjectBaseJobPage />} />}
-    />
+    <Route index element={<ProjectBaseJobsPage />} />
+    <Route path=":baseJobId" element={<ProjectBaseJobPage />} />
   </Route>,
   <Route path="tables" key="projectBaseTable">
-    <Route index element={<ProtectedRoute element={<ProjectBaseTablesPage />} />} />
+    <Route index element={<ProjectBaseTablesPage />} />
   </Route>,
 ];
 

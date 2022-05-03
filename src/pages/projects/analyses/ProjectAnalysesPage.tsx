@@ -37,6 +37,7 @@ const COLUMN_MAPPPING: IColumnMapping[] = [
   { displayName: "Tenant Id", jsonKeys: ["tenantId"] },
   { displayName: "Tenant Name", jsonKeys: ["tenantName"] },
   { displayName: "Reference", jsonKeys: ["reference"] },
+  { displayName: "Status", jsonKeys: ["status"] },
   { displayName: "User Reference", jsonKeys: ["userReference"] },
   { displayName: "Pipeline Id", jsonKeys: ["pipeline", "id"] },
 ];

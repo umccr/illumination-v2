@@ -9,6 +9,8 @@ import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import CircularProgress from "@mui/material/CircularProgress";
 
+import { grey } from "@mui/material/colors";
+
 import { ProjectApiAxiosParamCreator, ProjectPagedList, RunAxios } from "icats";
 
 async function getProjectData(): Promise<ProjectPagedList> {
@@ -45,7 +47,7 @@ function OverviewProject() {
     <TableContainer
       component={Paper}
       elevation={3}
-      sx={{ display: "flex", justifyContent: "center"}}
+      sx={{ display: "flex", justifyContent: "center" }}
     >
       {!projectData ? (
         <div style={{ minHeight: "75px" }}>
@@ -54,10 +56,13 @@ function OverviewProject() {
       ) : (
         <Table sx={{ minWidth: 650, width: "100%" }} aria-label="simple table">
           <TableHead>
-            <TableRow>
-              <TableCell>Projects</TableCell>
+            <TableRow sx={{ backgroundColor: grey[200] }}>
+              <TableCell sx={{ fontWeight: "bold" }}>Projects</TableCell>
               <TableCell
-                sx={{ borderLeft: "1px solid rgba(224, 224, 224, 1)" }}
+                sx={{
+                  borderLeft: "1px solid rgba(224, 224, 224, 1)",
+                  fontWeight: "bold",
+                }}
               >
                 Data
               </TableCell>
@@ -70,12 +75,24 @@ function OverviewProject() {
                 sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
               >
                 <TableCell component="th" scope="row">
-                  {row.name}
+                  <Link
+                    to={`projects/${row.id}`}
+                    style={{
+                      textDecoration: "none",
+                      color: "#4183c4",
+                      fontWeight: "bold",
+                    }}
+                  >
+                    {row.name}
+                  </Link>
                 </TableCell>
                 <TableCell
                   style={{ borderLeft: "1px solid rgba(224, 224, 224, 1)" }}
                 >
-                  <Link to={row.id} style={{ textDecoration: "none" }}>
+                  <Link
+                    to={`projects/${row.id}/data`}
+                    style={{ textDecoration: "none", color: "#4183c4" }}
+                  >
                     DATA
                   </Link>
                 </TableCell>

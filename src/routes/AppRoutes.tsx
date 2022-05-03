@@ -7,14 +7,19 @@ import PipelineRoutes from "./pipelines/PipelineRoutes";
 
 // Custom Routing
 import ProtectedRoute from "./utils/ProtectedRoute";
+import SignInPage from "../pages/SignInPage";
+import NotFoundPage from "../pages/NotFoundPage";
 
 export default function AppRoutes() {
   return (
     <Routes>
-      <Route path="/" element={<ProtectedRoute element={<HomePage />} />} />
-
-      <Route path="projects">{ProjectRoutes}</Route>
-      <Route path="pipelines">{PipelineRoutes}</Route>
+      <Route path="/" element={<ProtectedRoute />}>
+        <Route index element={<HomePage />} />
+        <Route path="projects">{ProjectRoutes}</Route>
+        <Route path="pipelines">{PipelineRoutes}</Route>
+      </Route>
+      <Route path="/signIn" element={<SignInPage />} />
+      <Route path="*" element={<NotFoundPage />} />
     </Routes>
   );
 }
