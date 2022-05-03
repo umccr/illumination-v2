@@ -2,7 +2,6 @@ import React from "react";
 
 import { Route } from "react-router-dom";
 
-import ProtectedRoute from "../../utils/ProtectedRoute";
 import ProjectDataListPage from "../../../pages/projects/data/ProjectDataListPage";
 import ProjectDataPage from "../../../pages/projects/data/ProjectDataPage";
 import ProjectDataLinkedPage from "../../../pages/projects/data/ProjectDataLinkedPage";

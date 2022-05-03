@@ -2,8 +2,6 @@ import React from "react";
 
 import { Route } from "react-router-dom";
 
-import ProtectedRoute from "../../utils/ProtectedRoute";
-
 import ProjectAnalysesPage from "../../../pages/projects/analyses/ProjectAnalysesPage";
 import ProjectAnalysesStepPage from "../../../pages/projects/analyses/ProjectAnalysesStepPage";
 import ProjectAnalysisPage from "../../../pages/projects/analyses/ProjectAnalysisPage";
