@@ -10,12 +10,12 @@ const ProjectNotificationSubscriptionsRoutes: React.ReactNode[] = [
   <Route
     key="projectNotificationIndex"
     index
-    element={<ProtectedRoute element={<ProjectNotificationsPage />} />}
+    element={<ProjectNotificationsPage />}
   />,
   <Route
     key="projectNotificationSubId"
     path=":subId"
-    element={<ProtectedRoute element={<ProjectNotificationPage />} />}
+    element={<ProjectNotificationPage />}
   />,
 ];
 

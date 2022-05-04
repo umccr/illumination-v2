@@ -57,7 +57,7 @@ function UserContextProvider(props: iProviderprops) {
           if (process.env.REACT_APP_ICA_JWT_SECRET_NAME) {
             const ica_jwt = await get_secret_manager_value(
               await getCredsUser(),
-              process.env.REACT_APP_ICA_JWT_SECRET_NAME ?? ""
+              process.env.REACT_APP_ICA_JWT_SECRET_NAME
             );
 
             SetToken(ica_jwt);

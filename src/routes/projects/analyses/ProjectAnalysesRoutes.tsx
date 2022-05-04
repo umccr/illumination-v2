@@ -13,37 +13,16 @@ import ProjectAnalysesRawOutputsPage from "../../../pages/projects/analyses/Proj
 import ProjectAnalysesConfigurationsPage from "../../../pages/projects/analyses/ProjectAnalysesConfigurationsPage";
 
 const ProjectAnalysesRoutes: React.ReactNode[] = [
-  <Route
-    index
-    element={<ProtectedRoute element={<ProjectAnalysesPage />} />}
-    key="projectAnalysesIndex"
-  />,
+  <Route index element={<ProjectAnalysesPage />} key="projectAnalysesIndex" />,
   <Route path=":analysisId" key="projectAnalysisId">
-    <Route
-      index
-      element={<ProtectedRoute element={<ProjectAnalysisPage />} />}
-    />
-    <Route
-      path="steps"
-      element={<ProtectedRoute element={<ProjectAnalysesStepPage />} />}
-    />
-    <Route
-      path="inputs"
-      element={<ProtectedRoute element={<ProjectAnalysesInputsPage />} />}
-    />
-    <Route
-      path="outputs"
-      element={<ProtectedRoute element={<ProjectAnalysesOutputsPage />} />}
-    />
-    <Route
-      path="rawOutputs"
-      element={<ProtectedRoute element={<ProjectAnalysesRawOutputsPage />} />}
-    />
+    <Route index element={<ProjectAnalysisPage />} />
+    <Route path="steps" element={<ProjectAnalysesStepPage />} />
+    <Route path="inputs" element={<ProjectAnalysesInputsPage />} />
+    <Route path="outputs" element={<ProjectAnalysesOutputsPage />} />
+    <Route path="rawOutputs" element={<ProjectAnalysesRawOutputsPage />} />
     <Route
       path="configurations"
-      element={
-        <ProtectedRoute element={<ProjectAnalysesConfigurationsPage />} />
-      }
+      element={<ProjectAnalysesConfigurationsPage />}
     />
   </Route>,
 ];
