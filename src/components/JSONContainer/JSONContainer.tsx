@@ -20,7 +20,7 @@ function JSONContainer(props: IJSONProps) {
       </Button>
       <JSONPretty
         data={data}
-        style={{ margin: "-1em 0" }}
+        style={{ margin: "-1em 0 2em" }}
         theme={{
           main: "line-height:1.3;color:#66d9ef;background:#272822;overflow:auto;",
           string: "color:#fd971f;",
