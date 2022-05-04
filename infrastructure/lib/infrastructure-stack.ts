@@ -82,6 +82,16 @@ export class InfrastructureStack extends Stack {
       }
     );
 
+    // Setting up to re-route external url
+    // Ref: https://stackoverflow.com/questions/44318922/receive-accessdenied-when-trying-to-access-a-page-via-the-full-url-on-my-website
+    const customErrorResponseProperty: aws_cloudfront.CfnDistribution.CustomErrorResponseProperty =
+      {
+        errorCode: 403,
+        errorCachingMinTtl: 60,
+        responseCode: 200,
+        responsePagePath: "/index.html",
+      };
+
     // Setup CloudFront
     const cloudfront_web_distribution =
       new aws_cloudfront.CloudFrontWebDistribution(
@@ -98,6 +108,7 @@ export class InfrastructureStack extends Stack {
             },
           ],
           defaultRootObject: "index.html",
+          errorConfigurations: [customErrorResponseProperty],
           priceClass: aws_cloudfront.PriceClass.PRICE_CLASS_ALL,
           viewerProtocolPolicy:
             aws_cloudfront.ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
@@ -201,18 +212,19 @@ export class InfrastructureStack extends Stack {
         "UMCCRCogClientIdLocalId",
         "/data_portal/client/cog_app_client_id_local"
       ).stringValue;
-    const umccr_cog_local_app_client = aws_cognito.UserPoolClient.fromUserPoolClientId(
-      this,
-      "UMCCRCogClientIdLocal",
-      local_umccr_cognito_app_client_id
-    );
+    const umccr_cog_local_app_client =
+      aws_cognito.UserPoolClient.fromUserPoolClientId(
+        this,
+        "UMCCRCogClientIdLocal",
+        local_umccr_cognito_app_client_id
+      );
 
     const cognito_identity_pool = new aws_cognito.CfnIdentityPool(
       this,
       "identity-pool",
       {
         identityPoolName: "illumination_identity_pool",
-        allowUnauthenticatedIdentities: true,
+        allowUnauthenticatedIdentities: false,
         cognitoIdentityProviders: [
           {
             clientId: illumination_client_id.userPoolClientId,
@@ -223,25 +235,6 @@ export class InfrastructureStack extends Stack {
             providerName: user_pool_provider_name,
           },
         ],
-      }
-    );
-    const illumination_unauthenticated_role = new aws_iam.Role(
-      this,
-      "IlluminationUnauhtenticatedRole",
-      {
-        description: "Default role for anonymous users",
-        assumedBy: new aws_iam.FederatedPrincipal(
-          "cognito-identity.amazonaws.com",
-          {
-            StringEquals: {
-              "cognito-identity.amazonaws.com:aud": cognito_identity_pool.ref,
-            },
-            "ForAnyValue:StringLike": {
-              "cognito-identity.amazonaws.com:amr": "unauthenticated",
-            },
-          },
-          "sts:AssumeRoleWithWebIdentity"
-        ),
       }
     );
 
@@ -270,7 +263,7 @@ export class InfrastructureStack extends Stack {
     const ica_jwt_secret_manager = aws_secretsmanager.Secret.fromSecretNameV2(
       this,
       "ICAJWTSecret",
-      "IcaSecretsPortalV2" // TODO: Change secret name to the proper V2
+      app_props.jwt_secret_name
     );
     ica_jwt_secret_manager.grantRead(illumination_authenticated_role);
 
@@ -281,7 +274,6 @@ export class InfrastructureStack extends Stack {
         identityPoolId: cognito_identity_pool.ref,
         roles: {
           authenticated: illumination_authenticated_role.roleArn,
-          unauthenticated: illumination_unauthenticated_role.roleArn,
         },
       }
     );

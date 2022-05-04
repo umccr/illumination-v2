@@ -48,13 +48,23 @@ function UserContextProvider(props: iProviderprops) {
           currentAuthenticatedUser: await getAuthUser(),
         });
 
-        // SetToken from SecretManager
-        const ica_jwt = await get_secret_manager_value(
-          await getCredsUser(),
-          "IcaSecretsPortal"
-        );
-        SetToken(process.env.REACT_APP_ICAV2_JWT ?? ica_jwt);
-        
+        if (process.env.REACT_APP_ICAV2_JWT) {
+          // Using BYO Token
+          SetToken(process.env.REACT_APP_ICAV2_JWT);
+        } else {
+          // SetToken from SecretManager
+
+          if (process.env.REACT_APP_ICA_JWT_SECRET_NAME) {
+            const ica_jwt = await get_secret_manager_value(
+              await getCredsUser(),
+              process.env.REACT_APP_ICA_JWT_SECRET_NAME
+            );
+
+            SetToken(ica_jwt);
+          } else {
+            throw new Error("Unable to set token for ICA endpoint");
+          }
+        }
       } catch (e) {
         setUser({
           isSignedIn: false,
