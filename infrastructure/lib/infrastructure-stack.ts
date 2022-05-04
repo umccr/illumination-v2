@@ -82,6 +82,16 @@ export class InfrastructureStack extends Stack {
       }
     );
 
+    // Setting up to re-route external url
+    // Ref: https://stackoverflow.com/questions/44318922/receive-accessdenied-when-trying-to-access-a-page-via-the-full-url-on-my-website
+    const customErrorResponseProperty: aws_cloudfront.CfnDistribution.CustomErrorResponseProperty =
+      {
+        errorCode: 403,
+        errorCachingMinTtl: 60,
+        responseCode: 200,
+        responsePagePath: "/index.html",
+      };
+
     // Setup CloudFront
     const cloudfront_web_distribution =
       new aws_cloudfront.CloudFrontWebDistribution(
@@ -98,6 +108,7 @@ export class InfrastructureStack extends Stack {
             },
           ],
           defaultRootObject: "index.html",
+          errorConfigurations: [customErrorResponseProperty],
           priceClass: aws_cloudfront.PriceClass.PRICE_CLASS_ALL,
           viewerProtocolPolicy:
             aws_cloudfront.ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
