@@ -2,7 +2,6 @@ import React from "react";
 
 import { Route } from "react-router-dom";
 
-import ProtectedRoute from "../../utils/ProtectedRoute";
 import ProjectCustomNotificationPage from "../../../pages/projects/notificationSubscriptions/ProjectCustomNotificationPage";
 import ProjectCustomNotificationsPage from "../../../pages/projects/notificationSubscriptions/ProjectCustomNotificationsPage";
 
