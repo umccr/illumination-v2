@@ -6,6 +6,7 @@ const config = {
     REGION: REGION,
     USER_POOL_ID: process.env.REACT_APP_COG_USER_POOL_ID,
     APP_CLIENT_ID: process.env.REACT_APP_COG_APP_CLIENT_ID,
+    IDENTITY_POOL_ID: process.env.REACT_APP_COG_IDENTITY_POOL_ID,
     OAUTH: {
       domain: OAUTH_DOMAIN,
       scope: ["email", "aws.cognito.signin.user.admin", "openid", "profile"],
@@ -13,11 +14,7 @@ const config = {
       redirectSignOut: process.env.REACT_APP_OAUTH_REDIRECT_OUT,
       responseType: "code",
     },
-  },
-  icaEndpoint: {
-    REGION: REGION,
-    API: `http://localhost:5000`,
-  },
+  }
 };
 
 export default config;

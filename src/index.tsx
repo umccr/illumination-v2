@@ -3,13 +3,10 @@ import ReactDOM from "react-dom";
 import reportWebVitals from "./reportWebVitals";
 import { BrowserRouter } from "react-router-dom";
 import { Amplify } from "aws-amplify";
-import { SetBasicConfig } from "icats";
 
 import App from "./App";
 import "./index.css";
 import config from "./config";
-
-SetBasicConfig({ baseURL: "http://127.0.0.1:5000/ica/rest" });
 
 
 Amplify.configure({
@@ -19,6 +16,7 @@ Amplify.configure({
     userPoolId: config.cognito.USER_POOL_ID,
     userPoolWebClientId: config.cognito.APP_CLIENT_ID,
     oauth: config.cognito.OAUTH,
+    identityPoolId: config.cognito.IDENTITY_POOL_ID,
   },
 });
 

@@ -2,25 +2,40 @@
 import "source-map-support/register";
 import * as cdk from "aws-cdk-lib";
 import { InfrastructureStack } from "../lib/infrastructure-stack";
-import { ProxyServerStack } from "../lib/proxy-server-stack";
 
-const app = new cdk.App();
+const account_id: string | undefined = process.env.CDK_DEFAULT_ACCOUNT;
+
+let app_stage: string = "dev";
+if (account_id === "472057503814") {
+  app_stage = "prod";
+}
+
+const app_props = {
+  app_name: "illumination",
+  app_stage: app_stage,
+  jwt_secret_name: "IcaV2SecretsWorkflow",
+  region: "ap-southeast-2",
+  client_bucket_name: {
+    dev: "org.umccr.dev.illumination",
+    prod: "org.umccr.prod.illumination",
+  },
+  alias_domain_name: {
+    dev: ["illumination.dev.umccr.org"],
+    prod: ["illumination.prod.umccr.org", "illumination.umccr.org"],
+  },
+  callback_url: {
+    dev: ["https://illumination.dev.umccr.org"],
+    prod: [
+      "https://illumination.umccr.org",
+      "https://illumination.prod.umccr.org",
+    ],
+  },
+};
+
+const app = new cdk.App({ context: { app_props: app_props } });
 new InfrastructureStack(app, "InfrastructureStack", {
-  /* If you don't specify 'env', this stack will be environment-agnostic.
-   * Account/Region-dependent features and context lookups will not work,
-   * but a single synthesized template can be deployed anywhere. */
-  /* Uncomment the next line to specialize this stack for the AWS Account
-   * and Region that are implied by the current CLI configuration. */
-  // env: { account: process.env.CDK_DEFAULT_ACCOUNT, region: process.env.CDK_DEFAULT_REGION },
-  /* Uncomment the next line if you know exactly what Account and Region you
-   * want to deploy the stack to. */
-  // env: { account: '123456789012', region: 'us-east-1' },
-  /* For more information, see https://docs.aws.amazon.com/cdk/latest/guide/environments.html */
-});
-
-new ProxyServerStack(app, "ProxyServerStack", {
-  stackName: "icav2-proxy-server",
+  stackName: `${app_props.app_name}-stack`,
   tags: {
-    stack: "icav2-proxy-server",
+    stack: `${app_props.app_name}-stack`,
   },
 });

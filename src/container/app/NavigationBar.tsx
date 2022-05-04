@@ -1,10 +1,7 @@
-import React, { useEffect, useState } from "react";
-
-// React Router Dom
-import { Link as RouterLink } from "react-router-dom";
+import React from "react";
 
 // aws-amplify
-import { Auth, Hub } from "aws-amplify";
+import { Auth } from "aws-amplify";
 import { CognitoHostedUIIdentityProvider } from "@aws-amplify/auth";
 
 // MaterialUI
@@ -74,21 +71,7 @@ function navbarLinkButton(linkInformation: NavBarLinkConstant) {
 
 const ResponsiveAppBar = () => {
   // User Context State
-  const { user, setUser } = useUserContext();
-  useEffect(() => {
-    const unsubscribe = Hub.listen("auth", ({ payload: { event, data } }) => {
-      switch (event) {
-        case "signIn":
-          setUser(data);
-          break;
-        case "signOut":
-          setUser({});
-          break;
-      }
-    });
-
-    return unsubscribe;
-  }, [setUser]);
+  const { user } = useUserContext();
 
   // Navigations Bar State
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
@@ -203,7 +186,7 @@ const ResponsiveAppBar = () => {
               open={Boolean(anchorElUser)}
               onClose={handleCloseUserMenu}
             >
-              {Object.keys(user).length === 0 ? (
+              {!user.isSignedIn ? (
                 <MenuItem
                   onClick={() =>
                     Auth.federatedSignIn({

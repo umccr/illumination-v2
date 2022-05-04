@@ -12,6 +12,7 @@ export default function AppRoutes() {
   return (
     <Routes>
       <Route path="/" element={<ProtectedRoute element={<HomePage />} />} />
+
       <Route path="projects">{ProjectRoutes}</Route>
       <Route path="pipelines">{PipelineRoutes}</Route>
     </Routes>

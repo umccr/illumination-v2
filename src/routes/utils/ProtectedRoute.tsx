@@ -13,10 +13,9 @@ interface IProtectedRouteProps {
 
 function ProtectedRoute(props: IProtectedRouteProps) {
   const { user } = useUserContext();
-
   return (
     <Grid container>
-      {Object.keys(user).length !== 0 ? (
+      {user.isSignedIn ? (
         props.element
       ) : (
         <>
