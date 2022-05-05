@@ -13,7 +13,7 @@ interface IButtonProps {
 const buttonProps: IButtonProps[] = [
   { name: "Projects", route: "/projects" },
   { name: "Pipeline", route: "/pipelines" },
-  // { name: "Bundles", route: "/bundles" },
+  { name: "Bundles", route: "/bundles" },
   // { name: "Users", route: "/users" },
   // { name: "Workgroups", route: "/workgroups" },
   // { name: "Region", route: "/regions" },
