@@ -4,6 +4,7 @@ import HomePage from "../pages/home/HomePage";
 
 import ProjectRoutes from "./projects/ProjectRoutes";
 import PipelineRoutes from "./pipelines/PipelineRoutes";
+import BundleRoutes from "./bundles/BundlesRoutes";
 
 // Custom Routing
 import ProtectedRoute from "./utils/ProtectedRoute";
@@ -17,6 +18,7 @@ export default function AppRoutes() {
         <Route index element={<HomePage />} />
         <Route path="projects">{ProjectRoutes}</Route>
         <Route path="pipelines">{PipelineRoutes}</Route>
+        <Route path="bundles">{BundleRoutes}</Route>
       </Route>
       <Route path="/signIn" element={<SignInPage />} />
       <Route path="*" element={<NotFoundPage />} />

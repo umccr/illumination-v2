@@ -11,6 +11,7 @@ import ProjectCustomNotificationsRoutes from "./notificationSubscriptions/Projec
 import ProjectNotificationsRoutes from "./notificationSubscriptions/ProjectNotificationSubscriptionsRoutes";
 import ProjectDataRoutes from "./data/ProjectDataRoutes";
 import ProjectPipelinesRoutes from "./pipelines/ProjectPipelinesRoutes";
+import ProjectBundlesRoutes from "./bundles/ProjectBundlesRoutes";
 
 const ProjectRoutes: React.ReactNode[] = [
   <Route index element={<ProjectsPage />} key="projectIndex" />,
@@ -24,6 +25,7 @@ const ProjectRoutes: React.ReactNode[] = [
     </Route>
     <Route path="notificationSubscriptions">{ProjectNotificationsRoutes}</Route>
     <Route path="pipelines">{ProjectPipelinesRoutes}</Route>
+    <Route path="bundles">{ProjectBundlesRoutes}</Route>
   </Route>,
 ];
 
