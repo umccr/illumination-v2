@@ -7,8 +7,8 @@ import CircularProgress from "@mui/material/CircularProgress";
 
 // icats component
 import {
-  MetadataModelList,
-  MetadataModelApiAxiosParamCreator,
+  NotificationChannelList,
+  NotificationChannelApiAxiosParamCreator,
   RunAxios,
 } from "icats";
 
@@ -28,36 +28,39 @@ const COLUMN_MAPPPING: IColumnMapping[] = [
     jsonKeys: ["id"],
     linkTo: { formatString: "{0}", formatValue: [["id"]] },
   },
-  { displayName: "Owner Id", jsonKeys: ["ownerId"] },
-  { displayName: "Tenant Id", jsonKeys: ["tenantId"] },
-  { displayName: "Name", jsonKeys: ["name"] },
-  { displayName: "Description", jsonKeys: ["description"] },
-  { displayName: "State", jsonKeys: ["state"] },
+  { displayName: "Address", jsonKeys: ["address"] },
+  { displayName: "Type", jsonKeys: ["type"] },
+
+  { displayName: "Owner Id", jsonKeys: ["ownerId"] }, 
+  { displayName: "Tenant Name", jsonKeys: ["tenantName"] },
+  { displayName: "Enabled", jsonKeys: ["enabled"] },
+
   { displayName: "Time Created", jsonKeys: ["timeCreated"] },
   { displayName: "Time Modified", jsonKeys: ["timeModified"] },
 ];
 
-async function getMetadataModelData(
+async function getNotificationChannelsData(
   parameter: any
-): Promise<MetadataModelList> {
+): Promise<NotificationChannelList> {
   // Generate axios parameter
-  const MetadataModelParamCreator = MetadataModelApiAxiosParamCreator();
-  const getMetadataModelsParam =
-    await MetadataModelParamCreator.getMetadataModels();
+  const NotificationChannelsParamCreator =
+    NotificationChannelApiAxiosParamCreator();
+  const getNotificationChannelssParam =
+    await NotificationChannelsParamCreator.getNotificationChannels();
 
-  getMetadataModelsParam.url += `?`;
+  getNotificationChannelssParam.url += `?`;
   for (const element in parameter) {
-    getMetadataModelsParam.url += `${element}=${parameter[element]}&`;
+    getNotificationChannelssParam.url += `${element}=${parameter[element]}&`;
   }
 
   // Calling axios
-  const axiosData = await RunAxios(getMetadataModelsParam);
+  const axiosData = await RunAxios(getNotificationChannelssParam);
   return axiosData.data;
 }
 
-function MetadataModelsPage() {
-  const [projectListResponse, setMetadataModelListResponse] =
-    useState<MetadataModelList | null>();
+function NotificationChannelssPage() {
+  const [projectListResponse, setNotificationChannelListResponse] =
+    useState<NotificationChannelList | null>();
   const [paginationProps, setPaginationProps] =
     useState<IPaginationProps>(paginationPropsInit);
   function handlePaginationPropsChange(newProps: any) {
@@ -87,10 +90,10 @@ function MetadataModelsPage() {
 
     async function fetchData() {
       try {
-        const data = await getMetadataModelData(apiParameter);
+        const data = await getNotificationChannelsData(apiParameter);
         if (cancel) return;
 
-        setMetadataModelListResponse(data);
+        setNotificationChannelListResponse(data);
         handlePaginationPropsChange({
           totalItem: getTotalItemCountFromRes(data),
         });
@@ -119,7 +122,7 @@ function MetadataModelsPage() {
       spacing={3}
     >
       <Grid item xs={12}>
-        <Typography variant="h4">Available Metadata Models</Typography>
+        <Typography variant="h4">Available Notification Channels</Typography>
       </Grid>
 
       {!projectListResponse ? (
@@ -143,4 +146,4 @@ function MetadataModelsPage() {
   );
 }
 
-export default MetadataModelsPage;
+export default NotificationChannelssPage;

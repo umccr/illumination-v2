@@ -6,6 +6,7 @@ import ProjectRoutes from "./projects/ProjectRoutes";
 import PipelineRoutes from "./pipelines/PipelineRoutes";
 import BundleRoutes from "./bundles/BundlesRoutes";
 import MetadataModelsRoute from "./metadataModels/metadataModelsRoute";
+import NotificationChannelRoutes from "./notificationChannels/notificationChannelRoutes";
 // Custom Routing
 import ProtectedRoute from "./utils/ProtectedRoute";
 import SignInPage from "../pages/SignInPage";
@@ -31,6 +32,7 @@ export default function AppRoutes() {
         <Route path="eventCodes" element={<EventCodesPage />} />
         <Route path="eventLog" element={<EventLogPage />} />
         <Route path="metadataModels">{MetadataModelsRoute}</Route>
+        <Route path="notificationChannels">{NotificationChannelRoutes}</Route>
       </Route>
       <Route path="/signIn" element={<SignInPage />} />
       <Route path="*" element={<NotFoundPage />} />
