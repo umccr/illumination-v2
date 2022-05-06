@@ -11,6 +11,7 @@ import ProtectedRoute from "./utils/ProtectedRoute";
 import SignInPage from "../pages/SignInPage";
 import NotFoundPage from "../pages/NotFoundPage";
 import AnalysisStoragePage from "../pages/analysisStorage/AnalysisStoragePage";
+import DataFormatsPage from "../pages/dataFormats/DataFormatsPage";
 
 export default function AppRoutes() {
   return (
@@ -24,6 +25,7 @@ export default function AppRoutes() {
 
         {/* Other Routes */}
         <Route path="analysisStorage" element={<AnalysisStoragePage />} />
+        <Route path="dataFormats" element={<DataFormatsPage />} />
       </Route>
       <Route path="/signIn" element={<SignInPage />} />
       <Route path="*" element={<NotFoundPage />} />
