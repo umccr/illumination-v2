@@ -69,7 +69,7 @@ function navbarLinkButton(linkInformation: NavBarLinkConstant) {
   );
 }
 
-const ResponsiveAppBar = () => {
+const   ResponsiveAppBar = () => {
   // User Context State
   const { user } = useUserContext();
 
