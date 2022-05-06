@@ -7,8 +7,8 @@ import CircularProgress from "@mui/material/CircularProgress";
 
 // icats component
 import {
-  NotificationChannelList,
-  NotificationChannelApiAxiosParamCreator,
+  StorageBundleList,
+  StorageBundleApiAxiosParamCreator,
   RunAxios,
 } from "icats";
 
@@ -23,44 +23,37 @@ import CustomTable, {
 } from "../../container/table/Table";
 
 const COLUMN_MAPPPING: IColumnMapping[] = [
-  {
-    displayName: "ID",
-    jsonKeys: ["id"],
-    linkTo: { formatString: "{0}", formatValue: [["id"]] },
-  },
-  { displayName: "Address", jsonKeys: ["address"] },
-  { displayName: "Type", jsonKeys: ["type"] },
-
-  { displayName: "Owner Id", jsonKeys: ["ownerId"] }, 
+  { displayName: "Bundle Name", jsonKeys: ["bundleName"] },
+  { displayName: "Entitlement Name", jsonKeys: ["entitlementName"] },
+  { displayName: "Id", jsonKeys: ["id"] },
+  { displayName: "Owner Id", jsonKeys: ["ownerId"] },
+  { displayName: "Tenant Id", jsonKeys: ["tenantId"] },
   { displayName: "Tenant Name", jsonKeys: ["tenantName"] },
-  { displayName: "Enabled", jsonKeys: ["enabled"] },
-
   { displayName: "Time Created", jsonKeys: ["timeCreated"] },
   { displayName: "Time Modified", jsonKeys: ["timeModified"] },
 ];
 
-async function getNotificationChannelsData(
+async function getStorageBundleData(
   parameter: any
-): Promise<NotificationChannelList> {
+): Promise<StorageBundleList> {
   // Generate axios parameter
-  const NotificationChannelsParamCreator =
-    NotificationChannelApiAxiosParamCreator();
-  const getNotificationChannelsParam =
-    await NotificationChannelsParamCreator.getNotificationChannels();
+  const StorageBundleParamCreator = StorageBundleApiAxiosParamCreator();
+  const getStorageBundleParam =
+    await StorageBundleParamCreator.getStorageBundles();
 
-  getNotificationChannelsParam.url += `?`;
+  getStorageBundleParam.url += `?`;
   for (const element in parameter) {
-    getNotificationChannelsParam.url += `${element}=${parameter[element]}&`;
+    getStorageBundleParam.url += `${element}=${parameter[element]}&`;
   }
 
   // Calling axios
-  const axiosData = await RunAxios(getNotificationChannelsParam);
+  const axiosData = await RunAxios(getStorageBundleParam);
   return axiosData.data;
 }
 
-function NotificationChannelsPage() {
-  const [projectListResponse, setNotificationChannelListResponse] =
-    useState<NotificationChannelList | null>();
+function StorageBundlePage() {
+  const [projectListResponse, setStorageBundleListResponse] =
+    useState<StorageBundleList | null>();
   const [paginationProps, setPaginationProps] =
     useState<IPaginationProps>(paginationPropsInit);
   function handlePaginationPropsChange(newProps: any) {
@@ -90,10 +83,10 @@ function NotificationChannelsPage() {
 
     async function fetchData() {
       try {
-        const data = await getNotificationChannelsData(apiParameter);
+        const data = await getStorageBundleData(apiParameter);
         if (cancel) return;
 
-        setNotificationChannelListResponse(data);
+        setStorageBundleListResponse(data);
         handlePaginationPropsChange({
           totalItem: getTotalItemCountFromRes(data),
         });
@@ -122,7 +115,7 @@ function NotificationChannelsPage() {
       spacing={3}
     >
       <Grid item xs={12}>
-        <Typography variant="h4">Available Notification Channels</Typography>
+        <Typography variant="h4">Storage Bundles</Typography>
       </Grid>
 
       {!projectListResponse ? (
@@ -146,4 +139,4 @@ function NotificationChannelsPage() {
   );
 }
 
-export default NotificationChannelsPage;
+export default StorageBundlePage;

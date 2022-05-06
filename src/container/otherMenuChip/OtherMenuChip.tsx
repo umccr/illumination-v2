@@ -17,7 +17,7 @@ const buttonProps: IButtonProps[] = [
   { name: "Event Log", route: "/eventLog" },
   { name: "Metadata Models", route: "/metadataModels" },
   { name: "Notification Channels", route: "/notificationChannels" },
-  // { name: "Storage Bundles", route: "/storageBundles" },
+  { name: "Storage Bundles", route: "/storageBundles" },
   // { name: "Storage Configurations", route: "/storageConfigurations" },
   // { name: "Storage Credentials", route: "/storageCredentials" },
 ];
