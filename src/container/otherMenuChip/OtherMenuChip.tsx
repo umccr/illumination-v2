@@ -13,7 +13,7 @@ interface IButtonProps {
 const buttonProps: IButtonProps[] = [
   { name: "Analysis Storage", route: "/analysisStorage" },
   { name: "Data Formats", route: "/dataFormats" },
-  // { name: "Event Codes", route: "/eventCodes" },
+  { name: "Event Codes", route: "/eventCodes" },
   // { name: "Event Log", route: "/eventLog" },
   // { name: "Metadata Models", route: "/metadataModels" },
   // { name: "Region", route: "/regions" },

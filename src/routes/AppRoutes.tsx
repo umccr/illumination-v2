@@ -12,6 +12,7 @@ import SignInPage from "../pages/SignInPage";
 import NotFoundPage from "../pages/NotFoundPage";
 import AnalysisStoragePage from "../pages/analysisStorage/AnalysisStoragePage";
 import DataFormatsPage from "../pages/dataFormats/DataFormatsPage";
+import EventCodesPage from "../pages/eventCodes/EventCodesPage";
 
 export default function AppRoutes() {
   return (
@@ -26,6 +27,7 @@ export default function AppRoutes() {
         {/* Other Routes */}
         <Route path="analysisStorage" element={<AnalysisStoragePage />} />
         <Route path="dataFormats" element={<DataFormatsPage />} />
+        <Route path="eventCodes" element={<EventCodesPage />} />
       </Route>
       <Route path="/signIn" element={<SignInPage />} />
       <Route path="*" element={<NotFoundPage />} />
