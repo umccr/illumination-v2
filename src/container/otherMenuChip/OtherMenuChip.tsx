@@ -15,7 +15,7 @@ const buttonProps: IButtonProps[] = [
   { name: "Data Formats", route: "/dataFormats" },
   { name: "Event Codes", route: "/eventCodes" },
   { name: "Event Log", route: "/eventLog" },
-  // { name: "Metadata Models", route: "/metadataModels" },
+  { name: "Metadata Models", route: "/metadataModels" },
   // { name: "Region", route: "/regions" },
   // {
   //   name: "Notification Channgel (403 Currently)",
