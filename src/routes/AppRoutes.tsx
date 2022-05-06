@@ -13,6 +13,8 @@ import NotFoundPage from "../pages/NotFoundPage";
 import AnalysisStoragePage from "../pages/analysisStorage/AnalysisStoragePage";
 import DataFormatsPage from "../pages/dataFormats/DataFormatsPage";
 import EventCodesPage from "../pages/eventCodes/EventCodesPage";
+import EventLogPage from "../pages/eventLog/EventLogPage";
+
 
 export default function AppRoutes() {
   return (
@@ -28,6 +30,7 @@ export default function AppRoutes() {
         <Route path="analysisStorage" element={<AnalysisStoragePage />} />
         <Route path="dataFormats" element={<DataFormatsPage />} />
         <Route path="eventCodes" element={<EventCodesPage />} />
+        <Route path="eventLog" element={<EventLogPage />} />
       </Route>
       <Route path="/signIn" element={<SignInPage />} />
       <Route path="*" element={<NotFoundPage />} />
