@@ -1,6 +1,5 @@
 import React from "react";
 
-import Stack from "@mui/material/Stack";
 import Chip from "@mui/material/Chip";
 import Grid from "@mui/material/Grid";
 import { Link as RouterLink } from "react-router-dom";
@@ -18,7 +17,7 @@ const buttonProps: IButtonProps[] = [
   { name: "Metadata Models", route: "/metadataModels" },
   { name: "Notification Channels", route: "/notificationChannels" },
   { name: "Storage Bundles", route: "/storageBundles" },
-  // { name: "Storage Configurations", route: "/storageConfigurations" },
+  { name: "Storage Configurations", route: "/storageConfigurations" },
   // { name: "Storage Credentials", route: "/storageCredentials" },
 ];
 

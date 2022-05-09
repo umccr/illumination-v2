@@ -7,6 +7,8 @@ import PipelineRoutes from "./pipelines/PipelineRoutes";
 import BundleRoutes from "./bundles/BundlesRoutes";
 import MetadataModelsRoute from "./metadataModels/metadataModelsRoute";
 import NotificationChannelRoutes from "./notificationChannels/notificationChannelRoutes";
+import storageConfigurationsRoutes from "./storageConfigurations/storageConfigurationsRoutes";
+
 // Custom Routing
 import ProtectedRoute from "./utils/ProtectedRoute";
 import SignInPage from "../pages/SignInPage";
@@ -35,6 +37,9 @@ export default function AppRoutes() {
         <Route path="storageBundles" element={<StrageBundlesPage />} />
         <Route path="metadataModels">{MetadataModelsRoute}</Route>
         <Route path="notificationChannels">{NotificationChannelRoutes}</Route>
+        <Route path="storageConfigurations">
+          {storageConfigurationsRoutes}
+        </Route>
       </Route>
       <Route path="/signIn" element={<SignInPage />} />
       <Route path="*" element={<NotFoundPage />} />
