@@ -12,6 +12,7 @@ import StorageCredentialsRoutes from "./storageCredentials/StorageCredentialsRou
 import WorkgroupsRoutes from "./workgroups/WorkgroupsRoutes";
 import RegionsRoutes from "./regions/RegionsRoutes";
 import UsersRoutes from "./users/UsersRoutes";
+import ConnectorsRoutes from "./connectors/ConnectorsRoutes";
 
 // Custom Routing
 import ProtectedRoute from "./utils/ProtectedRoute";
@@ -37,6 +38,8 @@ export default function AppRoutes() {
         <Route path="workgroups">{WorkgroupsRoutes}</Route>
         <Route path="regions">{RegionsRoutes}</Route>
         <Route path="samples" element={<SamplesListPage />} />
+        <Route path="connectors">{ConnectorsRoutes}</Route>
+
         {/* Other Routes */}
         <Route path="analysisStorage" element={<AnalysisStoragePage />} />
         <Route path="dataFormats" element={<DataFormatsPage />} />

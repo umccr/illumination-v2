@@ -18,7 +18,7 @@ const buttonProps: IButtonProps[] = [
   { name: "Workgroups", route: "/workgroups" },
   { name: "Regions", route: "/regions" },
   { name: "Samples (Use Regions Endpoint)", route: "/samples" },
-  // { name: "Connectors", route: "/conectors" },
+  { name: "Connectors", route: "/connectors" },
 ];
 
 function MainHomeChip() {
