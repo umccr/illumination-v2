@@ -1,6 +1,5 @@
 import React from "react";
 
-import Stack from "@mui/material/Stack";
 import Chip from "@mui/material/Chip";
 import Grid from "@mui/material/Grid";
 import { Link as RouterLink } from "react-router-dom";
@@ -11,19 +10,15 @@ interface IButtonProps {
 }
 
 const buttonProps: IButtonProps[] = [
-  // { name: "Analysis Storage", route: "/analysisStorage" },
-  // { name: "Data Formats", route: "/dataFormats" },
-  // { name: "Event Codes", route: "/eventCodes" },
-  // { name: "Event Log", route: "/eventLog" },
-  // { name: "Metadata Models", route: "/metadataModels" },
-  // { name: "Region", route: "/regions" },
-  // {
-  //   name: "Notification Channgel (403 Currently)",
-  //   route: "/notificationChannel",
-  // },
-  // { name: "Storage Bundles", route: "/storageBundles" },
-  // { name: "Storage Configurations", route: "/storageConfigurations" },
-  // { name: "Storage Credentials", route: "/storageCredentials" },
+  { name: "Analysis Storage", route: "/analysisStorage" },
+  { name: "Data Formats", route: "/dataFormats" },
+  { name: "Event Codes", route: "/eventCodes" },
+  { name: "Event Log", route: "/eventLog" },
+  { name: "Metadata Models", route: "/metadataModels" },
+  { name: "Notification Channels", route: "/notificationChannels" },
+  { name: "Storage Bundles", route: "/storageBundles" },
+  { name: "Storage Configurations", route: "/storageConfigurations" },
+  { name: "Storage Credentials", route: "/storageCredentials" },
 ];
 
 function OtherHomeChip() {
