@@ -8,6 +8,7 @@ import BundleRoutes from "./bundles/BundlesRoutes";
 import MetadataModelsRoute from "./metadataModels/metadataModelsRoute";
 import NotificationChannelRoutes from "./notificationChannels/notificationChannelRoutes";
 import storageConfigurationsRoutes from "./storageConfigurations/storageConfigurationsRoutes";
+import StorageCredentialsRoutes from "./storageCredentials/StorageCredentialsRoutes";
 
 // Custom Routing
 import ProtectedRoute from "./utils/ProtectedRoute";
@@ -40,6 +41,7 @@ export default function AppRoutes() {
         <Route path="storageConfigurations">
           {storageConfigurationsRoutes}
         </Route>
+        <Route path="storageCredentials">{StorageCredentialsRoutes}</Route>
       </Route>
       <Route path="/signIn" element={<SignInPage />} />
       <Route path="*" element={<NotFoundPage />} />

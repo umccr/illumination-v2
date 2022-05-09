@@ -12,7 +12,7 @@ const ProjectRoutes: React.ReactNode[] = [
     element={<StorageConfigurationListPage />}
     key="storageConfigurationIndex"
   />,
-  <Route path=":StorageConfigurationId" key="storageConfigurationIdIndex">
+  <Route path=":storageConfigurationId" key="storageConfigurationIdIndex">
     <Route index element={<StorageConfigurationPage />} />
     <Route path="details" element={<StorageConfigurationDetailsPage />} />
   </Route>,

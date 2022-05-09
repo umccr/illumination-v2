@@ -18,7 +18,7 @@ const buttonProps: IButtonProps[] = [
   { name: "Notification Channels", route: "/notificationChannels" },
   { name: "Storage Bundles", route: "/storageBundles" },
   { name: "Storage Configurations", route: "/storageConfigurations" },
-  // { name: "Storage Credentials", route: "/storageCredentials" },
+  { name: "Storage Credentials", route: "/storageCredentials" },
 ];
 
 function OtherHomeChip() {
