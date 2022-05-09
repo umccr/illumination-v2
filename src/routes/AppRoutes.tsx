@@ -11,6 +11,7 @@ import StorageConfigurationsRoutes from "./storageConfigurations/StorageConfigur
 import StorageCredentialsRoutes from "./storageCredentials/StorageCredentialsRoutes";
 import WorkgroupsRoutes from "./workgroups/WorkgroupsRoutes";
 import RegionsRoutes from "./regions/RegionsRoutes";
+import UsersRoutes from "./users/UsersRoutes";
 
 // Custom Routing
 import ProtectedRoute from "./utils/ProtectedRoute";
@@ -31,6 +32,7 @@ export default function AppRoutes() {
         <Route path="projects">{ProjectRoutes}</Route>
         <Route path="pipelines">{PipelineRoutes}</Route>
         <Route path="bundles">{BundleRoutes}</Route>
+        <Route path="users">{UsersRoutes}</Route>
         <Route path="workgroups">{WorkgroupsRoutes}</Route>
         <Route path="regions">{RegionsRoutes}</Route>
 
