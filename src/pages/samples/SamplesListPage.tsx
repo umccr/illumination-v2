@@ -1,16 +1,17 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 
-// MUI components
-import Grid from "@mui/material/Grid";
-import Typography from "@mui/material/Typography";
-import CircularProgress from "@mui/material/CircularProgress";
+// React-Router-Dom components
+import { useSearchParams, useNavigate } from "react-router-dom";
 
-// icats component
-import { RegionList, RegionApiAxiosParamCreator, RunAxios } from "icats";
+// MUI Component
+import { CircularProgress, Grid, Typography } from "@mui/material";
+
+// icats Component
+import { SamplePagedList, SampleApiAxiosParamCreator, RunAxios } from "icats";
 
 // Custom components
-import JSONContainer from "../../components/JSONContainer/JSONContainer";
 import { useDialogContext } from "../../container/app/DialogContext";
+import JSONContainer from "../../components/JSONContainer/JSONContainer";
 import CustomTable, {
   IColumnMapping,
   IPaginationProps,
@@ -19,41 +20,48 @@ import CustomTable, {
 } from "../../container/table/Table";
 
 const COLUMN_MAPPPING: IColumnMapping[] = [
-  {
-    displayName: "ID",
-    jsonKeys: ["id"],
-    linkTo: { formatString: "{0}", formatValue: [["id"]] },
-  },
-  {
-    displayName: "Samples",
-    jsonKeys: "Samples",
-    linkTo: { formatString: "/samples?region={0}", formatValue: [["id"]] },
-  },
+  { displayName: "ID", jsonKeys: ["id"] },
+  { displayName: "Name", jsonKeys: ["name"] },
+  { displayName: "Status", jsonKeys: ["status"] },
+  { displayName: "Metadata Valid", jsonKeys: ["metadataValid"] },
+  { displayName: "Owner Id", jsonKeys: ["ownerId"] },
+  { displayName: "Tenant Id", jsonKeys: ["tenantId"] },
   { displayName: "Tenant Name", jsonKeys: ["tenantName"] },
-  { displayName: "Country Tenant Name", jsonKeys: ["country", "tenantName"] },
-  { displayName: "Country", jsonKeys: ["country", "name"] },
   { displayName: "Time Created", jsonKeys: ["timeCreated"] },
   { displayName: "Time Modified", jsonKeys: ["timeModified"] },
 ];
 
-async function getRegionsData(parameter: any): Promise<RegionList> {
+async function getSamplesData(
+  region: string,
+  parameter: any
+): Promise<SamplePagedList> {
   // Generate axios parameter
-  const RegionsParamCreator = RegionApiAxiosParamCreator();
-  const getRegionsParam = await RegionsParamCreator.getRegions();
+  const SamplesParamCreator = SampleApiAxiosParamCreator();
+  const getSamplesParam = await SamplesParamCreator.getSamples(region);
 
-  getRegionsParam.url += `?`;
+  getSamplesParam.url += `&`;
   for (const element in parameter) {
-    getRegionsParam.url += `${element}=${parameter[element]}&`;
+    getSamplesParam.url += `${element}=${parameter[element]}&`;
   }
 
   // Calling axios
-  const axiosData = await RunAxios(getRegionsParam);
+  const axiosData = await RunAxios(getSamplesParam);
   return axiosData.data;
 }
 
-function RegionsPage() {
-  const [projectListResponse, setRegionListResponse] =
-    useState<RegionList | null>();
+function SamplesPage() {
+  // Take region Id for input
+  const [searchParams] = useSearchParams();
+  const region = searchParams.get("region");
+  const navigate = useNavigate();
+
+  if (!region) {
+    navigate("../regions", { replace: true });
+  }
+
+  const { setDialogInfo } = useDialogContext();
+  const [samplesResponse, setSamplesResponse] =
+    useState<SamplePagedList | null>();
   const [paginationProps, setPaginationProps] =
     useState<IPaginationProps>(paginationPropsInit);
   function handlePaginationPropsChange(newProps: any) {
@@ -64,8 +72,6 @@ function RegionsPage() {
     pageOffset: 0,
     pageSize: paginationProps.rowsPerPage,
   });
-
-  const { setDialogInfo } = useDialogContext();
 
   useEffect(() => {
     // Calculate pageOffset
@@ -80,16 +86,16 @@ function RegionsPage() {
 
   useEffect(() => {
     let cancel = false;
-
     async function fetchData() {
       try {
-        const data = await getRegionsData(apiParameter);
-        if (cancel) return;
-
-        setRegionListResponse(data);
-        handlePaginationPropsChange({
-          totalItem: getTotalItemCountFromRes(data),
-        });
+        if (region) {
+          const data = await getSamplesData(region, apiParameter);
+          if (cancel) return;
+          setSamplesResponse(data);
+          handlePaginationPropsChange({
+            totalItem: getTotalItemCountFromRes(data),
+          });
+        }
       } catch (err) {
         setDialogInfo({
           isOpen: true,
@@ -98,13 +104,11 @@ function RegionsPage() {
         });
       }
     }
-
     fetchData();
-
     return () => {
       cancel = true;
     };
-  }, [apiParameter, setDialogInfo]);
+  }, [region, setDialogInfo, apiParameter]);
 
   return (
     <Grid
@@ -115,23 +119,22 @@ function RegionsPage() {
       spacing={3}
     >
       <Grid item xs={12}>
-        <Typography variant="h4">Available Regions</Typography>
+        <Typography variant="h4">Region Id: {region}</Typography>
       </Grid>
-
-      {!projectListResponse ? (
+      {!samplesResponse ? (
         <CircularProgress sx={{ marginTop: "50px" }} />
       ) : (
         <Grid item container spacing={3}>
           <Grid item xs={12}>
             <CustomTable
-              items={projectListResponse.items}
+              items={samplesResponse.items}
               columnMapping={COLUMN_MAPPPING}
               paginationProps={paginationProps}
               handlePaginationPropsChange={handlePaginationPropsChange}
             />
           </Grid>
           <Grid item xs={12}>
-            <JSONContainer data={projectListResponse} />
+            <JSONContainer data={samplesResponse} />
           </Grid>
         </Grid>
       )}
@@ -139,4 +142,4 @@ function RegionsPage() {
   );
 }
 
-export default RegionsPage;
+export default SamplesPage;

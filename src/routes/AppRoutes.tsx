@@ -22,6 +22,7 @@ import DataFormatsPage from "../pages/dataFormats/DataFormatsPage";
 import EventCodesPage from "../pages/eventCodes/EventCodesPage";
 import EventLogPage from "../pages/eventLog/EventLogPage";
 import StrageBundlesPage from "../pages/storageBundles/StrageBundlesPage";
+import SamplesListPage from "../pages/samples/SamplesListPage";
 
 export default function AppRoutes() {
   return (
@@ -35,7 +36,7 @@ export default function AppRoutes() {
         <Route path="users">{UsersRoutes}</Route>
         <Route path="workgroups">{WorkgroupsRoutes}</Route>
         <Route path="regions">{RegionsRoutes}</Route>
-
+        <Route path="samples" element={<SamplesListPage />} />
         {/* Other Routes */}
         <Route path="analysisStorage" element={<AnalysisStoragePage />} />
         <Route path="dataFormats" element={<DataFormatsPage />} />

@@ -17,6 +17,7 @@ const buttonProps: IButtonProps[] = [
   { name: "Users", route: "/users" },
   { name: "Workgroups", route: "/workgroups" },
   { name: "Regions", route: "/regions" },
+  { name: "Samples (Use Regions Endpoint)", route: "/samples" },
   // { name: "Connectors", route: "/conectors" },
 ];
 
@@ -42,7 +43,7 @@ function MainHomeChip() {
               to={buttonProperties.route}
               label={buttonProperties.name}
               clickable
-              style={{ width: "100px" }}
+              style={{ minWidth: "100px" }}
             />
           </Grid>
         ))}
