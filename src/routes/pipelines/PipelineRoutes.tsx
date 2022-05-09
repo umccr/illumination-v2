@@ -7,7 +7,7 @@ import PipelinePage from "../../pages/pipelines/PipelinePage";
 import PipelineInputParametersPage from "../../pages/pipelines/PipelineInputParametersPage";
 import PipelineReferenceSetsPage from "../../pages/pipelines/PipelineReferenceSetsPage";
 
-const ProjectRoutes: React.ReactNode[] = [
+const PipelinesRoutes: React.ReactNode[] = [
   <Route index element={<PipelinesPage />} key="pipelineIndex" />,
   <Route path=":pipelineId" key="pipelineIdRoute">
     <Route index element={<PipelinePage />} />
@@ -16,4 +16,4 @@ const ProjectRoutes: React.ReactNode[] = [
   </Route>,
 ];
 
-export default ProjectRoutes;
+export default PipelinesRoutes;

@@ -6,7 +6,7 @@ import StorageConfigurationListPage from "../../pages/storageConfigurations/Stor
 import StorageConfigurationPage from "../../pages/storageConfigurations/StorageConfigurationPage";
 import StorageConfigurationDetailsPage from "../../pages/storageConfigurations/StorageConfigurationDetailsPage";
 
-const ProjectRoutes: React.ReactNode[] = [
+const StorageConfigurationsRoutes: React.ReactNode[] = [
   <Route
     index
     element={<StorageConfigurationListPage />}
@@ -18,4 +18,4 @@ const ProjectRoutes: React.ReactNode[] = [
   </Route>,
 ];
 
-export default ProjectRoutes;
+export default StorageConfigurationsRoutes;

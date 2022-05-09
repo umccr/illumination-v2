@@ -5,7 +5,7 @@ import { Route } from "react-router-dom";
 import StorageCredentialsListPage from "../../pages/storageCredentials/StorageCredentialsListPage";
 import StorageCredentialPage from "../../pages/storageCredentials/StorageCredentialPage";
 
-const ProjectRoutes: React.ReactNode[] = [
+const StorageCredentialsRoutes: React.ReactNode[] = [
   <Route
     index
     element={<StorageCredentialsListPage />}
@@ -16,4 +16,4 @@ const ProjectRoutes: React.ReactNode[] = [
   </Route>,
 ];
 
-export default ProjectRoutes;
+export default StorageCredentialsRoutes;
