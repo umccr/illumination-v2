@@ -52,7 +52,7 @@ async function getRegionsData(parameter: any): Promise<RegionList> {
 }
 
 function RegionsPage() {
-  const [projectListResponse, setRegionListResponse] =
+  const [regionListResponse, setRegionListResponse] =
     useState<RegionList | null>();
   const [paginationProps, setPaginationProps] =
     useState<IPaginationProps>(paginationPropsInit);
@@ -118,20 +118,20 @@ function RegionsPage() {
         <Typography variant="h4">Available Regions</Typography>
       </Grid>
 
-      {!projectListResponse ? (
+      {!regionListResponse ? (
         <CircularProgress sx={{ marginTop: "50px" }} />
       ) : (
         <Grid item container spacing={3}>
           <Grid item xs={12}>
             <CustomTable
-              items={projectListResponse.items}
+              items={regionListResponse.items}
               columnMapping={COLUMN_MAPPPING}
               paginationProps={paginationProps}
               handlePaginationPropsChange={handlePaginationPropsChange}
             />
           </Grid>
           <Grid item xs={12}>
-            <JSONContainer data={projectListResponse} />
+            <JSONContainer data={regionListResponse} />
           </Grid>
         </Grid>
       )}

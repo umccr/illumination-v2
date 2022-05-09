@@ -53,7 +53,7 @@ async function getConnectorDownloadRulesData(
 }
 
 function ConnectorDownloadRulesPage() {
-  const [projectListResponse, setDownloadRuleListResponse] =
+  const [downloadRuleListResponse, setDownloadRuleListResponse] =
     useState<DownloadRuleList | null>();
   const [paginationProps, setPaginationProps] =
     useState<IPaginationProps>(paginationPropsInit);
@@ -126,20 +126,20 @@ function ConnectorDownloadRulesPage() {
         <Typography variant="h4">Available Connector Download Rules</Typography>
       </Grid>
 
-      {!projectListResponse ? (
+      {!downloadRuleListResponse ? (
         <CircularProgress sx={{ marginTop: "50px" }} />
       ) : (
         <Grid item container spacing={3}>
           <Grid item xs={12}>
             <CustomTable
-              items={projectListResponse.items}
+              items={downloadRuleListResponse.items}
               columnMapping={COLUMN_MAPPPING}
               paginationProps={paginationProps}
               handlePaginationPropsChange={handlePaginationPropsChange}
             />
           </Grid>
           <Grid item xs={12}>
-            <JSONContainer data={projectListResponse} />
+            <JSONContainer data={downloadRuleListResponse} />
           </Grid>
         </Grid>
       )}

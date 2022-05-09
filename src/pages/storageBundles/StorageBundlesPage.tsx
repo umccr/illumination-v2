@@ -52,7 +52,7 @@ async function getStorageBundleData(
 }
 
 function StorageBundlePage() {
-  const [projectListResponse, setStorageBundleListResponse] =
+  const [storageBundleListResponse, setStorageBundleListResponse] =
     useState<StorageBundleList | null>();
   const [paginationProps, setPaginationProps] =
     useState<IPaginationProps>(paginationPropsInit);
@@ -118,20 +118,20 @@ function StorageBundlePage() {
         <Typography variant="h4">Storage Bundles</Typography>
       </Grid>
 
-      {!projectListResponse ? (
+      {!storageBundleListResponse ? (
         <CircularProgress sx={{ marginTop: "50px" }} />
       ) : (
         <Grid item container spacing={3}>
           <Grid item xs={12}>
             <CustomTable
-              items={projectListResponse.items}
+              items={storageBundleListResponse.items}
               columnMapping={COLUMN_MAPPPING}
               paginationProps={paginationProps}
               handlePaginationPropsChange={handlePaginationPropsChange}
             />
           </Grid>
           <Grid item xs={12}>
-            <JSONContainer data={projectListResponse} />
+            <JSONContainer data={storageBundleListResponse} />
           </Grid>
         </Grid>
       )}

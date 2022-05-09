@@ -53,7 +53,7 @@ async function getConnectorUploadRulesData(
 }
 
 function ConnectorUploadRulesPage() {
-  const [projectListResponse, setUploadRuleListResponse] =
+  const [connectorUploadRulesResponse, setUploadRuleListResponse] =
     useState<UploadRuleList | null>();
   const [paginationProps, setPaginationProps] =
     useState<IPaginationProps>(paginationPropsInit);
@@ -126,20 +126,20 @@ function ConnectorUploadRulesPage() {
         <Typography variant="h4">Available Connector Upload Rules</Typography>
       </Grid>
 
-      {!projectListResponse ? (
+      {!connectorUploadRulesResponse ? (
         <CircularProgress sx={{ marginTop: "50px" }} />
       ) : (
         <Grid item container spacing={3}>
           <Grid item xs={12}>
             <CustomTable
-              items={projectListResponse.items}
+              items={connectorUploadRulesResponse.items}
               columnMapping={COLUMN_MAPPPING}
               paginationProps={paginationProps}
               handlePaginationPropsChange={handlePaginationPropsChange}
             />
           </Grid>
           <Grid item xs={12}>
-            <JSONContainer data={projectListResponse} />
+            <JSONContainer data={connectorUploadRulesResponse} />
           </Grid>
         </Grid>
       )}

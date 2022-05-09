@@ -20,8 +20,8 @@ const COLUMN_MAPPPING: IColumnMapping[] = [
 
 async function getEventCodeData(): Promise<EventCodeList> {
   // Generate axios parameter
-  const analysisStorageParamCreator = EventCodeApiAxiosParamCreator();
-  const getEventCodeParam = await analysisStorageParamCreator.getEventCodes();
+  const eventCodeParamCreator = EventCodeApiAxiosParamCreator();
+  const getEventCodeParam = await eventCodeParamCreator.getEventCodes();
 
   // Calling axios
   const axiosData = await RunAxios(getEventCodeParam);
@@ -29,7 +29,7 @@ async function getEventCodeData(): Promise<EventCodeList> {
 }
 
 function EventCodePage() {
-  const [analysisStorageListResponse, setEventCodeListResponse] =
+  const [eventCodeListResponse, setEventCodeListResponse] =
     useState<EventCodeList | null>();
   const { setDialogInfo } = useDialogContext();
 
@@ -70,18 +70,18 @@ function EventCodePage() {
         <Typography variant="h4">Event Codes</Typography>
       </Grid>
 
-      {!analysisStorageListResponse ? (
+      {!eventCodeListResponse ? (
         <CircularProgress sx={{ marginTop: "50px" }} />
       ) : (
         <Grid item container spacing={3}>
           <Grid item xs={12}>
             <CustomTable
-              items={analysisStorageListResponse.items}
+              items={eventCodeListResponse.items}
               columnMapping={COLUMN_MAPPPING}
             />
           </Grid>
           <Grid item xs={12}>
-            <JSONContainer data={analysisStorageListResponse} />
+            <JSONContainer data={eventCodeListResponse} />
           </Grid>
         </Grid>
       )}

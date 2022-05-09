@@ -37,8 +37,8 @@ function StorageCredentialPage() {
   const { storageCredentialId } = useParams();
 
   const { setDialogInfo } = useDialogContext();
-  const [storageCredential, setStorageCredentialResponse] = useState<
-    StorageCredential | null | any
+  const [storageCredentialResponse, setStorageCredentialResponse] = useState<
+    StorageCredential | null
   >();
 
   useEffect(() => {
@@ -79,12 +79,12 @@ function StorageCredentialPage() {
           Storage Credential Id: {storageCredentialId}
         </Typography>
       </Grid>
-      {!storageCredential ? (
+      {!storageCredentialResponse ? (
         <CircularProgress sx={{ marginTop: "50px" }} />
       ) : (
         <Grid item container spacing={3}>
           <Grid item xs={12}>
-            <JSONContainer data={storageCredential} />
+            <JSONContainer data={storageCredentialResponse} />
           </Grid>
         </Grid>
       )}

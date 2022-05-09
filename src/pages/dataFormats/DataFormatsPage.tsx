@@ -47,7 +47,7 @@ async function getDataFormatData(parameter: any): Promise<DataFormatPagedList> {
 }
 
 function DataFormatsPage() {
-  const [projectListResponse, setDataFormatListResponse] =
+  const [dataFormatListResponse, setDataFormatListResponse] =
     useState<DataFormatPagedList | null>();
   const [paginationProps, setPaginationProps] =
     useState<IPaginationProps>(paginationPropsInit);
@@ -113,20 +113,20 @@ function DataFormatsPage() {
         <Typography variant="h4">Available Data Formats</Typography>
       </Grid>
 
-      {!projectListResponse ? (
+      {!dataFormatListResponse ? (
         <CircularProgress sx={{ marginTop: "50px" }} />
       ) : (
         <Grid item container spacing={3}>
           <Grid item xs={12}>
             <CustomTable
-              items={projectListResponse.items}
+              items={dataFormatListResponse.items}
               columnMapping={COLUMN_MAPPPING}
               paginationProps={paginationProps}
               handlePaginationPropsChange={handlePaginationPropsChange}
             />
           </Grid>
           <Grid item xs={12}>
-            <JSONContainer data={projectListResponse} />
+            <JSONContainer data={dataFormatListResponse} />
           </Grid>
         </Grid>
       )}

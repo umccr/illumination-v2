@@ -54,7 +54,7 @@ async function getConnectorsData(parameter: any): Promise<ConnectorList> {
 }
 
 function ConnectorsPage() {
-  const [projectListResponse, setConnectorListResponse] =
+  const [connectorListResponse, setConnectorListResponse] =
     useState<ConnectorList | null>();
   const [paginationProps, setPaginationProps] =
     useState<IPaginationProps>(paginationPropsInit);
@@ -120,20 +120,20 @@ function ConnectorsPage() {
         <Typography variant="h4">Available Connectors</Typography>
       </Grid>
 
-      {!projectListResponse ? (
+      {!connectorListResponse ? (
         <CircularProgress sx={{ marginTop: "50px" }} />
       ) : (
         <Grid item container spacing={3}>
           <Grid item xs={12}>
             <CustomTable
-              items={projectListResponse.items}
+              items={connectorListResponse.items}
               columnMapping={COLUMN_MAPPPING}
               paginationProps={paginationProps}
               handlePaginationPropsChange={handlePaginationPropsChange}
             />
           </Grid>
           <Grid item xs={12}>
-            <JSONContainer data={projectListResponse} />
+            <JSONContainer data={connectorListResponse} />
           </Grid>
         </Grid>
       )}

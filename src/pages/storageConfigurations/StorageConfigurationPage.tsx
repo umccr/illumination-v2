@@ -40,8 +40,8 @@ function StorageConfigurationPage() {
   const { storageConfigurationId } = useParams();
 
   const { setDialogInfo } = useDialogContext();
-  const [storageConfiguration, setStorageConfigurationResponse] = useState<
-    StorageConfiguration | null | any
+  const [storageConfigurationResponse, setStorageConfigurationResponse] = useState<
+    StorageConfiguration | null
   >();
 
   useEffect(() => {
@@ -81,12 +81,12 @@ function StorageConfigurationPage() {
         </Typography>
       </Grid>
       <ChipArray data={buttonProps} />
-      {!storageConfiguration ? (
+      {!storageConfigurationResponse ? (
         <CircularProgress sx={{ marginTop: "50px" }} />
       ) : (
         <Grid item container spacing={3}>
           <Grid item xs={12}>
-            <JSONContainer data={storageConfiguration} />
+            <JSONContainer data={storageConfigurationResponse} />
           </Grid>
         </Grid>
       )}

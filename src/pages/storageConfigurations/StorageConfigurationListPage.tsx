@@ -57,7 +57,7 @@ async function getStorageConfigurationsData(
 }
 
 function StorageConfigurationsPage() {
-  const [projectListResponse, setStorageConfigurationWithDetailsListResponse] =
+  const [storageConfigurationWithDetailsListResponse, setStorageConfigurationWithDetailsListResponse] =
     useState<StorageConfigurationWithDetailsList | null>();
   const [paginationProps, setPaginationProps] =
     useState<IPaginationProps>(paginationPropsInit);
@@ -123,20 +123,20 @@ function StorageConfigurationsPage() {
         <Typography variant="h4">Available Storage Configurations</Typography>
       </Grid>
 
-      {!projectListResponse ? (
+      {!storageConfigurationWithDetailsListResponse ? (
         <CircularProgress sx={{ marginTop: "50px" }} />
       ) : (
         <Grid item container spacing={3}>
           <Grid item xs={12}>
             <CustomTable
-              items={projectListResponse.items}
+              items={storageConfigurationWithDetailsListResponse.items}
               columnMapping={COLUMN_MAPPPING}
               paginationProps={paginationProps}
               handlePaginationPropsChange={handlePaginationPropsChange}
             />
           </Grid>
           <Grid item xs={12}>
-            <JSONContainer data={projectListResponse} />
+            <JSONContainer data={storageConfigurationWithDetailsListResponse} />
           </Grid>
         </Grid>
       )}

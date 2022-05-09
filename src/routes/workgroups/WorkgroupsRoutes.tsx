@@ -2,7 +2,6 @@ import React from "react";
 
 import { Route } from "react-router-dom";
 
-// Project Pages
 import WorkgroupsListPage from "../../pages/workgroups/WorkgroupsListPage";
 import WorkgroupPage from "../../pages/workgroups/WorkgroupPage";
 

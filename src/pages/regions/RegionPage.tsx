@@ -29,7 +29,7 @@ function RegionPage() {
   const { regionId } = useParams();
 
   const { setDialogInfo } = useDialogContext();
-  const [region, setRegionResponse] = useState<Region | null | any>();
+  const [regionResponse, setRegionResponse] = useState<Region | null>();
 
   useEffect(() => {
     let cancel = false;
@@ -65,12 +65,12 @@ function RegionPage() {
       <Grid item xs={12}>
         <Typography variant="h4">Region Id: {regionId}</Typography>
       </Grid>
-      {!region ? (
+      {!regionResponse ? (
         <CircularProgress sx={{ marginTop: "50px" }} />
       ) : (
         <Grid item container spacing={3}>
           <Grid item xs={12}>
-            <JSONContainer data={region} />
+            <JSONContainer data={regionResponse} />
           </Grid>
         </Grid>
       )}

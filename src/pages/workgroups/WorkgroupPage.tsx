@@ -29,7 +29,7 @@ function WorkgroupPage() {
   const { workgroupId } = useParams();
 
   const { setDialogInfo } = useDialogContext();
-  const [workgroup, setWorkgroupResponse] = useState<Workgroup | null | any>();
+  const [workgroupResponse, setWorkgroupResponse] = useState<Workgroup | null>();
 
   useEffect(() => {
     let cancel = false;
@@ -65,12 +65,12 @@ function WorkgroupPage() {
       <Grid item xs={12}>
         <Typography variant="h4">Workgroup Id: {workgroupId}</Typography>
       </Grid>
-      {!workgroup ? (
+      {!workgroupResponse ? (
         <CircularProgress sx={{ marginTop: "50px" }} />
       ) : (
         <Grid item container spacing={3}>
           <Grid item xs={12}>
-            <JSONContainer data={workgroup} />
+            <JSONContainer data={workgroupResponse} />
           </Grid>
         </Grid>
       )}

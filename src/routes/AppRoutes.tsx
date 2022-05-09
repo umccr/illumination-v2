@@ -22,7 +22,7 @@ import AnalysisStoragePage from "../pages/analysisStorage/AnalysisStoragePage";
 import DataFormatsPage from "../pages/dataFormats/DataFormatsPage";
 import EventCodesPage from "../pages/eventCodes/EventCodesPage";
 import EventLogPage from "../pages/eventLog/EventLogPage";
-import StrageBundlesPage from "../pages/storageBundles/StrageBundlesPage";
+import StorageBundlesPage from "../pages/storageBundles/StorageBundlesPage";
 import SamplesListPage from "../pages/samples/SamplesListPage";
 
 export default function AppRoutes() {
@@ -45,7 +45,7 @@ export default function AppRoutes() {
         <Route path="dataFormats" element={<DataFormatsPage />} />
         <Route path="eventCodes" element={<EventCodesPage />} />
         <Route path="eventLog" element={<EventLogPage />} />
-        <Route path="storageBundles" element={<StrageBundlesPage />} />
+        <Route path="storageBundles" element={<StorageBundlesPage />} />
         <Route path="metadataModels">{MetadataModelsRoute}</Route>
         <Route path="notificationChannels">{NotificationChannelRoutes}</Route>
         <Route path="storageConfigurations">

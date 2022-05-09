@@ -2,7 +2,6 @@ import React from "react";
 
 import { Route } from "react-router-dom";
 
-// Project Pages
 import UsersPage from "../../pages/users/UsersPage";
 import UserPage from "../../pages/users/UserPage";
 
