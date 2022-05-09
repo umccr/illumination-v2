@@ -10,6 +10,7 @@ import NotificationChannelRoutes from "./notificationChannels/NotificationChanne
 import StorageConfigurationsRoutes from "./storageConfigurations/StorageConfigurationsRoutes";
 import StorageCredentialsRoutes from "./storageCredentials/StorageCredentialsRoutes";
 import WorkgroupsRoutes from "./workgroups/WorkgroupsRoutes";
+import RegionsRoutes from "./regions/RegionsRoutes";
 
 // Custom Routing
 import ProtectedRoute from "./utils/ProtectedRoute";
@@ -31,6 +32,7 @@ export default function AppRoutes() {
         <Route path="pipelines">{PipelineRoutes}</Route>
         <Route path="bundles">{BundleRoutes}</Route>
         <Route path="workgroups">{WorkgroupsRoutes}</Route>
+        <Route path="regions">{RegionsRoutes}</Route>
 
         {/* Other Routes */}
         <Route path="analysisStorage" element={<AnalysisStoragePage />} />

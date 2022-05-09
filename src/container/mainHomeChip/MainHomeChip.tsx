@@ -16,7 +16,7 @@ const buttonProps: IButtonProps[] = [
   { name: "Bundles", route: "/bundles" },
   { name: "Users", route: "/users" },
   { name: "Workgroups", route: "/workgroups" },
-  // { name: "Region", route: "/regions" },
+  { name: "Regions", route: "/regions" },
   // { name: "Connectors", route: "/conectors" },
 ];
 
