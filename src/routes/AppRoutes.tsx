@@ -9,6 +9,7 @@ import MetadataModelsRoute from "./metadataModels/MetadataModelsRoute";
 import NotificationChannelRoutes from "./notificationChannels/NotificationChannelRoutes";
 import StorageConfigurationsRoutes from "./storageConfigurations/StorageConfigurationsRoutes";
 import StorageCredentialsRoutes from "./storageCredentials/StorageCredentialsRoutes";
+import WorkgroupsRoutes from "./workgroups/WorkgroupsRoutes";
 
 // Custom Routing
 import ProtectedRoute from "./utils/ProtectedRoute";
@@ -29,6 +30,7 @@ export default function AppRoutes() {
         <Route path="projects">{ProjectRoutes}</Route>
         <Route path="pipelines">{PipelineRoutes}</Route>
         <Route path="bundles">{BundleRoutes}</Route>
+        <Route path="workgroups">{WorkgroupsRoutes}</Route>
 
         {/* Other Routes */}
         <Route path="analysisStorage" element={<AnalysisStoragePage />} />

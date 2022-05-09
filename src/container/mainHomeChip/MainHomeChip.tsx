@@ -14,8 +14,8 @@ const buttonProps: IButtonProps[] = [
   { name: "Projects", route: "/projects" },
   { name: "Pipeline", route: "/pipelines" },
   { name: "Bundles", route: "/bundles" },
-  // { name: "Users", route: "/users" },
-  // { name: "Workgroups", route: "/workgroups" },
+  { name: "Users", route: "/users" },
+  { name: "Workgroups", route: "/workgroups" },
   // { name: "Region", route: "/regions" },
   // { name: "Connectors", route: "/conectors" },
 ];
