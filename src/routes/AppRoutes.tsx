@@ -5,9 +5,9 @@ import HomePage from "../pages/home/HomePage";
 import ProjectRoutes from "./projects/ProjectRoutes";
 import PipelineRoutes from "./pipelines/PipelineRoutes";
 import BundleRoutes from "./bundles/BundlesRoutes";
-import MetadataModelsRoute from "./metadataModels/metadataModelsRoute";
-import NotificationChannelRoutes from "./notificationChannels/notificationChannelRoutes";
-import storageConfigurationsRoutes from "./storageConfigurations/storageConfigurationsRoutes";
+import MetadataModelsRoute from "./metadataModels/MetadataModelsRoute";
+import NotificationChannelRoutes from "./notificationChannels/NotificationChannelRoutes";
+import StorageConfigurationsRoutes from "./storageConfigurations/StorageConfigurationsRoutes";
 import StorageCredentialsRoutes from "./storageCredentials/StorageCredentialsRoutes";
 
 // Custom Routing
@@ -39,7 +39,7 @@ export default function AppRoutes() {
         <Route path="metadataModels">{MetadataModelsRoute}</Route>
         <Route path="notificationChannels">{NotificationChannelRoutes}</Route>
         <Route path="storageConfigurations">
-          {storageConfigurationsRoutes}
+          {StorageConfigurationsRoutes}
         </Route>
         <Route path="storageCredentials">{StorageCredentialsRoutes}</Route>
       </Route>

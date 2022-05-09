@@ -19,14 +19,14 @@ import JSONContainer from "../../components/JSONContainer/JSONContainer";
 
 
 async function getStorageConfigurationDetailsData(
-  StorageConfigurationId: string
+  storageConfigurationId: string
 ): Promise<StorageConfigurationDetails> {
   // Generate axios parameter
   const StorageConfigurationDetailsParamCreator =
     StorageConfigurationApiAxiosParamCreator();
   const getStorageConfigurationDetailssParam =
     await StorageConfigurationDetailsParamCreator.getStorageConfigurationDetails(
-      StorageConfigurationId
+      storageConfigurationId
     );
 
   // Calling axios
@@ -35,7 +35,7 @@ async function getStorageConfigurationDetailsData(
 }
 
 function StorageConfigurationDetailsPage() {
-  const { StorageConfigurationId } = useParams();
+  const { storageConfigurationId } = useParams();
 
   const { setDialogInfo } = useDialogContext();
   const [storageConfigurationDetail, setStorageConfigurationDetailsResponse] = useState<
@@ -46,9 +46,9 @@ function StorageConfigurationDetailsPage() {
     let cancel = false;
     async function fetchData() {
       try {
-        if (StorageConfigurationId) {
+        if (storageConfigurationId) {
           const data = await getStorageConfigurationDetailsData(
-            StorageConfigurationId
+            storageConfigurationId
           );
           if (cancel) return;
           setStorageConfigurationDetailsResponse(data);
@@ -65,7 +65,7 @@ function StorageConfigurationDetailsPage() {
     return () => {
       cancel = true;
     };
-  }, [StorageConfigurationId, setDialogInfo]);
+  }, [storageConfigurationId, setDialogInfo]);
 
   return (
     <Grid
@@ -77,7 +77,7 @@ function StorageConfigurationDetailsPage() {
     >
       <Grid item xs={12}>
         <Typography variant="h4">
-          Storage Configuration Id: {StorageConfigurationId}
+          Storage Configuration Id: {storageConfigurationId}
         </Typography>
       </Grid>
       {!storageConfigurationDetail ? (

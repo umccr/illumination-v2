@@ -21,14 +21,14 @@ import ChipArray, { IButtonProps } from "../../components/chipArray/ChipArray";
 const buttonProps: IButtonProps[] = [{ name: "Details", route: "details" }];
 
 async function getStorageConfigurationData(
-  StorageConfigurationId: string
+  storageConfigurationId: string
 ): Promise<StorageConfiguration> {
   // Generate axios parameter
   const StorageConfigurationParamCreator =
     StorageConfigurationApiAxiosParamCreator();
   const getStorageConfigurationsParam =
     await StorageConfigurationParamCreator.getStorageConfiguration(
-      StorageConfigurationId
+      storageConfigurationId
     );
 
   // Calling axios
@@ -37,7 +37,7 @@ async function getStorageConfigurationData(
 }
 
 function StorageConfigurationPage() {
-  const { StorageConfigurationId } = useParams();
+  const { storageConfigurationId } = useParams();
 
   const { setDialogInfo } = useDialogContext();
   const [storageConfiguration, setStorageConfigurationResponse] = useState<
@@ -48,8 +48,8 @@ function StorageConfigurationPage() {
     let cancel = false;
     async function fetchData() {
       try {
-        if (StorageConfigurationId) {
-          const data = await getStorageConfigurationData(StorageConfigurationId);
+        if (storageConfigurationId) {
+          const data = await getStorageConfigurationData(storageConfigurationId);
           if (cancel) return;
           setStorageConfigurationResponse(data);
         }
@@ -65,7 +65,7 @@ function StorageConfigurationPage() {
     return () => {
       cancel = true;
     };
-  }, [StorageConfigurationId, setDialogInfo]);
+  }, [storageConfigurationId, setDialogInfo]);
 
   return (
     <Grid
@@ -77,7 +77,7 @@ function StorageConfigurationPage() {
     >
       <Grid item xs={12}>
         <Typography variant="h4">
-          Storage Configuration Id: {StorageConfigurationId}
+          Storage Configuration Id: {storageConfigurationId}
         </Typography>
       </Grid>
       <ChipArray data={buttonProps} />
