@@ -1,6 +1,5 @@
 import React from "react";
 
-import Stack from "@mui/material/Stack";
 import Chip from "@mui/material/Chip";
 import Grid from "@mui/material/Grid";
 import { Link as RouterLink } from "react-router-dom";
@@ -14,10 +13,11 @@ const buttonProps: IButtonProps[] = [
   { name: "Projects", route: "/projects" },
   { name: "Pipeline", route: "/pipelines" },
   { name: "Bundles", route: "/bundles" },
-  // { name: "Users", route: "/users" },
-  // { name: "Workgroups", route: "/workgroups" },
-  // { name: "Region", route: "/regions" },
-  // { name: "Connectors", route: "/conectors" },
+  { name: "Users", route: "/users" },
+  { name: "Workgroups", route: "/workgroups" },
+  { name: "Regions", route: "/regions" },
+  { name: "Samples (Use Regions Endpoint)", route: "/samples" },
+  { name: "Connectors", route: "/connectors" },
 ];
 
 function MainHomeChip() {
@@ -42,7 +42,7 @@ function MainHomeChip() {
               to={buttonProperties.route}
               label={buttonProperties.name}
               clickable
-              style={{ width: "100px" }}
+              style={{ minWidth: "100px" }}
             />
           </Grid>
         ))}

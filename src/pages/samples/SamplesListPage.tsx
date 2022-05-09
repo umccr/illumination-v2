@@ -1,20 +1,17 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 
-// MUI components
-import Grid from "@mui/material/Grid";
-import Typography from "@mui/material/Typography";
-import CircularProgress from "@mui/material/CircularProgress";
+// React-Router-Dom components
+import { useSearchParams, useNavigate } from "react-router-dom";
 
-// icats component
-import {
-  StorageConfigurationWithDetailsList,
-  StorageConfigurationApiAxiosParamCreator,
-  RunAxios,
-} from "icats";
+// MUI Component
+import { CircularProgress, Grid, Typography } from "@mui/material";
+
+// icats Component
+import { SamplePagedList, SampleApiAxiosParamCreator, RunAxios } from "icats";
 
 // Custom components
-import JSONContainer from "../../components/JSONContainer/JSONContainer";
 import { useDialogContext } from "../../container/app/DialogContext";
+import JSONContainer from "../../components/JSONContainer/JSONContainer";
 import CustomTable, {
   IColumnMapping,
   IPaginationProps,
@@ -23,42 +20,48 @@ import CustomTable, {
 } from "../../container/table/Table";
 
 const COLUMN_MAPPPING: IColumnMapping[] = [
-  {
-    displayName: "ID",
-    jsonKeys: ["id"],
-    linkTo: { formatString: "{0}", formatValue: [["id"]] },
-  },
+  { displayName: "ID", jsonKeys: ["id"] },
   { displayName: "Name", jsonKeys: ["name"] },
-  { displayName: "Description", jsonKeys: ["description"] },
-  { displayName: "Type", jsonKeys: ["type"] },
   { displayName: "Status", jsonKeys: ["status"] },
-  { displayName: "Is Default", jsonKeys: ["isDefault"] },
+  { displayName: "Metadata Valid", jsonKeys: ["metadataValid"] },
+  { displayName: "Owner Id", jsonKeys: ["ownerId"] },
+  { displayName: "Tenant Id", jsonKeys: ["tenantId"] },
+  { displayName: "Tenant Name", jsonKeys: ["tenantName"] },
   { displayName: "Time Created", jsonKeys: ["timeCreated"] },
   { displayName: "Time Modified", jsonKeys: ["timeModified"] },
 ];
 
-async function getStorageConfigurationsData(
+async function getSamplesData(
+  region: string,
   parameter: any
-): Promise<StorageConfigurationWithDetailsList> {
+): Promise<SamplePagedList> {
   // Generate axios parameter
-  const StorageConfigurationsParamCreator =
-    StorageConfigurationApiAxiosParamCreator();
-  const getStorageConfigurationsParam =
-    await StorageConfigurationsParamCreator.getStorageConfigurations();
+  const SamplesParamCreator = SampleApiAxiosParamCreator();
+  const getSamplesParam = await SamplesParamCreator.getSamples(region);
 
-  getStorageConfigurationsParam.url += `?`;
+  getSamplesParam.url += `&`;
   for (const element in parameter) {
-    getStorageConfigurationsParam.url += `${element}=${parameter[element]}&`;
+    getSamplesParam.url += `${element}=${parameter[element]}&`;
   }
 
   // Calling axios
-  const axiosData = await RunAxios(getStorageConfigurationsParam);
+  const axiosData = await RunAxios(getSamplesParam);
   return axiosData.data;
 }
 
-function StorageConfigurationsPage() {
-  const [storageConfigurationWithDetailsListResponse, setStorageConfigurationWithDetailsListResponse] =
-    useState<StorageConfigurationWithDetailsList | null>();
+function SamplesPage() {
+  // Take region Id for input
+  const [searchParams] = useSearchParams();
+  const region = searchParams.get("region");
+  const navigate = useNavigate();
+
+  if (!region) {
+    navigate("../regions", { replace: true });
+  }
+
+  const { setDialogInfo } = useDialogContext();
+  const [samplesResponse, setSamplesResponse] =
+    useState<SamplePagedList | null>();
   const [paginationProps, setPaginationProps] =
     useState<IPaginationProps>(paginationPropsInit);
   function handlePaginationPropsChange(newProps: any) {
@@ -69,8 +72,6 @@ function StorageConfigurationsPage() {
     pageOffset: 0,
     pageSize: paginationProps.rowsPerPage,
   });
-
-  const { setDialogInfo } = useDialogContext();
 
   useEffect(() => {
     // Calculate pageOffset
@@ -85,16 +86,16 @@ function StorageConfigurationsPage() {
 
   useEffect(() => {
     let cancel = false;
-
     async function fetchData() {
       try {
-        const data = await getStorageConfigurationsData(apiParameter);
-        if (cancel) return;
-
-        setStorageConfigurationWithDetailsListResponse(data);
-        handlePaginationPropsChange({
-          totalItem: getTotalItemCountFromRes(data),
-        });
+        if (region) {
+          const data = await getSamplesData(region, apiParameter);
+          if (cancel) return;
+          setSamplesResponse(data);
+          handlePaginationPropsChange({
+            totalItem: getTotalItemCountFromRes(data),
+          });
+        }
       } catch (err) {
         setDialogInfo({
           isOpen: true,
@@ -103,13 +104,11 @@ function StorageConfigurationsPage() {
         });
       }
     }
-
     fetchData();
-
     return () => {
       cancel = true;
     };
-  }, [apiParameter, setDialogInfo]);
+  }, [region, setDialogInfo, apiParameter]);
 
   return (
     <Grid
@@ -120,23 +119,22 @@ function StorageConfigurationsPage() {
       spacing={3}
     >
       <Grid item xs={12}>
-        <Typography variant="h4">Available Storage Configurations</Typography>
+        <Typography variant="h4">Region Id: {region}</Typography>
       </Grid>
-
-      {!storageConfigurationWithDetailsListResponse ? (
+      {!samplesResponse ? (
         <CircularProgress sx={{ marginTop: "50px" }} />
       ) : (
         <Grid item container spacing={3}>
           <Grid item xs={12}>
             <CustomTable
-              items={storageConfigurationWithDetailsListResponse.items}
+              items={samplesResponse.items}
               columnMapping={COLUMN_MAPPPING}
               paginationProps={paginationProps}
               handlePaginationPropsChange={handlePaginationPropsChange}
             />
           </Grid>
           <Grid item xs={12}>
-            <JSONContainer data={storageConfigurationWithDetailsListResponse} />
+            <JSONContainer data={samplesResponse} />
           </Grid>
         </Grid>
       )}
@@ -144,4 +142,4 @@ function StorageConfigurationsPage() {
   );
 }
 
-export default StorageConfigurationsPage;
+export default SamplesPage;

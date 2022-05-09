@@ -7,50 +7,38 @@ import { useParams } from "react-router-dom";
 import { CircularProgress, Grid, Typography } from "@mui/material";
 
 // icats Component
-import {
-  StorageCredential,
-  StorageCredentialsApiAxiosParamCreator,
-  RunAxios,
-} from "icats";
+import { Workgroup, WorkgroupApiAxiosParamCreator, RunAxios } from "icats";
 
 // Custom components
 import { useDialogContext } from "../../container/app/DialogContext";
 import JSONContainer from "../../components/JSONContainer/JSONContainer";
 
-async function getStorageCredentialData(
-  storageCredentialId: string
-): Promise<StorageCredential> {
+async function getWorkgroupData(workgroupId: string): Promise<Workgroup> {
   // Generate axios parameter
-  const StorageCredentialParamCreator =
-    StorageCredentialsApiAxiosParamCreator();
-  const getStorageCredentialsParam =
-    await StorageCredentialParamCreator.getStorageCredential(
-      storageCredentialId
-    );
+  const WorkgroupParamCreator = WorkgroupApiAxiosParamCreator();
+  const getWorkgroupsParam = await WorkgroupParamCreator.getWorkgroup(
+    workgroupId
+  );
 
   // Calling axios
-  const axiosData = await RunAxios(getStorageCredentialsParam);
+  const axiosData = await RunAxios(getWorkgroupsParam);
   return axiosData.data;
 }
 
-function StorageCredentialPage() {
-  const { storageCredentialId } = useParams();
+function WorkgroupPage() {
+  const { workgroupId } = useParams();
 
   const { setDialogInfo } = useDialogContext();
-  const [storageCredentialResponse, setStorageCredentialResponse] = useState<
-    StorageCredential | null
-  >();
+  const [workgroupResponse, setWorkgroupResponse] = useState<Workgroup | null>();
 
   useEffect(() => {
     let cancel = false;
     async function fetchData() {
       try {
-        if (storageCredentialId) {
-          const data = await getStorageCredentialData(
-            storageCredentialId
-          );
+        if (workgroupId) {
+          const data = await getWorkgroupData(workgroupId);
           if (cancel) return;
-          setStorageCredentialResponse(data);
+          setWorkgroupResponse(data);
         }
       } catch (err) {
         setDialogInfo({
@@ -64,7 +52,7 @@ function StorageCredentialPage() {
     return () => {
       cancel = true;
     };
-  }, [storageCredentialId, setDialogInfo]);
+  }, [workgroupId, setDialogInfo]);
 
   return (
     <Grid
@@ -75,16 +63,14 @@ function StorageCredentialPage() {
       spacing={3}
     >
       <Grid item xs={12}>
-        <Typography variant="h4">
-          Storage Credential Id: {storageCredentialId}
-        </Typography>
+        <Typography variant="h4">Workgroup Id: {workgroupId}</Typography>
       </Grid>
-      {!storageCredentialResponse ? (
+      {!workgroupResponse ? (
         <CircularProgress sx={{ marginTop: "50px" }} />
       ) : (
         <Grid item container spacing={3}>
           <Grid item xs={12}>
-            <JSONContainer data={storageCredentialResponse} />
+            <JSONContainer data={workgroupResponse} />
           </Grid>
         </Grid>
       )}
@@ -92,4 +78,4 @@ function StorageCredentialPage() {
   );
 }
 
-export default StorageCredentialPage;
+export default WorkgroupPage;

@@ -9,6 +9,10 @@ import MetadataModelsRoute from "./metadataModels/MetadataModelsRoute";
 import NotificationChannelRoutes from "./notificationChannels/NotificationChannelRoutes";
 import StorageConfigurationsRoutes from "./storageConfigurations/StorageConfigurationsRoutes";
 import StorageCredentialsRoutes from "./storageCredentials/StorageCredentialsRoutes";
+import WorkgroupsRoutes from "./workgroups/WorkgroupsRoutes";
+import RegionsRoutes from "./regions/RegionsRoutes";
+import UsersRoutes from "./users/UsersRoutes";
+import ConnectorsRoutes from "./connectors/ConnectorsRoutes";
 
 // Custom Routing
 import ProtectedRoute from "./utils/ProtectedRoute";
@@ -18,7 +22,8 @@ import AnalysisStoragePage from "../pages/analysisStorage/AnalysisStoragePage";
 import DataFormatsPage from "../pages/dataFormats/DataFormatsPage";
 import EventCodesPage from "../pages/eventCodes/EventCodesPage";
 import EventLogPage from "../pages/eventLog/EventLogPage";
-import StrageBundlesPage from "../pages/storageBundles/StrageBundlesPage";
+import StorageBundlesPage from "../pages/storageBundles/StorageBundlesPage";
+import SamplesListPage from "../pages/samples/SamplesListPage";
 
 export default function AppRoutes() {
   return (
@@ -29,13 +34,18 @@ export default function AppRoutes() {
         <Route path="projects">{ProjectRoutes}</Route>
         <Route path="pipelines">{PipelineRoutes}</Route>
         <Route path="bundles">{BundleRoutes}</Route>
+        <Route path="users">{UsersRoutes}</Route>
+        <Route path="workgroups">{WorkgroupsRoutes}</Route>
+        <Route path="regions">{RegionsRoutes}</Route>
+        <Route path="samples" element={<SamplesListPage />} />
+        <Route path="connectors">{ConnectorsRoutes}</Route>
 
         {/* Other Routes */}
         <Route path="analysisStorage" element={<AnalysisStoragePage />} />
         <Route path="dataFormats" element={<DataFormatsPage />} />
         <Route path="eventCodes" element={<EventCodesPage />} />
         <Route path="eventLog" element={<EventLogPage />} />
-        <Route path="storageBundles" element={<StrageBundlesPage />} />
+        <Route path="storageBundles" element={<StorageBundlesPage />} />
         <Route path="metadataModels">{MetadataModelsRoute}</Route>
         <Route path="notificationChannels">{NotificationChannelRoutes}</Route>
         <Route path="storageConfigurations">

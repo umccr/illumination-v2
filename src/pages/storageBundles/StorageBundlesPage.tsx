@@ -7,8 +7,8 @@ import CircularProgress from "@mui/material/CircularProgress";
 
 // icats component
 import {
-  StorageConfigurationWithDetailsList,
-  StorageConfigurationApiAxiosParamCreator,
+  StorageBundleList,
+  StorageBundleApiAxiosParamCreator,
   RunAxios,
 } from "icats";
 
@@ -23,42 +23,37 @@ import CustomTable, {
 } from "../../container/table/Table";
 
 const COLUMN_MAPPPING: IColumnMapping[] = [
-  {
-    displayName: "ID",
-    jsonKeys: ["id"],
-    linkTo: { formatString: "{0}", formatValue: [["id"]] },
-  },
-  { displayName: "Name", jsonKeys: ["name"] },
-  { displayName: "Description", jsonKeys: ["description"] },
-  { displayName: "Type", jsonKeys: ["type"] },
-  { displayName: "Status", jsonKeys: ["status"] },
-  { displayName: "Is Default", jsonKeys: ["isDefault"] },
+  { displayName: "Bundle Name", jsonKeys: ["bundleName"] },
+  { displayName: "Entitlement Name", jsonKeys: ["entitlementName"] },
+  { displayName: "Id", jsonKeys: ["id"] },
+  { displayName: "Owner Id", jsonKeys: ["ownerId"] },
+  { displayName: "Tenant Id", jsonKeys: ["tenantId"] },
+  { displayName: "Tenant Name", jsonKeys: ["tenantName"] },
   { displayName: "Time Created", jsonKeys: ["timeCreated"] },
   { displayName: "Time Modified", jsonKeys: ["timeModified"] },
 ];
 
-async function getStorageConfigurationsData(
+async function getStorageBundleData(
   parameter: any
-): Promise<StorageConfigurationWithDetailsList> {
+): Promise<StorageBundleList> {
   // Generate axios parameter
-  const StorageConfigurationsParamCreator =
-    StorageConfigurationApiAxiosParamCreator();
-  const getStorageConfigurationsParam =
-    await StorageConfigurationsParamCreator.getStorageConfigurations();
+  const StorageBundleParamCreator = StorageBundleApiAxiosParamCreator();
+  const getStorageBundleParam =
+    await StorageBundleParamCreator.getStorageBundles();
 
-  getStorageConfigurationsParam.url += `?`;
+  getStorageBundleParam.url += `?`;
   for (const element in parameter) {
-    getStorageConfigurationsParam.url += `${element}=${parameter[element]}&`;
+    getStorageBundleParam.url += `${element}=${parameter[element]}&`;
   }
 
   // Calling axios
-  const axiosData = await RunAxios(getStorageConfigurationsParam);
+  const axiosData = await RunAxios(getStorageBundleParam);
   return axiosData.data;
 }
 
-function StorageConfigurationsPage() {
-  const [storageConfigurationWithDetailsListResponse, setStorageConfigurationWithDetailsListResponse] =
-    useState<StorageConfigurationWithDetailsList | null>();
+function StorageBundlePage() {
+  const [storageBundleListResponse, setStorageBundleListResponse] =
+    useState<StorageBundleList | null>();
   const [paginationProps, setPaginationProps] =
     useState<IPaginationProps>(paginationPropsInit);
   function handlePaginationPropsChange(newProps: any) {
@@ -88,10 +83,10 @@ function StorageConfigurationsPage() {
 
     async function fetchData() {
       try {
-        const data = await getStorageConfigurationsData(apiParameter);
+        const data = await getStorageBundleData(apiParameter);
         if (cancel) return;
 
-        setStorageConfigurationWithDetailsListResponse(data);
+        setStorageBundleListResponse(data);
         handlePaginationPropsChange({
           totalItem: getTotalItemCountFromRes(data),
         });
@@ -120,23 +115,23 @@ function StorageConfigurationsPage() {
       spacing={3}
     >
       <Grid item xs={12}>
-        <Typography variant="h4">Available Storage Configurations</Typography>
+        <Typography variant="h4">Storage Bundles</Typography>
       </Grid>
 
-      {!storageConfigurationWithDetailsListResponse ? (
+      {!storageBundleListResponse ? (
         <CircularProgress sx={{ marginTop: "50px" }} />
       ) : (
         <Grid item container spacing={3}>
           <Grid item xs={12}>
             <CustomTable
-              items={storageConfigurationWithDetailsListResponse.items}
+              items={storageBundleListResponse.items}
               columnMapping={COLUMN_MAPPPING}
               paginationProps={paginationProps}
               handlePaginationPropsChange={handlePaginationPropsChange}
             />
           </Grid>
           <Grid item xs={12}>
-            <JSONContainer data={storageConfigurationWithDetailsListResponse} />
+            <JSONContainer data={storageBundleListResponse} />
           </Grid>
         </Grid>
       )}
@@ -144,4 +139,4 @@ function StorageConfigurationsPage() {
   );
 }
 
-export default StorageConfigurationsPage;
+export default StorageBundlePage;

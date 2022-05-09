@@ -10,7 +10,7 @@ import BundleToolsPage from "../../pages/bundles/BundleToolsPage";
 import BundlesSamplesPage from "../../pages/bundles/BundlesSamplesPage";
 import BundleToolsEligibleLinkingPage from "../../pages/bundles/BundleToolsEligibleLinkingPage";
 
-const ProjectRoutes: React.ReactNode[] = [
+const BundlesRoutes: React.ReactNode[] = [
   <Route index element={<BundlesListPage />} key="bundleIndexRoute" />,
   <Route path=":bundleId" key="bundleIdRoute">
     <Route index element={<BundlePage />} />
@@ -27,4 +27,4 @@ const ProjectRoutes: React.ReactNode[] = [
   </Route>,
 ];
 
-export default ProjectRoutes;
+export default BundlesRoutes;

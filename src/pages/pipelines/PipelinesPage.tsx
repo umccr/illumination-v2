@@ -38,7 +38,7 @@ async function getPipelinesData(): Promise<PipelineList> {
 }
 
 function PipelinesPage() {
-  const [projectListResponse, setPipelinesListResponse] =
+  const [pipelinesListResponse, setPipelinesListResponse] =
     useState<PipelineList | null>();
 
   const { setDialogInfo } = useDialogContext();
@@ -80,18 +80,18 @@ function PipelinesPage() {
         <Typography variant="h4">Available Pipelines</Typography>
       </Grid>
 
-      {!projectListResponse ? (
+      {!pipelinesListResponse ? (
         <CircularProgress sx={{ marginTop: "50px" }} />
       ) : (
         <Grid item container spacing={3}>
           <Grid item xs={12}>
             <CustomTable
-              items={projectListResponse.items}
+              items={pipelinesListResponse.items}
               columnMapping={COLUMN_MAPPPING}
             />
           </Grid>
           <Grid item xs={12}>
-            <JSONContainer data={projectListResponse} />
+            <JSONContainer data={pipelinesListResponse} />
           </Grid>
         </Grid>
       )}

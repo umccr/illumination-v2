@@ -6,11 +6,7 @@ import Typography from "@mui/material/Typography";
 import CircularProgress from "@mui/material/CircularProgress";
 
 // icats component
-import {
-  StorageConfigurationWithDetailsList,
-  StorageConfigurationApiAxiosParamCreator,
-  RunAxios,
-} from "icats";
+import { WorkgroupList, WorkgroupApiAxiosParamCreator, RunAxios } from "icats";
 
 // Custom components
 import JSONContainer from "../../components/JSONContainer/JSONContainer";
@@ -30,35 +26,30 @@ const COLUMN_MAPPPING: IColumnMapping[] = [
   },
   { displayName: "Name", jsonKeys: ["name"] },
   { displayName: "Description", jsonKeys: ["description"] },
-  { displayName: "Type", jsonKeys: ["type"] },
-  { displayName: "Status", jsonKeys: ["status"] },
-  { displayName: "Is Default", jsonKeys: ["isDefault"] },
-  { displayName: "Time Created", jsonKeys: ["timeCreated"] },
-  { displayName: "Time Modified", jsonKeys: ["timeModified"] },
 ];
 
-async function getStorageConfigurationsData(
+async function getWorkgroupsData(
   parameter: any
-): Promise<StorageConfigurationWithDetailsList> {
+): Promise<WorkgroupList> {
   // Generate axios parameter
-  const StorageConfigurationsParamCreator =
-    StorageConfigurationApiAxiosParamCreator();
-  const getStorageConfigurationsParam =
-    await StorageConfigurationsParamCreator.getStorageConfigurations();
+  const WorkgroupsParamCreator =
+    WorkgroupApiAxiosParamCreator();
+  const getWorkgroupsParam =
+    await WorkgroupsParamCreator.getWorkgroups();
 
-  getStorageConfigurationsParam.url += `?`;
+  getWorkgroupsParam.url += `?`;
   for (const element in parameter) {
-    getStorageConfigurationsParam.url += `${element}=${parameter[element]}&`;
+    getWorkgroupsParam.url += `${element}=${parameter[element]}&`;
   }
 
   // Calling axios
-  const axiosData = await RunAxios(getStorageConfigurationsParam);
+  const axiosData = await RunAxios(getWorkgroupsParam);
   return axiosData.data;
 }
 
-function StorageConfigurationsPage() {
-  const [storageConfigurationWithDetailsListResponse, setStorageConfigurationWithDetailsListResponse] =
-    useState<StorageConfigurationWithDetailsList | null>();
+function WorkgroupsPage() {
+  const [workgroupListResponse, setWorkgroupListResponse] =
+    useState<WorkgroupList | null>();
   const [paginationProps, setPaginationProps] =
     useState<IPaginationProps>(paginationPropsInit);
   function handlePaginationPropsChange(newProps: any) {
@@ -88,10 +79,10 @@ function StorageConfigurationsPage() {
 
     async function fetchData() {
       try {
-        const data = await getStorageConfigurationsData(apiParameter);
+        const data = await getWorkgroupsData(apiParameter);
         if (cancel) return;
 
-        setStorageConfigurationWithDetailsListResponse(data);
+        setWorkgroupListResponse(data);
         handlePaginationPropsChange({
           totalItem: getTotalItemCountFromRes(data),
         });
@@ -120,23 +111,23 @@ function StorageConfigurationsPage() {
       spacing={3}
     >
       <Grid item xs={12}>
-        <Typography variant="h4">Available Storage Configurations</Typography>
+        <Typography variant="h4">Available Workgroups</Typography>
       </Grid>
 
-      {!storageConfigurationWithDetailsListResponse ? (
+      {!workgroupListResponse ? (
         <CircularProgress sx={{ marginTop: "50px" }} />
       ) : (
         <Grid item container spacing={3}>
           <Grid item xs={12}>
             <CustomTable
-              items={storageConfigurationWithDetailsListResponse.items}
+              items={workgroupListResponse.items}
               columnMapping={COLUMN_MAPPPING}
               paginationProps={paginationProps}
               handlePaginationPropsChange={handlePaginationPropsChange}
             />
           </Grid>
           <Grid item xs={12}>
-            <JSONContainer data={storageConfigurationWithDetailsListResponse} />
+            <JSONContainer data={workgroupListResponse} />
           </Grid>
         </Grid>
       )}
@@ -144,4 +135,4 @@ function StorageConfigurationsPage() {
   );
 }
 
-export default StorageConfigurationsPage;
+export default WorkgroupsPage;

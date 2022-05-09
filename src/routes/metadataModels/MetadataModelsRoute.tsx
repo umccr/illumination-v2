@@ -6,7 +6,7 @@ import MetadataModelPage from "../../pages/metadataModels/MetadataModelPage";
 import MetadataModelsPage from "../../pages/metadataModels/MetadataModelsPage";
 import MetadataModelFieldsPage from "../../pages/metadataModels/MetadataModelFieldsPage";
 
-const ProjectRoutes: React.ReactNode[] = [
+const MetadataModelsRoutes: React.ReactNode[] = [
   <Route
     index
     element={<MetadataModelsPage />}
@@ -18,4 +18,4 @@ const ProjectRoutes: React.ReactNode[] = [
   </Route>,
 ];
 
-export default ProjectRoutes;
+export default MetadataModelsRoutes;

@@ -38,8 +38,8 @@ function StorageConfigurationDetailsPage() {
   const { storageConfigurationId } = useParams();
 
   const { setDialogInfo } = useDialogContext();
-  const [storageConfigurationDetail, setStorageConfigurationDetailsResponse] = useState<
-    StorageConfigurationDetails | null | any
+  const [storageConfigurationDetailResponse, setStorageConfigurationDetailsResponse] = useState<
+    StorageConfigurationDetails | null
   >();
 
   useEffect(() => {
@@ -80,12 +80,12 @@ function StorageConfigurationDetailsPage() {
           Storage Configuration Id: {storageConfigurationId}
         </Typography>
       </Grid>
-      {!storageConfigurationDetail ? (
+      {!storageConfigurationDetailResponse ? (
         <CircularProgress sx={{ marginTop: "50px" }} />
       ) : (
         <Grid item container spacing={3}>
           <Grid item xs={12}>
-            <JSONContainer data={storageConfigurationDetail} />
+            <JSONContainer data={storageConfigurationDetailResponse} />
           </Grid>
         </Grid>
       )}

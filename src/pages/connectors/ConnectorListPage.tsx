@@ -6,11 +6,7 @@ import Typography from "@mui/material/Typography";
 import CircularProgress from "@mui/material/CircularProgress";
 
 // icats component
-import {
-  StorageConfigurationWithDetailsList,
-  StorageConfigurationApiAxiosParamCreator,
-  RunAxios,
-} from "icats";
+import { ConnectorList, ConnectorApiAxiosParamCreator, RunAxios } from "icats";
 
 // Custom components
 import JSONContainer from "../../components/JSONContainer/JSONContainer";
@@ -28,37 +24,38 @@ const COLUMN_MAPPPING: IColumnMapping[] = [
     jsonKeys: ["id"],
     linkTo: { formatString: "{0}", formatValue: [["id"]] },
   },
-  { displayName: "Name", jsonKeys: ["name"] },
-  { displayName: "Description", jsonKeys: ["description"] },
-  { displayName: "Type", jsonKeys: ["type"] },
-  { displayName: "Status", jsonKeys: ["status"] },
-  { displayName: "Is Default", jsonKeys: ["isDefault"] },
+  { displayName: "Mode", jsonKeys: ["mode"] },
+  {
+    displayName: "Max Concurrent Transfers",
+    jsonKeys: ["maxConcurrentTransfers"],
+  },
+  { displayName: "OS", jsonKeys: ["os"] },
+  { displayName: "Installation Status", jsonKeys: ["installationStatus"] },
+  { displayName: "Owner Id", jsonKeys: ["ownerId"] },
+  { displayName: "Tenant Id", jsonKeys: ["tenantId"] },
+  { displayName: "Tenant Name", jsonKeys: ["tenantName"] },
   { displayName: "Time Created", jsonKeys: ["timeCreated"] },
   { displayName: "Time Modified", jsonKeys: ["timeModified"] },
 ];
 
-async function getStorageConfigurationsData(
-  parameter: any
-): Promise<StorageConfigurationWithDetailsList> {
+async function getConnectorsData(parameter: any): Promise<ConnectorList> {
   // Generate axios parameter
-  const StorageConfigurationsParamCreator =
-    StorageConfigurationApiAxiosParamCreator();
-  const getStorageConfigurationsParam =
-    await StorageConfigurationsParamCreator.getStorageConfigurations();
+  const ConnectorsParamCreator = ConnectorApiAxiosParamCreator();
+  const getConnectorsParam = await ConnectorsParamCreator.getConnectors();
 
-  getStorageConfigurationsParam.url += `?`;
+  getConnectorsParam.url += `?`;
   for (const element in parameter) {
-    getStorageConfigurationsParam.url += `${element}=${parameter[element]}&`;
+    getConnectorsParam.url += `${element}=${parameter[element]}&`;
   }
 
   // Calling axios
-  const axiosData = await RunAxios(getStorageConfigurationsParam);
+  const axiosData = await RunAxios(getConnectorsParam);
   return axiosData.data;
 }
 
-function StorageConfigurationsPage() {
-  const [storageConfigurationWithDetailsListResponse, setStorageConfigurationWithDetailsListResponse] =
-    useState<StorageConfigurationWithDetailsList | null>();
+function ConnectorsPage() {
+  const [connectorListResponse, setConnectorListResponse] =
+    useState<ConnectorList | null>();
   const [paginationProps, setPaginationProps] =
     useState<IPaginationProps>(paginationPropsInit);
   function handlePaginationPropsChange(newProps: any) {
@@ -88,10 +85,10 @@ function StorageConfigurationsPage() {
 
     async function fetchData() {
       try {
-        const data = await getStorageConfigurationsData(apiParameter);
+        const data = await getConnectorsData(apiParameter);
         if (cancel) return;
 
-        setStorageConfigurationWithDetailsListResponse(data);
+        setConnectorListResponse(data);
         handlePaginationPropsChange({
           totalItem: getTotalItemCountFromRes(data),
         });
@@ -120,23 +117,23 @@ function StorageConfigurationsPage() {
       spacing={3}
     >
       <Grid item xs={12}>
-        <Typography variant="h4">Available Storage Configurations</Typography>
+        <Typography variant="h4">Available Connectors</Typography>
       </Grid>
 
-      {!storageConfigurationWithDetailsListResponse ? (
+      {!connectorListResponse ? (
         <CircularProgress sx={{ marginTop: "50px" }} />
       ) : (
         <Grid item container spacing={3}>
           <Grid item xs={12}>
             <CustomTable
-              items={storageConfigurationWithDetailsListResponse.items}
+              items={connectorListResponse.items}
               columnMapping={COLUMN_MAPPPING}
               paginationProps={paginationProps}
               handlePaginationPropsChange={handlePaginationPropsChange}
             />
           </Grid>
           <Grid item xs={12}>
-            <JSONContainer data={storageConfigurationWithDetailsListResponse} />
+            <JSONContainer data={connectorListResponse} />
           </Grid>
         </Grid>
       )}
@@ -144,4 +141,4 @@ function StorageConfigurationsPage() {
   );
 }
 
-export default StorageConfigurationsPage;
+export default ConnectorsPage;

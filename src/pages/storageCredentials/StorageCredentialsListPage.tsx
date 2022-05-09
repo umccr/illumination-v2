@@ -54,7 +54,7 @@ async function getStorageCredentialsData(
 }
 
 function StorageCredentialsPage() {
-  const [projectListResponse, setStorageCredentialListResponse] =
+  const [storageCredentialListResponse, setStorageCredentialListResponse] =
     useState<StorageCredentialList | null>();
   const [paginationProps, setPaginationProps] =
     useState<IPaginationProps>(paginationPropsInit);
@@ -120,20 +120,20 @@ function StorageCredentialsPage() {
         <Typography variant="h4">Available Storage Credentials</Typography>
       </Grid>
 
-      {!projectListResponse ? (
+      {!storageCredentialListResponse ? (
         <CircularProgress sx={{ marginTop: "50px" }} />
       ) : (
         <Grid item container spacing={3}>
           <Grid item xs={12}>
             <CustomTable
-              items={projectListResponse.items}
+              items={storageCredentialListResponse.items}
               columnMapping={COLUMN_MAPPPING}
               paginationProps={paginationProps}
               handlePaginationPropsChange={handlePaginationPropsChange}
             />
           </Grid>
           <Grid item xs={12}>
-            <JSONContainer data={projectListResponse} />
+            <JSONContainer data={storageCredentialListResponse} />
           </Grid>
         </Grid>
       )}

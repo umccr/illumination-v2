@@ -1,16 +1,15 @@
 import React, { useState, useEffect } from "react";
 
+// React-Router-Dom components
+import { useParams } from "react-router-dom";
+
 // MUI components
 import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
 import CircularProgress from "@mui/material/CircularProgress";
 
 // icats component
-import {
-  StorageConfigurationWithDetailsList,
-  StorageConfigurationApiAxiosParamCreator,
-  RunAxios,
-} from "icats";
+import { DownloadRuleList, ConnectorApiAxiosParamCreator, RunAxios } from "icats";
 
 // Custom components
 import JSONContainer from "../../components/JSONContainer/JSONContainer";
@@ -23,47 +22,46 @@ import CustomTable, {
 } from "../../container/table/Table";
 
 const COLUMN_MAPPPING: IColumnMapping[] = [
-  {
-    displayName: "ID",
-    jsonKeys: ["id"],
-    linkTo: { formatString: "{0}", formatValue: [["id"]] },
-  },
-  { displayName: "Name", jsonKeys: ["name"] },
-  { displayName: "Description", jsonKeys: ["description"] },
-  { displayName: "Type", jsonKeys: ["type"] },
-  { displayName: "Status", jsonKeys: ["status"] },
-  { displayName: "Is Default", jsonKeys: ["isDefault"] },
+  { displayName: "ID", jsonKeys: ["id"] },
+  { displayName: "OS", jsonKeys: ["os"] },
+  { displayName: "Local Folder", jsonKeys: ["localFolder"] },
+  { displayName: "File Pattern", jsonKeys: ["localFolder"] },
+  { displayName: "Owner Id", jsonKeys: ["ownerId"] },
+  { displayName: "Tenant Id", jsonKeys: ["tenantId"] },
+  { displayName: "Tenant Name", jsonKeys: ["tenantName"] },
   { displayName: "Time Created", jsonKeys: ["timeCreated"] },
   { displayName: "Time Modified", jsonKeys: ["timeModified"] },
 ];
 
-async function getStorageConfigurationsData(
+async function getConnectorDownloadRulesData(
+  connectorId: string,
   parameter: any
-): Promise<StorageConfigurationWithDetailsList> {
+): Promise<DownloadRuleList> {
   // Generate axios parameter
-  const StorageConfigurationsParamCreator =
-    StorageConfigurationApiAxiosParamCreator();
-  const getStorageConfigurationsParam =
-    await StorageConfigurationsParamCreator.getStorageConfigurations();
+  const ConnectorDownloadRulesParamCreator = ConnectorApiAxiosParamCreator();
+  const getConnectorDownloadRulesParam =
+    await ConnectorDownloadRulesParamCreator.getDownloadRules(connectorId);
 
-  getStorageConfigurationsParam.url += `?`;
+  getConnectorDownloadRulesParam.url += `?`;
   for (const element in parameter) {
-    getStorageConfigurationsParam.url += `${element}=${parameter[element]}&`;
+    getConnectorDownloadRulesParam.url += `${element}=${parameter[element]}&`;
   }
 
   // Calling axios
-  const axiosData = await RunAxios(getStorageConfigurationsParam);
+  const axiosData = await RunAxios(getConnectorDownloadRulesParam);
   return axiosData.data;
 }
 
-function StorageConfigurationsPage() {
-  const [storageConfigurationWithDetailsListResponse, setStorageConfigurationWithDetailsListResponse] =
-    useState<StorageConfigurationWithDetailsList | null>();
+function ConnectorDownloadRulesPage() {
+  const [downloadRuleListResponse, setDownloadRuleListResponse] =
+    useState<DownloadRuleList | null>();
   const [paginationProps, setPaginationProps] =
     useState<IPaginationProps>(paginationPropsInit);
   function handlePaginationPropsChange(newProps: any) {
     setPaginationProps((prev) => ({ ...prev, ...newProps }));
   }
+
+  const { connectorId } = useParams();
 
   const [apiParameter, setApiParameter] = useState({
     pageOffset: 0,
@@ -88,13 +86,18 @@ function StorageConfigurationsPage() {
 
     async function fetchData() {
       try {
-        const data = await getStorageConfigurationsData(apiParameter);
-        if (cancel) return;
+        if (connectorId) {
+          const data = await getConnectorDownloadRulesData(
+            connectorId,
+            apiParameter
+          );
+          if (cancel) return;
 
-        setStorageConfigurationWithDetailsListResponse(data);
-        handlePaginationPropsChange({
-          totalItem: getTotalItemCountFromRes(data),
-        });
+          setDownloadRuleListResponse(data);
+          handlePaginationPropsChange({
+            totalItem: getTotalItemCountFromRes(data),
+          });
+        }
       } catch (err) {
         setDialogInfo({
           isOpen: true,
@@ -109,7 +112,7 @@ function StorageConfigurationsPage() {
     return () => {
       cancel = true;
     };
-  }, [apiParameter, setDialogInfo]);
+  }, [connectorId, apiParameter, setDialogInfo]);
 
   return (
     <Grid
@@ -120,23 +123,23 @@ function StorageConfigurationsPage() {
       spacing={3}
     >
       <Grid item xs={12}>
-        <Typography variant="h4">Available Storage Configurations</Typography>
+        <Typography variant="h4">Available Connector Download Rules</Typography>
       </Grid>
 
-      {!storageConfigurationWithDetailsListResponse ? (
+      {!downloadRuleListResponse ? (
         <CircularProgress sx={{ marginTop: "50px" }} />
       ) : (
         <Grid item container spacing={3}>
           <Grid item xs={12}>
             <CustomTable
-              items={storageConfigurationWithDetailsListResponse.items}
+              items={downloadRuleListResponse.items}
               columnMapping={COLUMN_MAPPPING}
               paginationProps={paginationProps}
               handlePaginationPropsChange={handlePaginationPropsChange}
             />
           </Grid>
           <Grid item xs={12}>
-            <JSONContainer data={storageConfigurationWithDetailsListResponse} />
+            <JSONContainer data={downloadRuleListResponse} />
           </Grid>
         </Grid>
       )}
@@ -144,4 +147,4 @@ function StorageConfigurationsPage() {
   );
 }
 
-export default StorageConfigurationsPage;
+export default ConnectorDownloadRulesPage;

@@ -56,7 +56,7 @@ async function getMetadataModelData(
 }
 
 function MetadataModelsPage() {
-  const [projectListResponse, setMetadataModelListResponse] =
+  const [metadataModelListResponse, setMetadataModelListResponse] =
     useState<MetadataModelList | null>();
   const [paginationProps, setPaginationProps] =
     useState<IPaginationProps>(paginationPropsInit);
@@ -122,20 +122,20 @@ function MetadataModelsPage() {
         <Typography variant="h4">Available Metadata Models</Typography>
       </Grid>
 
-      {!projectListResponse ? (
+      {!metadataModelListResponse ? (
         <CircularProgress sx={{ marginTop: "50px" }} />
       ) : (
         <Grid item container spacing={3}>
           <Grid item xs={12}>
             <CustomTable
-              items={projectListResponse.items}
+              items={metadataModelListResponse.items}
               columnMapping={COLUMN_MAPPPING}
               paginationProps={paginationProps}
               handlePaginationPropsChange={handlePaginationPropsChange}
             />
           </Grid>
           <Grid item xs={12}>
-            <JSONContainer data={projectListResponse} />
+            <JSONContainer data={metadataModelListResponse} />
           </Grid>
         </Grid>
       )}

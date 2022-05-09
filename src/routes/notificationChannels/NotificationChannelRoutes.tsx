@@ -5,7 +5,7 @@ import { Route } from "react-router-dom";
 import NotificationChannelPage from "../../pages/notificationChannels/NotificationChannelPage";
 import NotificationChannelsPage from "../../pages/notificationChannels/NotificationChannelsPage";
 
-const ProjectRoutes: React.ReactNode[] = [
+const NotificationChannelsRoutes: React.ReactNode[] = [
   <Route
     index
     element={<NotificationChannelsPage />}
@@ -16,4 +16,4 @@ const ProjectRoutes: React.ReactNode[] = [
   </Route>,
 ];
 
-export default ProjectRoutes;
+export default NotificationChannelsRoutes;

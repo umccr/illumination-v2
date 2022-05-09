@@ -7,51 +7,42 @@ import { useParams } from "react-router-dom";
 import { CircularProgress, Grid, Typography } from "@mui/material";
 
 // icats Component
-import {
-  StorageConfiguration,
-  StorageConfigurationApiAxiosParamCreator,
-  RunAxios,
-} from "icats";
+import { Connector, ConnectorApiAxiosParamCreator, RunAxios } from "icats";
 
 // Custom components
 import { useDialogContext } from "../../container/app/DialogContext";
 import JSONContainer from "../../components/JSONContainer/JSONContainer";
 import ChipArray, { IButtonProps } from "../../components/chipArray/ChipArray";
 
-const buttonProps: IButtonProps[] = [{ name: "Details", route: "details" }];
+const buttonProps: IButtonProps[] = [
+  { name: "Download Rule", route: "downloadRules" },
+  { name: "Upload Rule", route: "uploadRules" },
+]
 
-async function getStorageConfigurationData(
-  storageConfigurationId: string
-): Promise<StorageConfiguration> {
+async function getConnectorData(connectorId: string): Promise<Connector> {
   // Generate axios parameter
-  const StorageConfigurationParamCreator =
-    StorageConfigurationApiAxiosParamCreator();
-  const getStorageConfigurationsParam =
-    await StorageConfigurationParamCreator.getStorageConfiguration(
-      storageConfigurationId
-    );
+  const ConnectorParamCreator = ConnectorApiAxiosParamCreator();
+  const getConnectorsParam = await ConnectorParamCreator.getConnector(connectorId);
 
   // Calling axios
-  const axiosData = await RunAxios(getStorageConfigurationsParam);
+  const axiosData = await RunAxios(getConnectorsParam);
   return axiosData.data;
 }
 
-function StorageConfigurationPage() {
-  const { storageConfigurationId } = useParams();
+function ConnectorPage() {
+  const { connectorId } = useParams();
 
   const { setDialogInfo } = useDialogContext();
-  const [storageConfigurationResponse, setStorageConfigurationResponse] = useState<
-    StorageConfiguration | null
-  >();
+  const [connectorResponse, setConnectorResponse] = useState<Connector | null>();
 
   useEffect(() => {
     let cancel = false;
     async function fetchData() {
       try {
-        if (storageConfigurationId) {
-          const data = await getStorageConfigurationData(storageConfigurationId);
+        if (connectorId) {
+          const data = await getConnectorData(connectorId);
           if (cancel) return;
-          setStorageConfigurationResponse(data);
+          setConnectorResponse(data);
         }
       } catch (err) {
         setDialogInfo({
@@ -65,7 +56,7 @@ function StorageConfigurationPage() {
     return () => {
       cancel = true;
     };
-  }, [storageConfigurationId, setDialogInfo]);
+  }, [connectorId, setDialogInfo]);
 
   return (
     <Grid
@@ -76,17 +67,15 @@ function StorageConfigurationPage() {
       spacing={3}
     >
       <Grid item xs={12}>
-        <Typography variant="h4">
-          Storage Configuration Id: {storageConfigurationId}
-        </Typography>
+        <Typography variant="h4">Connector Id: {connectorId}</Typography>
       </Grid>
       <ChipArray data={buttonProps} />
-      {!storageConfigurationResponse ? (
+      {!connectorResponse ? (
         <CircularProgress sx={{ marginTop: "50px" }} />
       ) : (
         <Grid item container spacing={3}>
           <Grid item xs={12}>
-            <JSONContainer data={storageConfigurationResponse} />
+            <JSONContainer data={connectorResponse} />
           </Grid>
         </Grid>
       )}
@@ -94,4 +83,4 @@ function StorageConfigurationPage() {
   );
 }
 
-export default StorageConfigurationPage;
+export default ConnectorPage;

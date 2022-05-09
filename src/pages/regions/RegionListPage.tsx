@@ -6,11 +6,7 @@ import Typography from "@mui/material/Typography";
 import CircularProgress from "@mui/material/CircularProgress";
 
 // icats component
-import {
-  StorageBundleList,
-  StorageBundleApiAxiosParamCreator,
-  RunAxios,
-} from "icats";
+import { RegionList, RegionApiAxiosParamCreator, RunAxios } from "icats";
 
 // Custom components
 import JSONContainer from "../../components/JSONContainer/JSONContainer";
@@ -23,37 +19,41 @@ import CustomTable, {
 } from "../../container/table/Table";
 
 const COLUMN_MAPPPING: IColumnMapping[] = [
-  { displayName: "Bundle Name", jsonKeys: ["bundleName"] },
-  { displayName: "Entitlement Name", jsonKeys: ["entitlementName"] },
-  { displayName: "Id", jsonKeys: ["id"] },
-  { displayName: "Owner Id", jsonKeys: ["ownerId"] },
-  { displayName: "Tenant Id", jsonKeys: ["tenantId"] },
+  {
+    displayName: "ID",
+    jsonKeys: ["id"],
+    linkTo: { formatString: "{0}", formatValue: [["id"]] },
+  },
+  {
+    displayName: "Samples",
+    jsonKeys: "Samples",
+    linkTo: { formatString: "/samples?region={0}", formatValue: [["id"]] },
+  },
   { displayName: "Tenant Name", jsonKeys: ["tenantName"] },
+  { displayName: "Country Tenant Name", jsonKeys: ["country", "tenantName"] },
+  { displayName: "Country", jsonKeys: ["country", "name"] },
   { displayName: "Time Created", jsonKeys: ["timeCreated"] },
   { displayName: "Time Modified", jsonKeys: ["timeModified"] },
 ];
 
-async function getStorageBundleData(
-  parameter: any
-): Promise<StorageBundleList> {
+async function getRegionsData(parameter: any): Promise<RegionList> {
   // Generate axios parameter
-  const StorageBundleParamCreator = StorageBundleApiAxiosParamCreator();
-  const getStorageBundleParam =
-    await StorageBundleParamCreator.getStorageBundles();
+  const RegionsParamCreator = RegionApiAxiosParamCreator();
+  const getRegionsParam = await RegionsParamCreator.getRegions();
 
-  getStorageBundleParam.url += `?`;
+  getRegionsParam.url += `?`;
   for (const element in parameter) {
-    getStorageBundleParam.url += `${element}=${parameter[element]}&`;
+    getRegionsParam.url += `${element}=${parameter[element]}&`;
   }
 
   // Calling axios
-  const axiosData = await RunAxios(getStorageBundleParam);
+  const axiosData = await RunAxios(getRegionsParam);
   return axiosData.data;
 }
 
-function StorageBundlePage() {
-  const [projectListResponse, setStorageBundleListResponse] =
-    useState<StorageBundleList | null>();
+function RegionsPage() {
+  const [regionListResponse, setRegionListResponse] =
+    useState<RegionList | null>();
   const [paginationProps, setPaginationProps] =
     useState<IPaginationProps>(paginationPropsInit);
   function handlePaginationPropsChange(newProps: any) {
@@ -83,10 +83,10 @@ function StorageBundlePage() {
 
     async function fetchData() {
       try {
-        const data = await getStorageBundleData(apiParameter);
+        const data = await getRegionsData(apiParameter);
         if (cancel) return;
 
-        setStorageBundleListResponse(data);
+        setRegionListResponse(data);
         handlePaginationPropsChange({
           totalItem: getTotalItemCountFromRes(data),
         });
@@ -115,23 +115,23 @@ function StorageBundlePage() {
       spacing={3}
     >
       <Grid item xs={12}>
-        <Typography variant="h4">Storage Bundles</Typography>
+        <Typography variant="h4">Available Regions</Typography>
       </Grid>
 
-      {!projectListResponse ? (
+      {!regionListResponse ? (
         <CircularProgress sx={{ marginTop: "50px" }} />
       ) : (
         <Grid item container spacing={3}>
           <Grid item xs={12}>
             <CustomTable
-              items={projectListResponse.items}
+              items={regionListResponse.items}
               columnMapping={COLUMN_MAPPPING}
               paginationProps={paginationProps}
               handlePaginationPropsChange={handlePaginationPropsChange}
             />
           </Grid>
           <Grid item xs={12}>
-            <JSONContainer data={projectListResponse} />
+            <JSONContainer data={regionListResponse} />
           </Grid>
         </Grid>
       )}
@@ -139,4 +139,4 @@ function StorageBundlePage() {
   );
 }
 
-export default StorageBundlePage;
+export default RegionsPage;
