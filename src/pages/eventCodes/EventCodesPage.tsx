@@ -13,7 +13,7 @@ import JSONContainer from "../../components/JSONContainer/JSONContainer";
 import { useDialogContext } from "../../container/app/DialogContext";
 import CustomTable, { IColumnMapping } from "../../container/table/Table";
 
-const COLUMN_MAPPPING: IColumnMapping[] = [
+const COLUMN_MAPPING: IColumnMapping[] = [
   { displayName: "Event Code", jsonKeys: ["eventCode"] },
   { displayName: "Description", jsonKeys: ["description"] },
 ];
@@ -46,7 +46,7 @@ function EventCodePage() {
         setDialogInfo({
           isOpen: true,
           dialogTitle: "Error",
-          dialogContent: `Sorry, An error has occured while fetching the API (${err}). Please try again!`,
+          dialogContent: `Sorry, An error has occurred while fetching the API (${err}). Please try again!`,
         });
       }
     }
@@ -77,7 +77,7 @@ function EventCodePage() {
           <Grid item xs={12}>
             <CustomTable
               items={eventCodeListResponse.items}
-              columnMapping={COLUMN_MAPPPING}
+              columnMapping={COLUMN_MAPPING}
             />
           </Grid>
           <Grid item xs={12}>

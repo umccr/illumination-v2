@@ -21,7 +21,7 @@ import CustomTable, {
   getTotalItemCountFromRes,
 } from "../../../container/table/Table";
 
-const COLUMN_MAPPPING: IColumnMapping[] = [
+const COLUMN_MAPPING: IColumnMapping[] = [
   {
     displayName: "Id",
     jsonKeys: ["bundle", "id"],
@@ -42,8 +42,9 @@ const COLUMN_MAPPPING: IColumnMapping[] = [
 async function getProjectBundleListPages(
   projectId: string
 ): Promise<ProjectBundleList> {
-
-  const axiosData = await RunAxios({url:`/api/projects/${projectId}/bundles`});
+  const axiosData = await RunAxios({
+    url: `/api/projects/${projectId}/bundles`,
+  });
 
   return axiosData.data;
 }
@@ -94,7 +95,7 @@ function ProjectBundleListPage() {
           setDialogInfo({
             isOpen: true,
             dialogTitle: "Error",
-            dialogContent: `Sorry, An error has occured while fetching the API (${err}). Please try again!`,
+            dialogContent: `Sorry, An error has occurred while fetching the API (${err}). Please try again!`,
           });
         }
       }
@@ -128,7 +129,7 @@ function ProjectBundleListPage() {
           <Grid item xs={12}>
             <CustomTable
               items={projectBundleListResponse.items}
-              columnMapping={COLUMN_MAPPPING}
+              columnMapping={COLUMN_MAPPING}
               paginationProps={paginationProps}
               handlePaginationPropsChange={handlePaginationPropsChange}
             />

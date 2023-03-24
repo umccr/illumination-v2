@@ -33,7 +33,7 @@ const buttonProps: IButtonProps[] = [
   { name: "Eligible For Linking", route: "eligibleForLinking" },
 ];
 
-const COLUMN_MAPPPING: IColumnMapping[] = [
+const COLUMN_MAPPING: IColumnMapping[] = [
   {
     displayName: "Data Id",
     jsonKeys: ["data", "id"],
@@ -119,7 +119,7 @@ function ProjectDataListJobsPage() {
           setDialogInfo({
             isOpen: true,
             dialogTitle: "Error",
-            dialogContent: `Sorry, An error has occured while fetching the API (${err}). Please try again!`,
+            dialogContent: `Sorry, An error has occurred while fetching the API (${err}). Please try again!`,
           });
         }
       }
@@ -154,7 +154,7 @@ function ProjectDataListJobsPage() {
           <Grid item xs={12}>
             <CustomTable
               items={projectDataListJobsResponse.items}
-              columnMapping={COLUMN_MAPPPING}
+              columnMapping={COLUMN_MAPPING}
               paginationProps={paginationProps}
               handlePaginationPropsChange={handlePaginationPropsChange}
             />

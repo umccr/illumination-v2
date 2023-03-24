@@ -43,10 +43,7 @@ function ProjectDataLinkedPage() {
     async function fetchData() {
       if (projectId && dataId) {
         try {
-          const data = await getProjectDataLinkedData(
-            projectId,
-            dataId
-          );
+          const data = await getProjectDataLinkedData(projectId, dataId);
           if (cancel) return;
 
           setDataLinkedResponse(data);
@@ -54,7 +51,7 @@ function ProjectDataLinkedPage() {
           setDialogInfo({
             isOpen: true,
             dialogTitle: "Error",
-            dialogContent: `Sorry, An error has occured while fetching the API (${err}). Please try again!`,
+            dialogContent: `Sorry, An error has occurred while fetching the API (${err}). Please try again!`,
           });
         }
       }

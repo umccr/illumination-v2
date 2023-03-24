@@ -9,7 +9,7 @@ import { SetToken } from "icats";
 import { get_secret_manager_value } from "../../utils/AWS";
 
 // Interface
-interface iProviderprops {
+interface iProviderProps {
   children?: React.ReactNode;
 }
 
@@ -34,7 +34,7 @@ function getCredsUser() {
     .catch(() => console.log("Not signed in"));
 }
 
-function UserContextProvider(props: iProviderprops) {
+function UserContextProvider(props: iProviderProps) {
   const [user, setUser] = useState(userContext.user);
   const [isAuthenticating, setIsAuthenticating] = useState<Boolean>(true);
 

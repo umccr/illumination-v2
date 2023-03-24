@@ -17,7 +17,6 @@ import {
 import { useDialogContext } from "../../container/app/DialogContext";
 import JSONContainer from "../../components/JSONContainer/JSONContainer";
 
-
 async function getStorageConfigurationDetailsData(
   storageConfigurationId: string
 ): Promise<StorageConfigurationDetails> {
@@ -38,9 +37,10 @@ function StorageConfigurationDetailsPage() {
   const { storageConfigurationId } = useParams();
 
   const { setDialogInfo } = useDialogContext();
-  const [storageConfigurationDetailResponse, setStorageConfigurationDetailsResponse] = useState<
-    StorageConfigurationDetails | null
-  >();
+  const [
+    storageConfigurationDetailResponse,
+    setStorageConfigurationDetailsResponse,
+  ] = useState<StorageConfigurationDetails | null>();
 
   useEffect(() => {
     let cancel = false;
@@ -57,7 +57,7 @@ function StorageConfigurationDetailsPage() {
         setDialogInfo({
           isOpen: true,
           dialogTitle: "Error",
-          dialogContent: `Sorry, An error has occured while fetching the API (${err}). Please try again!`,
+          dialogContent: `Sorry, An error has occurred while fetching the API (${err}). Please try again!`,
         });
       }
     }

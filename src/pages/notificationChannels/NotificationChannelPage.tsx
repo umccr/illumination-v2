@@ -21,9 +21,12 @@ async function getNotificationChannelData(
   notificationChannelId: string
 ): Promise<NotificationChannel> {
   // Generate axios parameter
-  const NotificationChannelParamCreator = NotificationChannelApiAxiosParamCreator();
+  const NotificationChannelParamCreator =
+    NotificationChannelApiAxiosParamCreator();
   const getNotificationChannelsParam =
-    await NotificationChannelParamCreator.getNotificationChannel(notificationChannelId);
+    await NotificationChannelParamCreator.getNotificationChannel(
+      notificationChannelId
+    );
 
   // Calling axios
   const axiosData = await RunAxios(getNotificationChannelsParam);
@@ -50,7 +53,7 @@ function NotificationChannelPage() {
         setDialogInfo({
           isOpen: true,
           dialogTitle: "Error",
-          dialogContent: `Sorry, An error has occured while fetching the API (${err}). Please try again!`,
+          dialogContent: `Sorry, An error has occurred while fetching the API (${err}). Please try again!`,
         });
       }
     }

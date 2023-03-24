@@ -22,7 +22,7 @@ import CustomTable, {
   getTotalItemCountFromRes,
 } from "../../container/table/Table";
 
-const COLUMN_MAPPPING: IColumnMapping[] = [
+const COLUMN_MAPPING: IColumnMapping[] = [
   {
     displayName: "ID",
     jsonKeys: ["id"],
@@ -31,7 +31,7 @@ const COLUMN_MAPPPING: IColumnMapping[] = [
   { displayName: "Address", jsonKeys: ["address"] },
   { displayName: "Type", jsonKeys: ["type"] },
 
-  { displayName: "Owner Id", jsonKeys: ["ownerId"] }, 
+  { displayName: "Owner Id", jsonKeys: ["ownerId"] },
   { displayName: "Tenant Name", jsonKeys: ["tenantName"] },
   { displayName: "Enabled", jsonKeys: ["enabled"] },
 
@@ -101,7 +101,7 @@ function NotificationChannelsPage() {
         setDialogInfo({
           isOpen: true,
           dialogTitle: "Error",
-          dialogContent: `Sorry, An error has occured while fetching the API (${err}). Please try again!`,
+          dialogContent: `Sorry, An error has occurred while fetching the API (${err}). Please try again!`,
         });
       }
     }
@@ -132,7 +132,7 @@ function NotificationChannelsPage() {
           <Grid item xs={12}>
             <CustomTable
               items={notificationChannelListResponse.items}
-              columnMapping={COLUMN_MAPPPING}
+              columnMapping={COLUMN_MAPPING}
               paginationProps={paginationProps}
               handlePaginationPropsChange={handlePaginationPropsChange}
             />

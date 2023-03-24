@@ -45,7 +45,7 @@ function UserPage() {
         setDialogInfo({
           isOpen: true,
           dialogTitle: "Error",
-          dialogContent: `Sorry, An error has occured while fetching the API (${err}). Please try again!`,
+          dialogContent: `Sorry, An error has occurred while fetching the API (${err}). Please try again!`,
         });
       }
     }
@@ -65,7 +65,9 @@ function UserPage() {
     >
       <Grid item xs={12}>
         <Typography variant="h4">
-          {userResponse? `${userResponse.firstname} ${userResponse?.lastname}`: `User`}
+          {userResponse
+            ? `${userResponse.firstname} ${userResponse?.lastname}`
+            : `User`}
         </Typography>
       </Grid>
       <Grid item xs={12}>

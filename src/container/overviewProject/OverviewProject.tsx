@@ -16,10 +16,10 @@ import { ProjectApiAxiosParamCreator, ProjectPagedList, RunAxios } from "icats";
 async function getProjectData(): Promise<ProjectPagedList> {
   // Generate axios parameter
   const ProjectParamCreator = ProjectApiAxiosParamCreator();
-  const getProjectsParamter = await ProjectParamCreator.getProjects();
+  const getProjectsParameter = await ProjectParamCreator.getProjects();
 
   // Calling axios
-  const axiosData = await RunAxios(getProjectsParamter);
+  const axiosData = await RunAxios(getProjectsParameter);
   return axiosData.data;
 }
 

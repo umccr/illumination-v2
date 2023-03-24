@@ -20,7 +20,7 @@ import JSONContainer from "../../../components/JSONContainer/JSONContainer";
 import { useDialogContext } from "../../../container/app/DialogContext";
 import CustomTable, { IColumnMapping } from "../../../container/table/Table";
 
-const COLUMN_MAPPPING: IColumnMapping[] = [
+const COLUMN_MAPPING: IColumnMapping[] = [
   {
     displayName: "Notification Channel Id",
     jsonKeys: ["notificationChannel", "id"],
@@ -70,7 +70,6 @@ async function getProjectBasePages(
   const axiosData = await RunAxios(getProjectsParam);
 
   return axiosData.data;
-
 }
 
 function ProjectCustomNotificationsPage() {
@@ -96,7 +95,7 @@ function ProjectCustomNotificationsPage() {
           setDialogInfo({
             isOpen: true,
             dialogTitle: "Error",
-            dialogContent: `Sorry, An error has occured while fetching the API (${err}). Please try again!`,
+            dialogContent: `Sorry, An error has occurred while fetching the API (${err}). Please try again!`,
           });
         }
       }
@@ -131,7 +130,7 @@ function ProjectCustomNotificationsPage() {
           <Grid item xs={12}>
             <CustomTable
               items={projectCustomNotificationsResponse.items}
-              columnMapping={COLUMN_MAPPPING}
+              columnMapping={COLUMN_MAPPING}
             />
           </Grid>
           <Grid item xs={12}>
