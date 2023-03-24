@@ -19,7 +19,7 @@ import CustomTable, {
   getTotalItemCountFromRes,
 } from "../../container/table/Table";
 
-const COLUMN_MAPPPING: IColumnMapping[] = [
+const COLUMN_MAPPING: IColumnMapping[] = [
   { displayName: "ID", jsonKeys: ["id"] },
   { displayName: "Name", jsonKeys: ["name"] },
   { displayName: "Status", jsonKeys: ["status"] },
@@ -100,7 +100,7 @@ function SamplesPage() {
         setDialogInfo({
           isOpen: true,
           dialogTitle: "Error",
-          dialogContent: `Sorry, An error has occured while fetching the API (${err}). Please try again!`,
+          dialogContent: `Sorry, An error has occurred while fetching the API (${err}). Please try again!`,
         });
       }
     }
@@ -128,7 +128,7 @@ function SamplesPage() {
           <Grid item xs={12}>
             <CustomTable
               items={samplesResponse.items}
-              columnMapping={COLUMN_MAPPPING}
+              columnMapping={COLUMN_MAPPING}
               paginationProps={paginationProps}
               handlePaginationPropsChange={handlePaginationPropsChange}
             />

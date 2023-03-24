@@ -23,7 +23,7 @@ import CustomTable, {
 import { useDialogContext } from "../../container/app/DialogContext";
 import JSONContainer from "../../components/JSONContainer/JSONContainer";
 
-const COLUMN_MAPPPING: IColumnMapping[] = [
+const COLUMN_MAPPING: IColumnMapping[] = [
   { displayName: "Bundle Id", jsonKeys: ["bundleId"] },
   { displayName: "Sample Value", jsonKeys: ["sample", "value"] },
 ];
@@ -62,7 +62,7 @@ function BundleSamplesPage() {
   });
 
   const { setDialogInfo } = useDialogContext();
-  const { bundleId  } = useParams();
+  const { bundleId } = useParams();
 
   useEffect(() => {
     // Calculate pageOffset
@@ -92,7 +92,7 @@ function BundleSamplesPage() {
           setDialogInfo({
             isOpen: true,
             dialogTitle: "Error",
-            dialogContent: `Sorry, An error has occured while fetching the API (${err}). Please try again!`,
+            dialogContent: `Sorry, An error has occurred while fetching the API (${err}). Please try again!`,
           });
         }
       }
@@ -103,7 +103,7 @@ function BundleSamplesPage() {
     return () => {
       cancel = true;
     };
-  }, [ setDialogInfo, bundleId, apiParameter]);
+  }, [setDialogInfo, bundleId, apiParameter]);
 
   return (
     <Grid
@@ -126,7 +126,7 @@ function BundleSamplesPage() {
           <Grid item xs={12}>
             <CustomTable
               items={bundleSamplesResponse.items}
-              columnMapping={COLUMN_MAPPPING}
+              columnMapping={COLUMN_MAPPING}
               paginationProps={paginationProps}
               handlePaginationPropsChange={handlePaginationPropsChange}
             />

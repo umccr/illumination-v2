@@ -40,16 +40,17 @@ function StorageConfigurationPage() {
   const { storageConfigurationId } = useParams();
 
   const { setDialogInfo } = useDialogContext();
-  const [storageConfigurationResponse, setStorageConfigurationResponse] = useState<
-    StorageConfiguration | null
-  >();
+  const [storageConfigurationResponse, setStorageConfigurationResponse] =
+    useState<StorageConfiguration | null>();
 
   useEffect(() => {
     let cancel = false;
     async function fetchData() {
       try {
         if (storageConfigurationId) {
-          const data = await getStorageConfigurationData(storageConfigurationId);
+          const data = await getStorageConfigurationData(
+            storageConfigurationId
+          );
           if (cancel) return;
           setStorageConfigurationResponse(data);
         }
@@ -57,7 +58,7 @@ function StorageConfigurationPage() {
         setDialogInfo({
           isOpen: true,
           dialogTitle: "Error",
-          dialogContent: `Sorry, An error has occured while fetching the API (${err}). Please try again!`,
+          dialogContent: `Sorry, An error has occurred while fetching the API (${err}). Please try again!`,
         });
       }
     }

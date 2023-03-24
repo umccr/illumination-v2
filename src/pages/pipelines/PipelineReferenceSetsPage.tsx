@@ -49,7 +49,7 @@ function PipelinePage() {
         setDialogInfo({
           isOpen: true,
           dialogTitle: "Error",
-          dialogContent: `Sorry, An error has occured while fetching the API (${err}). Please try again!`,
+          dialogContent: `Sorry, An error has occurred while fetching the API (${err}). Please try again!`,
         });
       }
     }

@@ -6,11 +6,7 @@ import { useParams } from "react-router-dom";
 import { CircularProgress, Grid, Typography } from "@mui/material";
 
 // icats Component
-import {
-  ProjectBaseJobApiAxiosParamCreator,
-  BaseJob,
-  RunAxios,
-} from "icats";
+import { ProjectBaseJobApiAxiosParamCreator, BaseJob, RunAxios } from "icats";
 
 // JSON to table
 import JSONToTable from "../../../components/JSONToTable/JSONToTable";
@@ -18,7 +14,6 @@ import JSONToTable from "../../../components/JSONToTable/JSONToTable";
 // Custom component
 import { useDialogContext } from "../../../container/app/DialogContext";
 import JSONContainer from "../../../components/JSONContainer/JSONContainer";
-
 
 async function getProjectBaseJobData(
   projectId: string,
@@ -34,7 +29,6 @@ async function getProjectBaseJobData(
   // Calling axios
   const axiosData = await RunAxios(getProjectsParam);
   return axiosData.data;
-
 }
 
 function ProjectBaseJobPage() {
@@ -58,7 +52,7 @@ function ProjectBaseJobPage() {
           setDialogInfo({
             isOpen: true,
             dialogTitle: "Error",
-            dialogContent: `Sorry, An error has occured while fetching the API (${err}). Please try again!`,
+            dialogContent: `Sorry, An error has occurred while fetching the API (${err}). Please try again!`,
           });
         }
       }

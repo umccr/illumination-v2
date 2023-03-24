@@ -16,9 +16,7 @@ import JSONContainer from "../../components/JSONContainer/JSONContainer";
 async function getRegionData(regionId: string): Promise<Region> {
   // Generate axios parameter
   const RegionParamCreator = RegionApiAxiosParamCreator();
-  const getRegionsParam = await RegionParamCreator.getRegion(
-    regionId
-  );
+  const getRegionsParam = await RegionParamCreator.getRegion(regionId);
 
   // Calling axios
   const axiosData = await RunAxios(getRegionsParam);
@@ -44,7 +42,7 @@ function RegionPage() {
         setDialogInfo({
           isOpen: true,
           dialogTitle: "Error",
-          dialogContent: `Sorry, An error has occured while fetching the API (${err}). Please try again!`,
+          dialogContent: `Sorry, An error has occurred while fetching the API (${err}). Please try again!`,
         });
       }
     }

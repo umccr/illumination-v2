@@ -23,7 +23,7 @@ import CustomTable, {
 import { useDialogContext } from "../../container/app/DialogContext";
 import JSONContainer from "../../components/JSONContainer/JSONContainer";
 
-const COLUMN_MAPPPING: IColumnMapping[] = [
+const COLUMN_MAPPING: IColumnMapping[] = [
   { displayName: "ID", jsonKeys: ["data", "id"] },
   { displayName: "Name", jsonKeys: ["data", "details", "name"] },
   { displayName: "Path", jsonKeys: ["data", "details", "path"] },
@@ -105,7 +105,7 @@ function BundleDataPage() {
           setDialogInfo({
             isOpen: true,
             dialogTitle: "Error",
-            dialogContent: `Sorry, An error has occured while fetching the API (${err}). Please try again!`,
+            dialogContent: `Sorry, An error has occurred while fetching the API (${err}). Please try again!`,
           });
         }
       }
@@ -139,7 +139,7 @@ function BundleDataPage() {
           <Grid item xs={12}>
             <CustomTable
               items={bundleDataResponse.items}
-              columnMapping={COLUMN_MAPPPING}
+              columnMapping={COLUMN_MAPPING}
               paginationProps={paginationProps}
               handlePaginationPropsChange={handlePaginationPropsChange}
             />

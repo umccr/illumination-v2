@@ -43,10 +43,7 @@ function ProjectDataChildrenPage() {
     async function fetchData() {
       if (projectId && dataId) {
         try {
-          const data = await getProjectChildrenData(
-            projectId,
-            dataId
-          );
+          const data = await getProjectChildrenData(projectId, dataId);
           if (cancel) return;
 
           setDataChildrenResponse(data);
@@ -54,7 +51,7 @@ function ProjectDataChildrenPage() {
           setDialogInfo({
             isOpen: true,
             dialogTitle: "Error",
-            dialogContent: `Sorry, An error has occured while fetching the API (${err}). Please try again!`,
+            dialogContent: `Sorry, An error has occurred while fetching the API (${err}). Please try again!`,
           });
         }
       }

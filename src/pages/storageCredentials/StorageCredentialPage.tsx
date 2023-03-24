@@ -37,18 +37,15 @@ function StorageCredentialPage() {
   const { storageCredentialId } = useParams();
 
   const { setDialogInfo } = useDialogContext();
-  const [storageCredentialResponse, setStorageCredentialResponse] = useState<
-    StorageCredential | null
-  >();
+  const [storageCredentialResponse, setStorageCredentialResponse] =
+    useState<StorageCredential | null>();
 
   useEffect(() => {
     let cancel = false;
     async function fetchData() {
       try {
         if (storageCredentialId) {
-          const data = await getStorageCredentialData(
-            storageCredentialId
-          );
+          const data = await getStorageCredentialData(storageCredentialId);
           if (cancel) return;
           setStorageCredentialResponse(data);
         }
@@ -56,7 +53,7 @@ function StorageCredentialPage() {
         setDialogInfo({
           isOpen: true,
           dialogTitle: "Error",
-          dialogContent: `Sorry, An error has occured while fetching the API (${err}). Please try again!`,
+          dialogContent: `Sorry, An error has occurred while fetching the API (${err}). Please try again!`,
         });
       }
     }

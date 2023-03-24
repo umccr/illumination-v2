@@ -7,22 +7,26 @@ import { useParams } from "react-router-dom";
 import { CircularProgress, Grid, Typography } from "@mui/material";
 
 // icats Component
-import { MetadataModel, MetadataModelApiAxiosParamCreator, RunAxios } from "icats";
-
+import {
+  MetadataModel,
+  MetadataModelApiAxiosParamCreator,
+  RunAxios,
+} from "icats";
 
 // Custom components
 import { useDialogContext } from "../../container/app/DialogContext";
 import JSONContainer from "../../components/JSONContainer/JSONContainer";
 import ChipArray, { IButtonProps } from "../../components/chipArray/ChipArray";
 
-const buttonProps: IButtonProps[] = [
-  { name: "Fields", route: "fields" },
-];
+const buttonProps: IButtonProps[] = [{ name: "Fields", route: "fields" }];
 
-async function getMetadataModelData(metadataModelId: string): Promise<MetadataModel> {
+async function getMetadataModelData(
+  metadataModelId: string
+): Promise<MetadataModel> {
   // Generate axios parameter
   const MetadataModelParamCreator = MetadataModelApiAxiosParamCreator();
-  const getMetadataModelsParam = await MetadataModelParamCreator.getMetadataModel(metadataModelId);
+  const getMetadataModelsParam =
+    await MetadataModelParamCreator.getMetadataModel(metadataModelId);
 
   // Calling axios
   const axiosData = await RunAxios(getMetadataModelsParam);
@@ -33,7 +37,8 @@ function MetadataModelPage() {
   const { metadataModelId } = useParams();
 
   const { setDialogInfo } = useDialogContext();
-  const [metadataModelResponse, setMetadataModelResponse] = useState<MetadataModel | null>();
+  const [metadataModelResponse, setMetadataModelResponse] =
+    useState<MetadataModel | null>();
 
   useEffect(() => {
     let cancel = false;
@@ -48,7 +53,7 @@ function MetadataModelPage() {
         setDialogInfo({
           isOpen: true,
           dialogTitle: "Error",
-          dialogContent: `Sorry, An error has occured while fetching the API (${err}). Please try again!`,
+          dialogContent: `Sorry, An error has occurred while fetching the API (${err}). Please try again!`,
         });
       }
     }
@@ -67,7 +72,9 @@ function MetadataModelPage() {
       spacing={3}
     >
       <Grid item xs={12}>
-        <Typography variant="h4">Metadata Model Id: {metadataModelId}</Typography>
+        <Typography variant="h4">
+          Metadata Model Id: {metadataModelId}
+        </Typography>
       </Grid>
       <ChipArray data={buttonProps} />
       {!metadataModelResponse ? (

@@ -9,7 +9,11 @@ import Typography from "@mui/material/Typography";
 import CircularProgress from "@mui/material/CircularProgress";
 
 // icats component
-import { DownloadRuleList, ConnectorApiAxiosParamCreator, RunAxios } from "icats";
+import {
+  DownloadRuleList,
+  ConnectorApiAxiosParamCreator,
+  RunAxios,
+} from "icats";
 
 // Custom components
 import JSONContainer from "../../components/JSONContainer/JSONContainer";
@@ -21,7 +25,7 @@ import CustomTable, {
   getTotalItemCountFromRes,
 } from "../../container/table/Table";
 
-const COLUMN_MAPPPING: IColumnMapping[] = [
+const COLUMN_MAPPING: IColumnMapping[] = [
   { displayName: "ID", jsonKeys: ["id"] },
   { displayName: "OS", jsonKeys: ["os"] },
   { displayName: "Local Folder", jsonKeys: ["localFolder"] },
@@ -102,7 +106,7 @@ function ConnectorDownloadRulesPage() {
         setDialogInfo({
           isOpen: true,
           dialogTitle: "Error",
-          dialogContent: `Sorry, An error has occured while fetching the API (${err}). Please try again!`,
+          dialogContent: `Sorry, An error has occurred while fetching the API (${err}). Please try again!`,
         });
       }
     }
@@ -133,7 +137,7 @@ function ConnectorDownloadRulesPage() {
           <Grid item xs={12}>
             <CustomTable
               items={downloadRuleListResponse.items}
-              columnMapping={COLUMN_MAPPPING}
+              columnMapping={COLUMN_MAPPING}
               paginationProps={paginationProps}
               handlePaginationPropsChange={handlePaginationPropsChange}
             />

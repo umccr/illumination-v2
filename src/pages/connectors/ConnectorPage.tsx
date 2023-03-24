@@ -17,12 +17,14 @@ import ChipArray, { IButtonProps } from "../../components/chipArray/ChipArray";
 const buttonProps: IButtonProps[] = [
   { name: "Download Rule", route: "downloadRules" },
   { name: "Upload Rule", route: "uploadRules" },
-]
+];
 
 async function getConnectorData(connectorId: string): Promise<Connector> {
   // Generate axios parameter
   const ConnectorParamCreator = ConnectorApiAxiosParamCreator();
-  const getConnectorsParam = await ConnectorParamCreator.getConnector(connectorId);
+  const getConnectorsParam = await ConnectorParamCreator.getConnector(
+    connectorId
+  );
 
   // Calling axios
   const axiosData = await RunAxios(getConnectorsParam);
@@ -33,7 +35,8 @@ function ConnectorPage() {
   const { connectorId } = useParams();
 
   const { setDialogInfo } = useDialogContext();
-  const [connectorResponse, setConnectorResponse] = useState<Connector | null>();
+  const [connectorResponse, setConnectorResponse] =
+    useState<Connector | null>();
 
   useEffect(() => {
     let cancel = false;
@@ -48,7 +51,7 @@ function ConnectorPage() {
         setDialogInfo({
           isOpen: true,
           dialogTitle: "Error",
-          dialogContent: `Sorry, An error has occured while fetching the API (${err}). Please try again!`,
+          dialogContent: `Sorry, An error has occurred while fetching the API (${err}). Please try again!`,
         });
       }
     }

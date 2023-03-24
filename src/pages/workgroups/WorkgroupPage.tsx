@@ -29,7 +29,8 @@ function WorkgroupPage() {
   const { workgroupId } = useParams();
 
   const { setDialogInfo } = useDialogContext();
-  const [workgroupResponse, setWorkgroupResponse] = useState<Workgroup | null>();
+  const [workgroupResponse, setWorkgroupResponse] =
+    useState<Workgroup | null>();
 
   useEffect(() => {
     let cancel = false;
@@ -44,7 +45,7 @@ function WorkgroupPage() {
         setDialogInfo({
           isOpen: true,
           dialogTitle: "Error",
-          dialogContent: `Sorry, An error has occured while fetching the API (${err}). Please try again!`,
+          dialogContent: `Sorry, An error has occurred while fetching the API (${err}). Please try again!`,
         });
       }
     }

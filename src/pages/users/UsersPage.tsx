@@ -13,7 +13,7 @@ import JSONContainer from "../../components/JSONContainer/JSONContainer";
 import { useDialogContext } from "../../container/app/DialogContext";
 import CustomTable, { IColumnMapping } from "../../container/table/Table";
 
-const COLUMN_MAPPPING: IColumnMapping[] = [
+const COLUMN_MAPPING: IColumnMapping[] = [
   { displayName: "Email", jsonKeys: ["email"] },
   {
     displayName: "ID",
@@ -54,7 +54,7 @@ function UsersPage() {
         setDialogInfo({
           isOpen: true,
           dialogTitle: "Error",
-          dialogContent: `Sorry, An error has occured while fetching the API (${err}). Please try again!`,
+          dialogContent: `Sorry, An error has occurred while fetching the API (${err}). Please try again!`,
         });
       }
     }
@@ -85,7 +85,7 @@ function UsersPage() {
           <Grid item xs={12}>
             <CustomTable
               items={usersListResponse.items}
-              columnMapping={COLUMN_MAPPPING}
+              columnMapping={COLUMN_MAPPING}
             />
           </Grid>
           <Grid item xs={12}>

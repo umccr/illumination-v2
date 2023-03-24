@@ -39,7 +39,7 @@ export class InfrastructureStack extends Stack {
     );
 
     /**
-     * Lookup SSL Certficate that is created manually
+     * Lookup SSL Certificate that is created manually
      */
     const use1_cert_arn = aws_ssm.StringParameter.fromStringParameterName(
       this,
@@ -70,10 +70,10 @@ export class InfrastructureStack extends Stack {
     });
 
     /**
-     * Creates CloudFront and S3 acess via OAI
+     * Creates CloudFront and S3 access via OAI
      */
 
-    // Illumination OriginAccessIdentiy
+    // Illumination OriginAccessIdentity
     const illumination_oai = new aws_cloudfront.OriginAccessIdentity(
       this,
       "IlluminationOAI",
@@ -182,7 +182,7 @@ export class InfrastructureStack extends Stack {
       }
     );
 
-    // Exporting these values to SSM paramter to be used in React app
+    // Exporting these values to SSM parameter to be used in React app
     new aws_ssm.StringParameter(this, "SSMAppClientId", {
       stringValue: illumination_client_id.userPoolClientId,
       parameterName: "/illumination/cognito_app_client_id",
@@ -197,15 +197,15 @@ export class InfrastructureStack extends Stack {
     });
 
     /**
-     *  Add Autenticated user to access secret manager via Cognito Identity Pool
+     *  Add Authenticated user to access secret manager via Cognito Identity Pool
      *  Ref: https://bobbyhadz.com/blog/aws-cdk-cognito-identity-pool-example
      */
 
-    // Construcy User Pool Provider name
+    // Construct User Pool Provider name
     // Ref: https://stackoverflow.com/a/44007441/13137208
     const user_pool_provider_name: string = `cognito-idp.${app_props.region}.amazonaws.com/${umccr_cognito_user_pool_id}`;
 
-    // Lookup local congito app client
+    // Lookup local cognito app client
     const local_umccr_cognito_app_client_id =
       aws_ssm.StringParameter.fromStringParameterName(
         this,
@@ -240,9 +240,9 @@ export class InfrastructureStack extends Stack {
 
     const illumination_authenticated_role = new aws_iam.Role(
       this,
-      "IlluminationAuhtenticatedRole",
+      "IlluminationAuthenticatedRole",
       {
-        description: "Roles to access ICA secret mangaer",
+        description: "Roles to access ICA secret manager",
         roleName: "illumination_authenticated_pool",
         assumedBy: new aws_iam.FederatedPrincipal(
           "cognito-identity.amazonaws.com",
@@ -278,7 +278,7 @@ export class InfrastructureStack extends Stack {
       }
     );
 
-    // Put in SSM paramter
+    // Put in SSM parameter
     new aws_ssm.StringParameter(this, "SSMIdentityPoolId", {
       stringValue: cognito_identity_pool.ref,
       parameterName: "/illumination/cog_identity_pool_id",

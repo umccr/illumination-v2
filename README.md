@@ -16,7 +16,7 @@ You could still run this app locally by invoking the [start.sh](start.sh) script
 When sourcing [start.sh](start.sh), there is argument need to specify. Arguments as follow.
 
 - local - This will set local environment variable, and deploy the app locally at <http://localhost:3000>. You could BYO ICAV2 JWT token by setting environment variable `ICAV2_ACCESS_TOKEN`.
-- deploy - This will update the remote application. The script will set environment needed for remote deployment, build the app, and store to the S3 bucket. NOTE: Make sure correct/valid environemt variables for the remote environment.
+- deploy - This will update the remote application. The script will set environment needed for remote deployment, build the app, and store to the S3 bucket. NOTE: Make sure correct/valid environment variables for the remote environment.
 
 Example
 ```bash
@@ -25,4 +25,4 @@ source start.sh deploy
 ```
 
 ### Infrastructure
-Details on the infrastucture is on the [infrastrucutre](infrastructure/README.md) directory.
+Details on the infrastructure is on the [infrastructure](infrastructure/README.md) directory.
